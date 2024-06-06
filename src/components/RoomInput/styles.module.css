@@ -1,0 +1,10 @@
+.roomInput {
+  display: flex;
+  align-items: flex-start;
+  flex-flow: column wrap;
+  gap: 0.5rem;
+
+  > input {
+    width: 100%;
+  }
+}

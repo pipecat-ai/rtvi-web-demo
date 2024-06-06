@@ -1,0 +1,48 @@
+.container {
+  display: grid;
+  width: 100%;
+  border: 1px solid var(--color-gray-100);
+  border-radius: var(--borderRadius-xs);
+  overflow: hidden;
+}
+
+.row {
+  font-size: var(--font-size-xs);
+  background-color: var(--color-gray-50);
+  color: var(--color-gray-800);
+  padding: 8px;
+  align-items: center;
+  overflow: hidden;
+
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: subgrid;
+  grid-column: span 2;
+
+  &:nth-child(even) {
+    background-color: white;
+  }
+
+  svg {
+    line-height: 1;
+  }
+
+  > span:first-child {
+    font-weight: 500;
+    flex-shrink: 0;
+    width: max-content;
+  }
+
+  > span:last-child {
+    font-family: var(--font-mono);
+    color: var(--color-gray-600);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: right;
+  }
+}
+
+.danger {
+  color: var(--color-red-600);
+}
