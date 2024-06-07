@@ -30,6 +30,19 @@ export const Session: React.FC<SessionProps> = ({
   const [talkState, setTalkState] = useState<"user" | "assistant" | "open">(
     openMic ? "open" : "assistant"
   );
+  const [muted, setMuted] = useState(false);
+
+  function toggleMute() {
+    if (!daily) return;
+
+    if (!muted) {
+      daily.setLocalAudio(false);
+    } else {
+      daily.setLocalAudio(true);
+    }
+
+    setMuted(!muted);
+  }
 
   useAppMessage({
     onAppMessage: (e) => {
@@ -78,7 +91,12 @@ export const Session: React.FC<SessionProps> = ({
 
       <div className={styles.agentContainer}>
         <Agent />
-        <UserMicBubble openMic={openMic} active={talkState !== "assistant"} />
+        <UserMicBubble
+          openMic={openMic}
+          active={talkState !== "assistant"}
+          muted={muted}
+          handleMute={() => toggleMute()}
+        />
         <DailyAudio />
       </div>
 

@@ -24,3 +24,4 @@ Navigate to https://localhost:5173
 - Move layout styles to layout.css
 - Use global media query to change common variables (font size, gutter etc)
 - Rename "styles.module.css" to component specific
+- Handle issue where user speaks before mic track is ready
