@@ -68,4 +68,6 @@
   --card-lg: 640px;
 
   @custom-media --screen-small (max-width: 768px);
+
+  --screen-sm: 768px;
 }

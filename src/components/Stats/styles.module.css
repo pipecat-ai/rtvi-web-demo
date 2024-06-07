@@ -1,7 +1,11 @@
 .container {
   display: flex;
   flex-flow: row;
-  gap: 1rem;
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    gap: 1rem;
+  }
 }
 
 .serviceStat {

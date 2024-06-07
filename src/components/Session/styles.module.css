@@ -1,26 +1,14 @@
-.footer {
-  display: flex;
-  flex-flow: row nowrap;
-  margin-top: auto;
-  align-self: flex-end;
-}
-
-.controls {
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-
 .agentContainer {
   flex: 1;
   display: flex;
   flex-flow: column wrap;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 .agent {
+  box-sizing: border-box;
   margin-top: auto;
   min-width: 420px;
   padding: 0.75rem;
@@ -36,6 +24,11 @@
   background-clip: padding-box, border-box;
   background-origin: border-box;
   border: 1px solid transparent;
+
+  @media (max-width: 768px) {
+    min-width: 0;
+    width: 100%;
+  }
 }
 
 .agentWindow {
@@ -43,6 +36,10 @@
   aspect-ratio: 1;
   background: var(--color-gray-200);
   border-radius: var(--borderRadius-md);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   @media (max-width: 768px) {
     min-width: 0;
@@ -120,4 +117,40 @@
   > span {
     background: var(--color-green-400);
   }
+}
+
+.footer {
+  display: flex;
+  flex-flow: row nowrap;
+  margin-top: auto;
+  align-self: flex-end;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.controls {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+
+  @media (max-width: 768px) {
+    width: 100%;
+
+    > button:last-child {
+      margin-left: auto;
+    }
+  }
+}
+
+.loader {
+  padding: 12px;
+  display: inline-block;
+  line-height: 0;
+  background-color: var(--color-gray-400);
+  border-radius: 99px;
+  color: white;
+  position: absolute;
 }

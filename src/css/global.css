@@ -60,6 +60,10 @@ main {
   justify-content: center;
   flex: 1;
   padding: 1rem 0;
+
+  @media (--screen-small) {
+    padding: 0.5rem 0;
+  }
 }
 
 /* Dialog (modal) */
