@@ -1,8 +1,9 @@
 import React from "react";
-import Status from "./status";
-import styles from "./styles.module.css";
-
 import { useParticipantIds } from "@daily-co/daily-react";
+
+import Status from "./status";
+
+import styles from "./styles.module.css";
 
 export const Agent: React.FC = () => {
   const participantIds = useParticipantIds({ filter: "remote" });
@@ -12,7 +13,7 @@ export const Agent: React.FC = () => {
     <div className={styles.agent}>
       <div className={styles.agentWindow}></div>
       <footer className={styles.agentFooter}>
-        <Status>User status</Status>
+        <Status variant="connected">User status</Status>
         <Status variant={status}>Agent status</Status>
       </footer>
     </div>

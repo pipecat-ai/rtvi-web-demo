@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import Header from "./components/header.tsx";
 import { DailyProvider } from "@daily-co/daily-react";
+
+import Header from "./components/header.tsx";
+import App from "./App.tsx";
 
 import "./css/global.css";
 

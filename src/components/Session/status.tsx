@@ -1,4 +1,5 @@
-import { VariantProps, cva } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority";
+
 import styles from "./styles.module.css";
 
 const statusVariants = cva(styles.statusIndicator, {

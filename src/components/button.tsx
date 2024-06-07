@@ -6,6 +6,8 @@ const buttonVariants = cva("button", {
     variant: {
       primary: "button-primary",
       ghost: "button-ghost",
+      outline: "button-outline",
+      light: "button-light",
     },
     size: {
       base: "",

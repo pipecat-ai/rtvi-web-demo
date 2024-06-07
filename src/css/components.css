@@ -45,6 +45,26 @@
   border-color: var(--color-gray-600);
 }
 
+.button-outline {
+  border: 1px solid var(--color-gray-950);
+  background-color: transparent;
+  color: var(--color-gray-950);
+}
+.button-outline:hover:not(:disabled) {
+  background-color: white;
+  border-color: var(--color-gray-600);
+}
+
+.button-light {
+  border: 1px solid var(--color-gray-200);
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-950);
+}
+.button-light:hover:not(:disabled) {
+  background-color: var(--color-gray-300);
+  border-color: var(--color-gray-300);
+}
+
 .button-icon {
   padding: 1rem;
 }

@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+  flex-flow: row;
+  gap: 1rem;
+}
+
+.serviceStat {
+  display: flex;
+  flex-flow: column wrap;
+  font-size: var(--font-size-sm);
+}
+
+.serviceName {
+  font-weight: 500;
+}
+
+.value {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+}

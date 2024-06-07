@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { LogOut, Settings } from "lucide-react";
 import { DailyAudio, useAppMessage, useDaily } from "@daily-co/daily-react";
+import { LineChart, LogOut, Settings } from "lucide-react";
 
-import DeviceSelect from "../DeviceSelect";
-import Agent from "./agent";
+import StatsAggregator from "../../utils/stats_aggregator";
 import { Button } from "../button";
+import DeviceSelect from "../DeviceSelect";
+import Stats from "../Stats";
 import UserMicBubble from "../UserMicBubble";
+
+import Agent from "./agent";
 
 import styles from "./styles.module.css";
 
@@ -14,12 +17,15 @@ interface SessionProps {
   openMic?: boolean;
 }
 
+const stats_aggregator: StatsAggregator = new StatsAggregator();
+
 export const Session: React.FC<SessionProps> = ({
   onLeave,
   openMic = false,
 }) => {
   const daily = useDaily();
   const [showDevices, setShowDevices] = useState(false);
+  const [showStats, setShowStats] = useState(false);
   const modalRef = useRef<HTMLDialogElement>(null);
   const [talkState, setTalkState] = useState<"user" | "assistant" | "open">(
     openMic ? "open" : "assistant"
@@ -27,6 +33,14 @@ export const Session: React.FC<SessionProps> = ({
 
   useAppMessage({
     onAppMessage: (e) => {
+      // Aggregate metrics from pipecat
+      if (e.data?.type === "pipecat-metrics") {
+        e.data.metrics.ttfb.map((m: { name: string; time: number }) => {
+          stats_aggregator.addStat([m.name, "ttfb", m.time, Date.now()]);
+        });
+        return;
+      }
+
       if (!daily || !e.data?.cue) return;
 
       // Determine the UI state from the cue sent by the bot
@@ -60,6 +74,8 @@ export const Session: React.FC<SessionProps> = ({
         <Button onClick={() => setShowDevices(false)}>Close</Button>
       </dialog>
 
+      {showStats && <Stats statsAggregator={stats_aggregator} />}
+
       <div className={styles.agentContainer}>
         <Agent />
         <UserMicBubble openMic={openMic} active={talkState !== "assistant"} />
@@ -68,6 +84,13 @@ export const Session: React.FC<SessionProps> = ({
 
       <footer className={styles.footer}>
         <div className={styles.controls}>
+          <Button
+            variant={showStats ? "light" : "ghost"}
+            size="icon"
+            onClick={() => setShowStats(!showStats)}
+          >
+            <LineChart />
+          </Button>
           <Button
             variant="ghost"
             size="icon"

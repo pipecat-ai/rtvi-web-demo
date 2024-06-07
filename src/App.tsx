@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { useDaily } from "@daily-co/daily-react";
-
-import { fetch_meeting_token, fetch_start_agent } from "./actions";
+import { ArrowRight, Loader2 } from "lucide-react";
 
 import { Alert } from "./components/alert";
 import { Button } from "./components/button";
-import { ArrowRight, Loader2 } from "lucide-react";
 import { DeviceSelect } from "./components/DeviceSelect";
-import Session from "./components/Session";
 import { RoomInput } from "./components/RoomInput";
+import Session from "./components/Session";
 import { SettingList } from "./components/SettingList/SettingList";
+import { fetch_meeting_token, fetch_start_agent } from "./actions";
 
 type State =
   | "idle"
@@ -39,7 +38,6 @@ const checkRoomUrl = (url: string | null): boolean =>
   !!(url && /^(https?:\/\/[^.]+\.daily\.co\/[^/]+)$/.test(url));
 
 export default function App() {
-  // Use Daily as our agent transport
   const daily = useDaily();
 
   const [state, setState] = useState<State>("idle");
