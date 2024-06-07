@@ -43,6 +43,10 @@
   aspect-ratio: 1;
   background: var(--color-gray-200);
   border-radius: var(--borderRadius-md);
+
+  @media (max-width: 768px) {
+    min-width: 0;
+  }
 }
 
 .agentFooter {

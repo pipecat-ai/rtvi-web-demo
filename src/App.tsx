@@ -37,12 +37,14 @@ const roomQs = new URLSearchParams(window.location.search).get("room_url");
 const checkRoomUrl = (url: string | null): boolean =>
   !!(url && /^(https?:\/\/[^.]+\.daily\.co\/[^/]+)$/.test(url));
 
+// Mic mode
+const isOpenMic = import.meta.env.VITE_OPEN_MIC ? true : false;
+
 export default function App() {
   const daily = useDaily();
 
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState<string | null>(null);
-  const [config, setConfig] = useState<{ open_mic?: boolean }>({});
   const [roomUrl, setRoomUrl] = useState<string | null>(roomQs || null);
   const [roomError, setRoomError] = useState<boolean>(
     (roomQs && checkRoomUrl(roomQs)) || false
@@ -69,7 +71,6 @@ export default function App() {
 
       try {
         data = await fetch_start_agent(roomUrl, serverUrl);
-        setConfig(data.config || {});
 
         if (data.error) {
           setError(data.detail);
@@ -126,7 +127,7 @@ export default function App() {
   }
 
   if (state === "connected") {
-    return <Session onLeave={() => leave()} openMic={config?.open_mic} />;
+    return <Session onLeave={() => leave()} openMic={isOpenMic} />;
   }
 
   if (state !== "idle") {
