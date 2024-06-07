@@ -35,7 +35,7 @@ if (!serverUrl.endsWith("/")) serverUrl += "/";
 // Query string for room URL
 const roomQs = new URLSearchParams(window.location.search).get("room_url");
 const checkRoomUrl = (url: string | null): boolean =>
-  !!(url && /^(https?:\/\/[^.]+\.daily\.co\/[^/]+)$/.test(url));
+  !!(url && /^(https?:\/\/[^.]+(\.staging)?\.daily\.co\/[^/]+)$/.test(url));
 
 // Mic mode
 const isOpenMic = import.meta.env.VITE_OPEN_MIC ? true : false;
