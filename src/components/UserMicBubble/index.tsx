@@ -1,14 +1,12 @@
-import React, { useCallback, useRef } from "react";
-
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  useAppMessage,
   useAudioLevel,
   useAudioTrack,
   useLocalSessionId,
-  //useAppMessage,
 } from "@daily-co/daily-react";
-//import { DailyEventObjectAppMessage } from "@daily-co/daily-js";
 import { Mic, MicOff } from "lucide-react";
-//import { TypewriterEffect } from "../ui/typewriter";
+
 import styles from "./styles.module.css";
 
 const AudioIndicatorBubble: React.FC = () => {
@@ -39,13 +37,13 @@ interface Props {
 }
 
 export default function UserMicBubble({ active, openMic = false }: Props) {
-  /*
   const [transcription, setTranscription] = useState<string[]>([]);
+
   useAppMessage({
-    onAppMessage: (e: DailyEventObjectAppMessage<any>) => {
+    onAppMessage: (e) => {
       if (e.fromId && e.fromId === "transcription") {
         if (e.data.user_id === "" && e.data.is_final) {
-          //setTranscription((t) => [...t, ...e.data.text.split(" ")]);
+          setTranscription((t) => [...t, ...e.data.text.split(" ")]);
         }
       }
     },
@@ -55,7 +53,7 @@ export default function UserMicBubble({ active, openMic = false }: Props) {
     if (active) return;
     const t = setTimeout(() => setTranscription([]), 4000);
     return () => clearTimeout(t);
-  }, [active]);*/
+  }, [active]);
 
   const cx = openMic ? styles.micIconOpen : active && styles.micIconActive;
 
@@ -65,7 +63,11 @@ export default function UserMicBubble({ active, openMic = false }: Props) {
         {!openMic && !active ? <MicOff size={42} /> : <Mic size={42} />}
         {(openMic || active) && <AudioIndicatorBubble />}
       </div>
-      <footer className={styles.transcript}></footer>
+      {transcription.length > 0 && (
+        <footer className={`${styles.transcript} ${active ? "active" : ""}`}>
+          {transcription}
+        </footer>
+      )}
     </div>
   );
 }

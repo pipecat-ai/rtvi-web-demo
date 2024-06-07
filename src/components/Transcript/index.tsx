@@ -38,14 +38,14 @@ export default function Transcript() {
   return (
     <div className={styles.container}>
       {sentences.map((sentence, index) => (
-        <p key={index} className={`${styles.transcript} ${styles.sentence}`}>
+        <abbr key={index} className={`${styles.transcript} ${styles.sentence}`}>
           <span>{sentence}</span>
-        </p>
+        </abbr>
       ))}
       {partialText && (
-        <p className={`${styles.transcript}`}>
+        <abbr className={`${styles.transcript}`}>
           <span>{partialText}</span>
-        </p>
+        </abbr>
       )}
     </div>
   );

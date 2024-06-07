@@ -79,15 +79,25 @@
 }
 
 .transcript {
+  position: absolute;
+  bottom: 0px;
   flex: 0;
   align-self: center;
   opacity: 0.25;
   transition: opacity 1s ease;
   transition-delay: 2.5s;
-}
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  z-index: 999;
+  box-decoration-break: clone;
+  color: white;
+  background-color: color-mix(in srgb, var(--color-gray-800), transparent 30%);
+  border-radius: var(--borderRadius-xs);
+  padding: 4px 8px;
 
-.active .transcript {
-  opacity: 1;
+  &:global(.active) {
+    opacity: 1;
+  }
 }
 
 .volume {
