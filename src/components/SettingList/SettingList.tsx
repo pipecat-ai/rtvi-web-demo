@@ -14,10 +14,12 @@ export const SettingList: React.FC<SettingList> = ({
 }) => {
   return (
     <div className={styles.container}>
-      <div className={styles.row}>
-        <span>Server URL</span>
-        <span>{serverUrl}</span>
-      </div>
+      {import.meta.env.VITE_SERVER_URL && (
+        <div className={styles.row}>
+          <span>Server URL</span>
+          <span>{serverUrl}</span>
+        </div>
+      )}
       <div className={styles.row}>
         <span>Auto room creation</span>
         <span>

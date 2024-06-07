@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useDaily } from "@daily-co/daily-react";
 
+import { fetch_meeting_token, fetch_start_agent } from "./actions";
+
 import { Alert } from "./components/alert";
 import { Button } from "./components/button";
 import { ArrowRight, Loader2 } from "lucide-react";
@@ -13,11 +15,19 @@ type State =
   | "idle"
   | "configuring"
   | "requesting_agent"
+  | "requesting_token"
   | "connecting"
   | "connected"
   | "started"
   | "finished"
   | "error";
+
+const status_text = {
+  configuring: "Start",
+  requesting_agent: "Requesting agent...",
+  requesting_token: "Requesting token...",
+  connecting: "Connecting to room...",
+};
 
 // Server URL (ensure trailing slash)
 let serverUrl = import.meta.env.VITE_SERVER_URL || import.meta.env.BASE_URL;
@@ -50,48 +60,57 @@ export default function App() {
   }
 
   async function start() {
-    if (!daily) return;
+    if (!daily || !roomUrl) return;
 
-    setState("requesting_agent");
-
-    // Request a bot to join your session
     let data;
 
-    try {
-      const res = await fetch(`${serverUrl}start_bot`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ room_url: roomUrl }),
-      });
+    // Request agent to start, or join room directly
+    if (import.meta.env.VITE_SERVER_URL) {
+      // Request a new agent to join the room
+      setState("requesting_agent");
 
-      data = await res.json();
-      setConfig(data.config || {});
+      try {
+        data = await fetch_start_agent(roomUrl, serverUrl);
+        setConfig(data.config || {});
 
-      if (!res.ok) {
-        setError(data.detail);
+        if (data.error) {
+          setError(data.detail);
+          setState("error");
+          return;
+        }
+      } catch (e) {
+        setError(
+          `Unable to connect to the server at '${serverUrl}' - is it running?`
+        );
         setState("error");
         return;
       }
-    } catch (e) {
-      setError(
-        `Unable to connect to the server at '${serverUrl}' - is it running?`
-      );
-      setState("error");
-      return;
+    } else {
+      // Retrieve user token for room
+      setState("requesting_token");
+
+      try {
+        data = await fetch_meeting_token(roomUrl);
+      } catch (e) {
+        setError(
+          `Unable to get token for room: ${roomUrl} - have you set your Daily API key?`
+        );
+        setState("error");
+        return;
+      }
     }
 
+    // Join the daily session, passing through the url and token
     setState("connecting");
 
-    // Join the daily session, passing through the url and token
     await daily.join({
-      url: data.room_url,
+      url: data.room_url || roomUrl,
       token: data.token,
       videoSource: false,
       startAudioOff: true,
     });
 
+    // Away we go...
     setState("connected");
   }
 
@@ -111,12 +130,6 @@ export default function App() {
   if (state === "connected") {
     return <Session onLeave={() => leave()} openMic={config?.open_mic} />;
   }
-
-  const status_text = {
-    configuring: "Start",
-    requesting_agent: "Requesting agent...",
-    connecting: "Connecting to agent...",
-  };
 
   if (state !== "idle") {
     return (
@@ -150,19 +163,21 @@ export default function App() {
           <p>Review and configure your bot experience</p>
         </div>
 
-        {import.meta.env.DEV && !import.meta.env.VITE_SERVER_URL && (
-          <Alert title="Missing server URL environment" intent="danger">
-            <p>
-              You have not set a server URL for local development. Please set{" "}
-              <samp>VITE_SERVER_URL</samp> in{" "}
-              <samp>.env.development.local</samp>.
-            </p>
-            <p>
-              Without this, the client will attempt to start the bot by calling
-              localhost on the same port.
-            </p>
-          </Alert>
-        )}
+        {import.meta.env.DEV &&
+          !import.meta.env.VITE_SERVER_URL &&
+          !import.meta.env.VITE_DAILY_API_KEY && (
+            <Alert title="Missing server URL environment" intent="danger">
+              <p>
+                You have not set a server URL for local development, or a Daily
+                API Key if you're bypassing starting an agent. Please set{" "}
+                <samp>VITE_SERVER_URL</samp> in <samp>.env.local</samp>.
+              </p>
+              <p>
+                Without this, the client will attempt to start the bot by
+                calling localhost on the same port.
+              </p>
+            </Alert>
+          )}
         <SettingList
           serverUrl={serverUrl}
           roomQueryString={roomQs}
