@@ -8,6 +8,7 @@ import { DeviceSelect } from "./components/DeviceSelect";
 import { RoomInput } from "./components/RoomInput";
 import Session from "./components/Session";
 import { SettingList } from "./components/SettingList/SettingList";
+import { Switch } from "./components/switch";
 import { fetch_meeting_token, fetch_start_agent } from "./actions";
 
 type State =
@@ -45,6 +46,7 @@ export default function App() {
 
   const [state, setState] = useState<State>("idle");
   const [error, setError] = useState<string | null>(null);
+  const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
   const [roomUrl, setRoomUrl] = useState<string | null>(roomQs || null);
   const [roomError, setRoomError] = useState<boolean>(
     (roomQs && checkRoomUrl(roomQs)) || false
@@ -106,7 +108,7 @@ export default function App() {
       url: data.room_url || roomUrl,
       token: data.token,
       videoSource: false,
-      startAudioOff: true,
+      startAudioOff: startAudioOff,
     });
 
     // Away we go...
@@ -127,7 +129,13 @@ export default function App() {
   }
 
   if (state === "connected") {
-    return <Session onLeave={() => leave()} openMic={isOpenMic} />;
+    return (
+      <Session
+        onLeave={() => leave()}
+        openMic={isOpenMic}
+        startAudioOff={startAudioOff}
+      />
+    );
   }
 
   if (state !== "idle") {
@@ -139,6 +147,13 @@ export default function App() {
             <p> Please configure your microphone and speakers below</p>
           </div>
           <DeviceSelect />
+          <div>
+            Join with mic muted:
+            <Switch
+              checked={startAudioOff}
+              onCheckedChange={() => setStartAudioOff(!startAudioOff)}
+            />
+          </div>
           <div className="card-footer">
             <Button
               key="start"

@@ -10,20 +10,22 @@
 
 #root {
   margin: 0 auto;
-  padding: 1rem;
   text-align: center;
   display: flex;
-  flex-direction: column;
+  flex-flow: row nowrap;
   flex: 1;
 
-  @media (--screen-small) {
-    padding: 0.5rem;
+  > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
   }
 }
 
 html {
   font-size: 16px;
-  @media (--screen-small) {
+
+  @media (max-width: 768px) {
     font-size: 14px;
   }
 }
@@ -59,11 +61,12 @@ main {
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 1rem 0;
+  padding: var(--site-padding);
+  padding-top: 0px;
+}
 
-  @media (--screen-small) {
-    padding: 0.5rem 0;
-  }
+aside#tray {
+  overflow-x: hidden;
 }
 
 /* Dialog (modal) */

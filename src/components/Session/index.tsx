@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { DailyAudio, useAppMessage, useDaily } from "@daily-co/daily-react";
 import { LineChart, LogOut, Settings } from "lucide-react";
 
@@ -15,12 +16,14 @@ import styles from "./styles.module.css";
 interface SessionProps {
   onLeave: () => void;
   openMic?: boolean;
+  startAudioOff?: boolean;
 }
 
 const stats_aggregator: StatsAggregator = new StatsAggregator();
 
 export const Session: React.FC<SessionProps> = ({
   onLeave,
+  startAudioOff = false,
   openMic = false,
 }) => {
   const daily = useDaily();
@@ -30,7 +33,7 @@ export const Session: React.FC<SessionProps> = ({
   const [talkState, setTalkState] = useState<"user" | "assistant" | "open">(
     openMic ? "open" : "assistant"
   );
-  const [muted, setMuted] = useState(false);
+  const [muted, setMuted] = useState(startAudioOff);
 
   function toggleMute() {
     if (!daily) return;
@@ -87,7 +90,11 @@ export const Session: React.FC<SessionProps> = ({
         <Button onClick={() => setShowDevices(false)}>Close</Button>
       </dialog>
 
-      {showStats && <Stats statsAggregator={stats_aggregator} />}
+      {showStats &&
+        createPortal(
+          <Stats statsAggregator={stats_aggregator} />,
+          document.getElementById("tray")!
+        )}
 
       <div className={styles.agentContainer}>
         <Agent />

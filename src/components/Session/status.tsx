@@ -7,6 +7,7 @@ const statusVariants = cva(styles.statusIndicator, {
     variant: {
       default: styles.statusDefault,
       connecting: styles.statusOrange,
+      loading: styles.statusDefault,
       connected: styles.statusGreen,
     },
   },
@@ -22,6 +23,7 @@ export interface StatusProps
 const status_text = {
   default: "Idle",
   connecting: "Connecting",
+  loading: "Loading",
   connected: "Connected",
 };
 

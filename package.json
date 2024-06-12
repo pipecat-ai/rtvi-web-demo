@@ -12,16 +12,20 @@
   "dependencies": {
     "@daily-co/daily-js": "^0.64.0",
     "@daily-co/daily-react": "^0.19.0",
+    "@radix-ui/react-switch": "^1.0.3",
     "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
     "framer-motion": "^11.2.10",
     "lucide-react": "^0.378.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-sparklines": "^1.7.0",
     "recoil": "^0.7.7"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/react-sparklines": "^1.7.5",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
@@ -31,7 +35,6 @@
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "i": "^0.3.7",
     "npm": "^10.8.0",
-    "postcss-custom-media": "^10.0.6",
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
     "vite-plugin-webfont-dl": "^3.9.4"

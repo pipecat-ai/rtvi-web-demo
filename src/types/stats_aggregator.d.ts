@@ -1,28 +1,34 @@
-type Metric = "ttfb";
+type Stat = [string, string, number, number];
 
-type Stat = [string, Metric, number, number];
-type TransformedStats = {
-  [key: string]: {
-    metric: Metric;
-    value: number;
-    timeseries: number[] | null;
-    median: number | null;
-    high: number | null;
-    low: number | null;
-  };
-};
+interface MetricValue {
+  latest: number;
+  timeseries: number[];
+  median: number | null;
+  high: number | null;
+  low: number | null;
+}
+
+interface Metric {
+  [metric: string]: MetricValue;
+}
+
+interface StatsMap {
+  [service: string]: Metric;
+}
 
 interface IStatsAggregator {
-  stats: Stat[];
+  statsMap: StatsMap;
+  hasNewStats: boolean;
 
   addStat(stat: Stat): void;
-  transformStats(): TransformedStats;
+  getStats(): StatsMap | null;
 }
 
 declare class StatsAggregator implements IStatsAggregator {
-  stats: Stat[];
+  statsMap: StatsMap;
+  private hasNewStats: boolean;
 
   constructor();
   addStat(stat: Stat): void;
-  transformStats(): TransformedStats;
+  getStats(): StatsMap | null;
 }

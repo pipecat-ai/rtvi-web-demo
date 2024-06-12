@@ -67,7 +67,11 @@
   --card-md: 560px;
   --card-lg: 640px;
 
-  @custom-media --screen-small (max-width: 768px);
+  --layout-aside-width: 320px;
 
-  --screen-sm: 768px;
+  --site-padding: 1rem;
+
+  @media (max-width: 768px) {
+    --site-padding: 0.5rem;
+  }
 }

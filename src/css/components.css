@@ -128,6 +128,50 @@ input::placeholder {
   color: var(--color-gray-400);
 }
 
+.switch {
+  box-sizing: border-box;
+  display: inline-flex;
+  padding: 0px;
+  height: 25px;
+  width: 42px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 999px;
+  align-items: center;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+
+  &:focus-visible {
+    outline-offset: none;
+  }
+
+  &[data-state="checked"] {
+    background-color: var(--color-green-500);
+  }
+  &[data-state="unchecked"] {
+    background-color: var(--color-gray-300);
+  }
+}
+
+.switch-thumb {
+  pointer-events: none;
+  display: block;
+  height: 21px;
+  width: 21px;
+  border-radius: 999px;
+  background-color: white;
+  will-change: transform;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+  transition: transform 100ms;
+
+  &[data-state="checked"] {
+    transform: translateX(17px);
+  }
+  &[data-state="unchecked"] {
+    transform: translateX(0px);
+  }
+}
+
 /* Alerts */
 
 .alert {
@@ -179,7 +223,7 @@ input::placeholder {
   background-origin: border-box;
   border: 1px solid transparent;
 
-  @media (--screen-small) {
+  @media (max-width: 768px) {
     max-width: none;
     width: 100%;
   }
@@ -206,10 +250,9 @@ input::placeholder {
     max-width: var(--card-lg);
   }
 
-  @media (--screen-small) {
+  @media (max-width: 768px) {
     max-width: none;
-    padding: 0.5rem;
-    gap: 1rem;
+    padding: 0.75rem;
   }
 }
 
@@ -230,7 +273,7 @@ input::placeholder {
     margin-top: 1rem;
   }
 
-  @media (--screen-small) {
+  @media (max-width: 768px) {
     > p {
       margin-top: 0.5rem;
     }
@@ -244,7 +287,7 @@ input::placeholder {
   justify-content: center;
   flex: 1;
 
-  @media (--screen-small) {
+  @media (max-width: 768px) {
     button {
       width: 100%;
     }
@@ -257,6 +300,7 @@ input::placeholder {
   align-self: flex-start;
   align-items: center;
   gap: 2rem;
+  padding: var(--site-padding);
 }
 
 .header .logo-button {

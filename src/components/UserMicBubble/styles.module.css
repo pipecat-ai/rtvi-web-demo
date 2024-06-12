@@ -94,8 +94,8 @@
   border-radius: 999px;
   transition: all 0.1s ease;
   transform: scale(0);
-  opacity: 0.4;
-  background-color: var(--color-green-200);
+  opacity: 0.5;
+  background-color: var(--color-green-300);
 }
 
 /* Transcript */

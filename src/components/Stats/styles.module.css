@@ -1,10 +1,16 @@
 .container {
   display: flex;
-  flex-flow: row;
+  flex-flow: column wrap;
   gap: 1.5rem;
+  width: var(--layout-aside-width);
+  box-sizing: border-box;
+  border-left: 1px solid var(--color-gray-200);
+  height: 100%;
+  font-size: var(--font-size-sm);
 
   @media (max-width: 768px) {
     gap: 1rem;
+    padding: 1rem;
   }
 }
 
@@ -22,4 +28,10 @@
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
   text-transform: uppercase;
+}
+
+.statsHeader {
+  background-color: var(--color-gray-100);
+  font-weight: 600;
+  padding: 8px 0;
 }

@@ -9,11 +9,14 @@ import "./css/global.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Header />
-    <main>
-      <DailyProvider>
-        <App />
-      </DailyProvider>
-    </main>
+    <div>
+      <Header />
+      <main>
+        <DailyProvider>
+          <App />
+        </DailyProvider>
+      </main>
+    </div>
+    <aside id="tray" />
   </React.StrictMode>
 );

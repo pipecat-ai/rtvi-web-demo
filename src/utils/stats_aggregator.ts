@@ -1,51 +1,48 @@
-type Stats = Stat[];
-
 class StatsAggregator implements IStatsAggregator {
-  stats: Stats;
+  statsMap: StatsMap = {};
+  private hasNewStats = false;
 
-  constructor() {
-    this.stats = [];
-  }
+  constructor() {}
 
   addStat(stat: Stat) {
-    this.stats.push(stat);
+    const [service, metric, value] = stat;
+    if (!service || !metric || value <= 0) {
+      return;
+    }
+
+    // Ensure the service exists in statsMap
+    if (!this.statsMap[service]) {
+      this.statsMap[service] = {};
+    }
+
+    const timeseries = [
+      ...(this.statsMap[service][metric]?.timeseries || []),
+      value,
+    ];
+
+    const median =
+      timeseries.reduce((acc, curr) => acc + curr, 0) / timeseries.length;
+    const high = timeseries.reduce((acc, curr) => Math.max(acc, curr), 0);
+    const low = timeseries.reduce((acc, curr) => Math.min(acc, curr), Infinity);
+
+    this.statsMap[service][metric] = {
+      latest: value,
+      timeseries,
+      median,
+      high,
+      low,
+    };
+
+    this.hasNewStats = true;
   }
 
-  transformStats(): TransformedStats {
-    // Create a mapping unique to each service
-    const serviceMap: TransformedStats = this.stats.reduce(
-      (acc: TransformedStats, stat: Stat) => {
-        acc[stat[0]] = {
-          metric: stat[1],
-          value: stat[2],
-          timeseries: [],
-          median: 0,
-          high: 0,
-          low: 0,
-        };
-        return acc;
-      },
-      {} as TransformedStats
-    );
-
-    // Sort stats by time
-    this.stats.sort((a, b) => a[3] - b[3]);
-
-    // Add the latest value for each service
-    this.stats.forEach((stat) => {
-      const [service, metric, value] = stat;
-
-      serviceMap[service] = {
-        metric,
-        value,
-        timeseries: [],
-        median: 0,
-        high: 0,
-        low: 0,
-      };
-    });
-
-    return serviceMap;
+  getStats(): StatsMap | null {
+    if (this.hasNewStats) {
+      this.hasNewStats = false;
+      return this.statsMap;
+    } else {
+      return null;
+    }
   }
 }
 
