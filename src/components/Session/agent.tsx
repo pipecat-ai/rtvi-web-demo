@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useActiveSpeakerId, useParticipantIds } from "@daily-co/daily-react";
+import clsx from "clsx";
 import { Loader2 } from "lucide-react";
 
 import Transcript from "../Transcript";
@@ -24,9 +25,14 @@ export const Agent: React.FC = () => {
     }
   }, [activeSpeakerId, participantIds.length]);
 
+  const cx = clsx(
+    styles.agentWindow,
+    agentState === "connected" && styles.connected
+  );
+
   return (
     <div className={styles.agent}>
-      <div className={`${styles.agentWindow} ${agentState}`}>
+      <div className={cx}>
         {agentState === "connecting" ? (
           <span className={styles.loader}>
             <Loader2 size={32} className="animate-spin" />

@@ -40,10 +40,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 2.5s;
+  overflow: hidden;
 
   @media (max-width: 768px) {
     min-width: 0;
   }
+}
+
+.connected {
+  background: var(--color-gray-600);
 }
 
 .agentFooter {
@@ -153,4 +159,32 @@
   border-radius: 99px;
   color: white;
   position: absolute;
+}
+
+.face {
+  animation: faceAppear 1.5s ease-out forwards;
+  position: relative;
+  z-index: 2;
+}
+
+.faceBubble {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  z-index: 1;
+  background-color: var(--color-gray-700);
+  transition: transform 0.1s ease;
+  transform: scale(0.15);
+}
+
+@keyframes faceAppear {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

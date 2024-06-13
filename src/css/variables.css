@@ -73,5 +73,8 @@
 
   @media (max-width: 768px) {
     --site-padding: 0.5rem;
+    --card-sm: 100%;
+    --card-md: 100%;
+    --card-lg: 100%;
   }
 }

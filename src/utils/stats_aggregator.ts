@@ -1,6 +1,6 @@
 class StatsAggregator implements IStatsAggregator {
   statsMap: StatsMap = {};
-  private hasNewStats = false;
+  hasNewStats = false;
 
   constructor() {}
 

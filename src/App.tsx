@@ -23,7 +23,7 @@ type State =
   | "error";
 
 const status_text = {
-  configuring: "Start",
+  configuring: "Let's go!",
   requesting_agent: "Requesting agent...",
   requesting_token: "Requesting token...",
   connecting: "Connecting to room...",
@@ -111,6 +111,10 @@ export default function App() {
       startAudioOff: startAudioOff,
     });
 
+    // Get room info
+    const room_data = await daily.room();
+    console.log(room_data);
+
     // Away we go...
     setState("connected");
   }
@@ -141,18 +145,20 @@ export default function App() {
   if (state !== "idle") {
     return (
       <div className="card card-appear">
-        <div className="card-inner">
+        <div className="card-inner card-md">
           <div className="card-header">
             <h1>Configure your devices</h1>
             <p> Please configure your microphone and speakers below</p>
           </div>
           <DeviceSelect />
-          <div>
-            Join with mic muted:
-            <Switch
-              checked={startAudioOff}
-              onCheckedChange={() => setStartAudioOff(!startAudioOff)}
-            />
+          <div className="config-options">
+            <div className="config-option">
+              <label>Join with mic muted:</label>
+              <Switch
+                checked={startAudioOff}
+                onCheckedChange={() => setStartAudioOff(!startAudioOff)}
+              />
+            </div>
           </div>
           <div className="card-footer">
             <Button
@@ -171,10 +177,10 @@ export default function App() {
 
   return (
     <div className="card card-appear">
-      <div className="card-inner">
+      <div className="card-inner card-md">
         <div className="card-header">
           <h1>Pipecat {import.meta.env.VITE_APP_TITLE}</h1>
-          <p>Review and configure your bot experience</p>
+          <p>Check configuration below</p>
         </div>
 
         {import.meta.env.DEV &&

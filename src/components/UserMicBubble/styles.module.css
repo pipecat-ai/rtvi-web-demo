@@ -7,7 +7,7 @@
   margin: auto;
 }
 
-.micIcon {
+.bubble {
   position: relative;
   cursor: pointer;
   box-sizing: border-box;
@@ -24,18 +24,13 @@
   transition: all 0.5s ease;
   border: 6px solid color-mix(in srgb, var(--color-gray-300), transparent 70%);
   outline: 6px solid color-mix(in srgb, var(--color-gray-300), transparent 70%);
+  outline-offset: 0px;
+
   background-color: var(--color-gray-500);
   background-image: radial-gradient(
     var(--color-gray-300),
     var(--color-gray-400)
   );
-}
-
-.micIcon svg {
-  position: relative;
-  z-index: 20;
-  opacity: 0.3;
-  transition: opacity 0.5s ease;
 }
 
 @keyframes pulse {
@@ -53,7 +48,17 @@
   }
 }
 
-.micIconOpen {
+.icon {
+  position: relative;
+  z-index: 20;
+  opacity: 0.3;
+  transition: opacity 0.5s ease;
+  width: 42px;
+  height: 42px;
+  line-height: 1;
+}
+
+.canTalk {
   background-color: var(--color-gray-500);
   background-image: radial-gradient(
     var(--color-gray-500),
@@ -61,22 +66,16 @@
   );
   border: 6px solid color-mix(in srgb, var(--color-gray-200), transparent 60%);
   outline: 6px solid color-mix(in srgb, var(--color-gray-400), transparent 70%);
+  outline-offset: 4px;
+
+  .icon {
+    opacity: 1;
+  }
 }
 
-.micIconActive {
-  background-color: var(--color-green-500);
-  background-image: radial-gradient(
-    var(--color-green-500),
-    var(--color-green-600)
-  );
-  border: 6px solid color-mix(in srgb, var(--color-green-200), transparent 60%);
-  outline: 6px solid color-mix(in srgb, var(--color-green-400), transparent 70%);
-  animation: pulse 2s infinite ease-in-out;
-}
-
-.micIconOpen svg,
-.micIconActive svg {
-  opacity: 1;
+.blocked {
+  pointer-events: none;
+  cursor: disabled;
 }
 
 .muted {

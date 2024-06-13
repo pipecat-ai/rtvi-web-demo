@@ -5,6 +5,10 @@ import {
   useParticipantIds,
 } from "@daily-co/daily-react";
 
+import FaceSVG from "./face.svg";
+
+import styles from "./styles.module.css";
+
 export const Avatar: React.FC = () => {
   const remoteParticipantId = useParticipantIds({ filter: "remote" })[0];
   const audioTrack = useAudioTrack(remoteParticipantId);
@@ -14,24 +18,15 @@ export const Avatar: React.FC = () => {
     audioTrack?.persistentTrack,
     useCallback((volume) => {
       if (!volRef.current) return;
-      volRef.current.style.transform = `scale(${Math.max(0.15, volume)})`;
+      volRef.current.style.transform = `scale(${Math.max(0.15, 1 + volume)})`;
     }, [])
   );
 
   return (
-    <div>
-      <div className="vol" ref={volRef} />
-      <style>{`
-        .vol {
-          border: 2px solid black;
-          border-radius: 100%;
-          height: 64px;
-          transition: transform 0.1s ease;
-          transform: scale(0.15);
-          width: 64px;
-        }
-      `}</style>
-    </div>
+    <>
+      <img src={FaceSVG} alt="Face" className={styles.face} />
+      <div className={styles.faceBubble} ref={volRef} />
+    </>
   );
 };
 

@@ -1,10 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Sparklines,
   SparklinesBars,
   SparklinesLine,
   SparklinesReferenceLine,
 } from "react-sparklines";
+import { DailyEventObjectAppMessage } from "@daily-co/daily-js";
+import { useAppMessage } from "@daily-co/daily-react";
+
+import { Button } from "../button";
 
 import styles from "./styles.module.css";
 
@@ -21,7 +25,17 @@ const Stats = React.memo(
     const [currentStats, setCurrentStats] = useState<StatsMap>(
       statsAggregator.statsMap
     );
+    const [ping, setPing] = useState<number | null>(null);
     const intervalRef = useRef(0);
+
+    const sendAppMessage = useAppMessage({
+      onAppMessage: useCallback((ev: DailyEventObjectAppMessage) => {
+        // Aggregate metrics from pipecat
+        if (ev.data?.type === "latency-pong-pipeline-delivery") {
+          setPing(Date.now() - ev.data.ts);
+        }
+      }, []),
+    });
 
     useEffect(() => {
       intervalRef.current = setInterval(() => {
@@ -40,15 +54,23 @@ const Stats = React.memo(
 
     useEffect(() => () => clearInterval(intervalRef.current), []); // Cleanup
 
+    function sendPingRequest() {
+      // Send ping to get latency
+      sendAppMessage({ "latency-ping": { ts: Date.now() } }, "*");
+    }
+
     const sumOfServices = Object.values(currentStats).reduce(
       (acc, service) => acc + (service.ttfb.latest || 0),
       0
     );
 
+    // Calculate delta between ping and pong ts in milliseconds
+
     return (
       <div className={styles.container}>
         <StatsHeader title="Network Stats" />
-        TBC
+        <Button onClick={sendPingRequest}>Send Ping</Button>
+        {ping} ms
         <StatsHeader title="Service Stats" />
         Sum: {sumOfServices?.toFixed(3)}s
         {currentStats &&

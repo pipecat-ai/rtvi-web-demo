@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { DailyAudio, useAppMessage, useDaily } from "@daily-co/daily-react";
+import {
+  DailyAudio,
+  useActiveSpeakerId,
+  useAppMessage,
+  useDaily,
+} from "@daily-co/daily-react";
 import { LineChart, LogOut, Settings } from "lucide-react";
 
 import StatsAggregator from "../../utils/stats_aggregator";
@@ -27,6 +32,7 @@ export const Session: React.FC<SessionProps> = ({
   openMic = false,
 }) => {
   const daily = useDaily();
+  const [hasStarted, setHasStarted] = useState(false);
   const [showDevices, setShowDevices] = useState(false);
   const [showStats, setShowStats] = useState(false);
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -34,6 +40,7 @@ export const Session: React.FC<SessionProps> = ({
     openMic ? "open" : "assistant"
   );
   const [muted, setMuted] = useState(startAudioOff);
+  const activeSpeakerId = useActiveSpeakerId({ ignoreLocal: true });
 
   function toggleMute() {
     if (!daily) return;
@@ -46,6 +53,13 @@ export const Session: React.FC<SessionProps> = ({
 
     setMuted(!muted);
   }
+
+  useEffect(() => {
+    if (hasStarted || activeSpeakerId === null) {
+      return;
+    }
+    setHasStarted(true);
+  }, [hasStarted, activeSpeakerId]);
 
   useAppMessage({
     onAppMessage: (e) => {
@@ -100,7 +114,7 @@ export const Session: React.FC<SessionProps> = ({
         <Agent />
         <UserMicBubble
           openMic={openMic}
-          active={talkState !== "assistant"}
+          active={hasStarted && talkState !== "assistant"}
           muted={muted}
           handleMute={() => toggleMute()}
         />

@@ -18,6 +18,7 @@
 .transcript {
   font-weight: 600;
   font-size: var(--font-size-sm);
+  max-width: 320px;
 }
 
 .transcript span {

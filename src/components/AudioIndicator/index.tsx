@@ -1,9 +1,9 @@
+import { useCallback, useRef } from "react";
 import {
   useAudioLevel,
   useAudioTrack,
   useLocalSessionId,
 } from "@daily-co/daily-react";
-import { useCallback, useRef } from "react";
 
 import styles from "./styles.module.css";
 

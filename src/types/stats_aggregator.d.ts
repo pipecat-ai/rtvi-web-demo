@@ -26,7 +26,7 @@ interface IStatsAggregator {
 
 declare class StatsAggregator implements IStatsAggregator {
   statsMap: StatsMap;
-  private hasNewStats: boolean;
+  hasNewStats: boolean;
 
   constructor();
   addStat(stat: Stat): void;

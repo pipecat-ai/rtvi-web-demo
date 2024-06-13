@@ -240,13 +240,13 @@ input::placeholder {
   flex-flow: column wrap;
   max-width: var(--card-md);
 
-  &.card-small {
+  &.card-sm {
     max-width: var(--card-sm);
   }
-  &.card-medium {
+  &.card-md {
     max-width: var(--card-md);
   }
-  &.card-large {
+  &.card-lg {
     max-width: var(--card-lg);
   }
 
@@ -286,12 +286,27 @@ input::placeholder {
   gap: 1rem;
   justify-content: center;
   flex: 1;
+  border-top: 1px solid var(--color-gray-200);
+  padding-top: 2rem;
 
   @media (max-width: 768px) {
     button {
       width: 100%;
     }
   }
+}
+
+.config-options {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 0.75rem;
+}
+.config-option {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* Header */

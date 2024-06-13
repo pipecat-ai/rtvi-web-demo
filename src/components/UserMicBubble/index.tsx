@@ -1,14 +1,13 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef } from "react";
 import {
-  useAppMessage,
   useAudioLevel,
   useAudioTrack,
   useLocalSessionId,
 } from "@daily-co/daily-react";
-import { Mic, MicOff } from "lucide-react";
+import clsx from "clsx";
+import { Mic, MicOff, Pause } from "lucide-react";
 
-import { TypewriterEffect } from "./typewriter";
-
+//import { TypewriterEffect } from "./typewriter";
 import styles from "./styles.module.css";
 
 const AudioIndicatorBubble: React.FC = () => {
@@ -42,14 +41,14 @@ interface Props {
 
 export default function UserMicBubble({
   active,
-  openMic = false,
+  //openMic = false,
   muted = false,
   handleMute,
 }: Props) {
-  const [transcription, setTranscription] = useState<string[]>([]);
+  //const [transcription, setTranscription] = useState<string[]>([]);
 
   //@TODO: wait for track started, incase initial transcription is missed
-  useAppMessage({
+  /*useAppMessage({
     onAppMessage: (e) => {
       if (!muted && e.fromId && e.fromId === "transcription") {
         if (e.data.user_id === "" && e.data.is_final) {
@@ -57,35 +56,47 @@ export default function UserMicBubble({
         }
       }
     },
-  });
+  });*/
 
-  useEffect(() => {
+  /*useEffect(() => {
     //if (active) return;
-    //const t = setTimeout(() => setTranscription([]), 4000);
+    const t = setTimeout(() => setTranscription([]), 4000);
     //return () => clearTimeout(t);
-  }, []);
+  }, []);*/
 
-  const cx = muted
+  const canTalk = !muted && active;
+
+  /*const cx = muted
     ? styles.muted
-    : openMic
+    : canTalk
     ? styles.micIconOpen
-    : active && styles.micIconActive;
+    : active && styles.micIconActive;*/
+
+  const cx = clsx(
+    muted && active && styles.muted,
+    !active && styles.blocked,
+    canTalk && styles.canTalk
+  );
 
   return (
     <div className={`${styles.bubbleContainer}`}>
-      <div className={`${styles.micIcon} ${cx}`} onClick={() => handleMute()}>
-        {muted || (!openMic && !active) ? (
-          <MicOff size={42} />
-        ) : (
-          <Mic size={42} />
-        )}
-        {!muted && (openMic || active) && <AudioIndicatorBubble />}
+      <div className={`${styles.bubble} ${cx}`} onClick={() => handleMute()}>
+        <div className={styles.icon}>
+          {!active ? (
+            <Pause size={42} />
+          ) : canTalk ? (
+            <Mic size={42} />
+          ) : (
+            <MicOff size={42} />
+          )}
+        </div>
+        {canTalk && <AudioIndicatorBubble />}
       </div>
-      {!muted && (
+      {/*!muted && (
         <footer className={`${styles.transcript} ${active ? "active" : ""}`}>
           <TypewriterEffect words={transcription} />
         </footer>
-      )}
+      )}*/}
     </div>
   );
 }

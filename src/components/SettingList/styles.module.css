@@ -23,10 +23,6 @@
     background-color: white;
   }
 
-  svg {
-    line-height: 1;
-  }
-
   > span:first-child {
     font-weight: 500;
     flex-shrink: 0;
@@ -34,12 +30,14 @@
   }
 
   > span:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     font-family: var(--font-mono);
     color: var(--color-gray-600);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: right;
   }
 }
 

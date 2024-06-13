@@ -3,8 +3,8 @@ import { DailyMeetingState } from "@daily-co/daily-js";
 import { useDaily, useDevices } from "@daily-co/daily-react";
 import { Mic, Speaker } from "lucide-react";
 
-import { AudioIndicatorBar } from "../AudioIndicator";
 import { Alert } from "../alert";
+import { AudioIndicatorBar } from "../AudioIndicator";
 
 import styles from "./styles.module.css";
 
