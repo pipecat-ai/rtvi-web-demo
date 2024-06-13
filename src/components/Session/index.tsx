@@ -5,6 +5,7 @@ import {
   useActiveSpeakerId,
   useAppMessage,
   useDaily,
+  useMeetingState,
 } from "@daily-co/daily-react";
 import { LineChart, LogOut, Settings } from "lucide-react";
 
@@ -41,6 +42,7 @@ export const Session: React.FC<SessionProps> = ({
   );
   const [muted, setMuted] = useState(startAudioOff);
   const activeSpeakerId = useActiveSpeakerId({ ignoreLocal: true });
+  const meetingState = useMeetingState();
 
   function toggleMute() {
     if (!daily) return;
@@ -53,6 +55,12 @@ export const Session: React.FC<SessionProps> = ({
 
     setMuted(!muted);
   }
+
+  useEffect(() => {
+    if (meetingState === "error") {
+      onLeave();
+    }
+  }, [meetingState, onLeave]);
 
   useEffect(() => {
     if (hasStarted || activeSpeakerId === null) {

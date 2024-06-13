@@ -18,7 +18,7 @@ export const Avatar: React.FC = () => {
     audioTrack?.persistentTrack,
     useCallback((volume) => {
       if (!volRef.current) return;
-      volRef.current.style.transform = `scale(${Math.max(0.15, 1 + volume)})`;
+      volRef.current.style.transform = `scale(${Math.max(1, 1 + volume)})`;
     }, [])
   );
 

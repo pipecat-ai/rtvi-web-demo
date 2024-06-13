@@ -21,10 +21,11 @@
   align-items: center;
   margin: 0 auto;
   z-index: 20;
-  transition: all 0.5s ease;
+  transition: all 0.5s ease, opacity 2s ease;
   border: 6px solid color-mix(in srgb, var(--color-gray-300), transparent 70%);
   outline: 6px solid color-mix(in srgb, var(--color-gray-300), transparent 70%);
   outline-offset: 0px;
+  opacity: 0.5;
 
   background-color: var(--color-gray-500);
   background-image: radial-gradient(
@@ -59,6 +60,7 @@
 }
 
 .canTalk {
+  opacity: 1;
   background-color: var(--color-gray-500);
   background-image: radial-gradient(
     var(--color-gray-500),
@@ -79,6 +81,7 @@
 }
 
 .muted {
+  opacity: 1;
   background-color: var(--color-red-500);
   background-image: radial-gradient(var(--color-red-500), var(--color-red-600));
   border: 6px solid color-mix(in srgb, var(--color-red-200), transparent 60%);

@@ -311,12 +311,13 @@ input::placeholder {
 
 /* Header */
 .header {
+  width: 100%;
   box-sizing: border-box;
   display: flex;
   align-self: flex-start;
   align-items: center;
   gap: 2rem;
-  margin: var(--site-padding);
+  padding: var(--site-padding);
 }
 
 .header .logo-button {

@@ -1,4 +1,6 @@
-export const fetch_meeting_token = async (roomUrl: string) => {
+export const fetch_meeting_token = async (roomUrl: string | null) => {
+  if (!roomUrl) return "";
+
   const roomName = roomUrl?.split("/").pop();
   const req = await fetch(
     `${
@@ -24,7 +26,10 @@ export const fetch_meeting_token = async (roomUrl: string) => {
   return data;
 };
 
-export const fetch_start_agent = async (roomUrl: string, serverUrl: string) => {
+export const fetch_start_agent = async (
+  roomUrl: string | null,
+  serverUrl: string
+) => {
   const req = await fetch(`${serverUrl}start_bot`, {
     method: "POST",
     headers: {

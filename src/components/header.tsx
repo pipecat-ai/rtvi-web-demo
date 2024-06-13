@@ -1,3 +1,4 @@
+import ExpiryTimer from "./ExpiryTimer";
 import Logo from "./logo";
 
 function Header() {
@@ -15,6 +16,8 @@ function Header() {
           Discord
         </a>
       </nav>
+
+      <ExpiryTimer />
     </header>
   );
 }

@@ -37,6 +37,7 @@ if (!serverUrl.endsWith("/")) serverUrl += "/";
 const roomQs = new URLSearchParams(window.location.search).get("room_url");
 const checkRoomUrl = (url: string | null): boolean =>
   !!(url && /^(https?:\/\/[^.]+(\.staging)?\.daily\.co\/[^/]+)$/.test(url));
+const autoRoomCreation = import.meta.env.VITE_MANUAL_ROOM_ENTRY ? false : true;
 
 // Mic mode
 const isOpenMic = import.meta.env.VITE_OPEN_MIC ? true : false;
@@ -53,7 +54,7 @@ export default function App() {
   );
 
   function handleRoomUrl() {
-    if (checkRoomUrl(roomUrl)) {
+    if (checkRoomUrl(roomUrl) || autoRoomCreation) {
       setRoomError(false);
       setState("configuring");
     } else {
@@ -62,7 +63,7 @@ export default function App() {
   }
 
   async function start() {
-    if (!daily || !roomUrl) return;
+    if (!daily || (!roomUrl && !autoRoomCreation)) return;
 
     let data;
 
@@ -110,10 +111,6 @@ export default function App() {
       videoSource: false,
       startAudioOff: startAudioOff,
     });
-
-    // Get room info
-    const room_data = await daily.room();
-    console.log(room_data);
 
     // Away we go...
     setState("connected");

@@ -175,7 +175,6 @@
   z-index: 1;
   background-color: var(--color-gray-700);
   transition: transform 0.1s ease;
-  transform: scale(0.15);
 }
 
 @keyframes faceAppear {
