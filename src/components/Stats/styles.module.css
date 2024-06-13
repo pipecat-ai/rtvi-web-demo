@@ -14,24 +14,62 @@
   }
 }
 
-.serviceStat {
+.statsContainer {
   display: flex;
   flex-flow: column wrap;
-  font-size: var(--font-size-sm);
+  gap: 2rem;
+
+  padding: 0 1rem;
 }
 
 .serviceName {
   font-weight: 500;
 }
 
-.value {
+.statValue {
+  line-height: 1;
   font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
   text-transform: uppercase;
+  font-size: var(--font-size-xs);
+  display: inline-flex;
+  flex-flow: row nowrap;
+  gap: 5px;
+
+  span {
+    line-height: 1;
+  }
+
+  span:global(.bold) {
+    font-weight: bold;
+  }
+  sub {
+    vertical-align: baseline;
+    margin-left: 2px;
+    font-size: 65%;
+  }
 }
 
 .statsHeader {
   background-color: var(--color-gray-100);
   font-weight: 600;
   padding: 8px 0;
+}
+
+.serviceStat {
+  font-size: var(--font-size-sm);
+}
+
+.chart {
+  width: auto;
+  height: 80px;
+  line-height: 1;
+}
+
+.rangeRow {
+  display: flex;
+  flex-flow: row nowrap;
+  font-size: 11px;
+  font-family: var(--font-mono);
+  justify-content: space-between;
+  width: 100%;
 }

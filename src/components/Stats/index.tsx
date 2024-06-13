@@ -59,51 +59,74 @@ const Stats = React.memo(
       sendAppMessage({ "latency-ping": { ts: Date.now() } }, "*");
     }
 
-    const sumOfServices = Object.values(currentStats).reduce(
+    /*const sumOfServices = Object.values(currentStats).reduce(
       (acc, service) => acc + (service.ttfb.latest || 0),
       0
-    );
+    );*/
 
     // Calculate delta between ping and pong ts in milliseconds
 
     return (
       <div className={styles.container}>
         <StatsHeader title="Network Stats" />
-        <Button onClick={sendPingRequest}>Send Ping</Button>
-        {ping} ms
+        <div className={styles.statsContainer}>
+          {ping || "--"} ms
+          <Button onClick={sendPingRequest}>Send Ping</Button>
+        </div>
         <StatsHeader title="Service Stats" />
-        Sum: {sumOfServices?.toFixed(3)}s
-        {currentStats &&
-          Object.entries(currentStats).map(([service, data]) => {
-            return (
-              <div key={service}>
-                <div className={styles.serviceStat}>
-                  <div className={styles.serviceName}>{service}</div>
-                  <div className={styles.value}>
-                    Latest: {data.ttfb?.latest?.toFixed(3)}
-                    <br />
-                    High: {data.ttfb?.high?.toFixed(3)}
-                    <br />
-                    Low: {data.ttfb?.low?.toFixed(3)}
-                    <br />
-                    Median: {data.ttfb?.median?.toFixed(3)}
-                    <br />
+        <div className={styles.statsContainer}>
+          {currentStats &&
+            Object.entries(currentStats).map(([service, data]) => {
+              return (
+                <div key={service} className={styles.serviceStat}>
+                  <header>
+                    <div className={styles.serviceName}>{service}</div>
+                    <div className={styles.statValue}>
+                      Latest:
+                      <span className="bold">
+                        {data.ttfb?.latest?.toFixed(3)}
+                        <sub>/s</sub>
+                      </span>
+                    </div>
+                  </header>
+                  <div className={styles.chart}>
+                    <Sparklines data={data.ttfb?.timeseries} limit={20}>
+                      <SparklinesBars
+                        style={{ fill: "#41c3f9", fillOpacity: ".25" }}
+                      />
+                      <SparklinesLine
+                        style={{ stroke: "#41c3f9", fill: "none" }}
+                      />
+                      <SparklinesReferenceLine type="mean" />
+                    </Sparklines>
                   </div>
+                  <footer className={styles.rangeRow}>
+                    <div className={styles.statValue}>
+                      H
+                      <span>
+                        {data.ttfb?.high?.toFixed(3)}
+                        <sub>/s</sub>
+                      </span>
+                    </div>
+                    <div className={styles.statValue}>
+                      M:
+                      <span>
+                        {data.ttfb?.median?.toFixed(3)}
+                        <sub>/s</sub>
+                      </span>
+                    </div>
+                    <div className={styles.statValue}>
+                      L:
+                      <span>
+                        {data.ttfb?.low?.toFixed(3)}
+                        <sub>/s</sub>
+                      </span>
+                    </div>
+                  </footer>
                 </div>
-                <div>
-                  <Sparklines data={data.ttfb?.timeseries} limit={20}>
-                    <SparklinesBars
-                      style={{ fill: "#41c3f9", fillOpacity: ".25" }}
-                    />
-                    <SparklinesLine
-                      style={{ stroke: "#41c3f9", fill: "none" }}
-                    />
-                    <SparklinesReferenceLine type="mean" />
-                  </Sparklines>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+        </div>
       </div>
     );
   },
