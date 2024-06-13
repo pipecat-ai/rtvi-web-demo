@@ -13,6 +13,7 @@
     "@daily-co/daily-js": "^0.64.0",
     "@daily-co/daily-react": "^0.19.0",
     "@radix-ui/react-switch": "^1.0.3",
+    "braces": "^3.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "framer-motion": "^11.2.10",
