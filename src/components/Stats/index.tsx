@@ -8,7 +8,7 @@ import {
 import { DailyEventObjectAppMessage } from "@daily-co/daily-js";
 import { useAppMessage } from "@daily-co/daily-react";
 
-import { Button } from "../button";
+import { Button } from "../ui/button";
 
 import styles from "./styles.module.css";
 

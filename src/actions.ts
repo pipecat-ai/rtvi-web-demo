@@ -30,7 +30,7 @@ export const fetch_start_agent = async (
   roomUrl: string | null,
   serverUrl: string
 ) => {
-  const req = await fetch(`${serverUrl}start_bot`, {
+  const req = await fetch(`${serverUrl}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

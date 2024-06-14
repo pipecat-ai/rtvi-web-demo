@@ -37,15 +37,12 @@
 @keyframes pulse {
   0% {
     outline-width: 6px;
-    @apply outline-teal-500/10;
   }
   50% {
     outline-width: 24px;
-    @apply outline-teal-500/50;
   }
   100% {
     outline-width: 6px;
-    @apply outline-teal-500/10;
   }
 }
 

@@ -2,11 +2,13 @@ import React from "react";
 import { cva, VariantProps } from "class-variance-authority";
 import { CircleAlert } from "lucide-react";
 
-const alertVariants = cva("alert", {
+import { cn } from "@/utils/tailwind";
+
+const alertVariants = cva("text-left border border-black rounded-lg p-4", {
   variants: {
     intent: {
       info: "alert-info",
-      danger: "alert-danger",
+      danger: "border-red-200 text-red-600 bg-red-50",
     },
   },
   defaultVariants: {
@@ -21,11 +23,26 @@ export interface AlertProps
 export const Alert: React.FC<AlertProps> = ({ children, intent, title }) => {
   return (
     <div className={alertVariants({ intent })}>
-      <h3>
+      <AlertTitle>
         {intent === "danger" && <CircleAlert size={18} />}
         {title}
-      </h3>
+      </AlertTitle>
       {children}
     </div>
   );
 };
+
+export const AlertTitle = React.forwardRef<
+  HTMLParagraphElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <p
+    ref={ref}
+    className={cn(
+      "text-base font-bold flex items-center gap-2 mb-2",
+      className
+    )}
+    {...props}
+  />
+));
+AlertTitle.displayName = "AlertTitle";

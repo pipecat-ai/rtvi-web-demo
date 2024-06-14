@@ -2,13 +2,21 @@ import { useState } from "react";
 import { useDaily } from "@daily-co/daily-react";
 import { ArrowRight, Loader2 } from "lucide-react";
 
-import { Alert } from "./components/alert";
-import { Button } from "./components/button";
 import { DeviceSelect } from "./components/DeviceSelect";
 import { RoomInput } from "./components/RoomInput";
 import Session from "./components/Session";
 import { SettingList } from "./components/SettingList/SettingList";
 import { Switch } from "./components/switch";
+import { Alert } from "./components/ui/alert";
+import { Button } from "./components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./components/ui/card";
 import { fetch_meeting_token, fetch_start_agent } from "./actions";
 
 type State =
@@ -173,25 +181,22 @@ export default function App() {
   }
 
   return (
-    <div className="card card-appear">
-      <div className="card-inner card-md">
-        <div className="card-header">
-          <h1>Pipecat {import.meta.env.VITE_APP_TITLE}</h1>
-          <p>Check configuration below</p>
-        </div>
-
+    <Card shadow fullWidthMobile className="animate-appear max-w-lg">
+      <CardHeader>
+        <CardTitle>Pipecat {import.meta.env.VITE_APP_TITLE}</CardTitle>
+        <CardDescription>Check configuration below</CardDescription>
+      </CardHeader>
+      <CardContent stack>
         {import.meta.env.DEV &&
-          !import.meta.env.VITE_SERVER_URL &&
-          !import.meta.env.VITE_DAILY_API_KEY && (
-            <Alert title="Missing server URL environment" intent="danger">
+          (!import.meta.env.VITE_SERVER_URL ||
+            !import.meta.env.VITE_DAILY_API_KEY) && (
+            <Alert title="Missing environment settings" intent="danger">
               <p>
                 You have not set a server URL for local development, or a Daily
                 API Key if you're bypassing starting an agent. Please set{" "}
-                <samp>VITE_SERVER_URL</samp> in <samp>.env.local</samp>.
-              </p>
-              <p>
-                Without this, the client will attempt to start the bot by
-                calling localhost on the same port.
+                <samp>VITE_SERVER_URL</samp> in <samp>.env.local</samp>. Without
+                this, the client will attempt to start the bot by calling
+                localhost on the same port.
               </p>
             </Alert>
           )}
@@ -204,16 +209,17 @@ export default function App() {
         {import.meta.env.VITE_MANUAL_ROOM_ENTRY && !roomQs && (
           <RoomInput onChange={(url) => setRoomUrl(url)} error={roomError} />
         )}
-        <div className="card-footer">
-          <Button
-            key="next"
-            disabled={!!(roomQs && !roomError)}
-            onClick={() => handleRoomUrl()}
-          >
-            Next <ArrowRight />
-          </Button>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+      <CardFooter>
+        <Button
+          fullWidthMobile
+          key="next"
+          disabled={!!(roomQs && !roomError)}
+          onClick={() => handleRoomUrl()}
+        >
+          Next <ArrowRight />
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }
