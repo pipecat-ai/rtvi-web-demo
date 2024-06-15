@@ -19,7 +19,10 @@ class VolumeMeter extends AudioWorkletProcessor {
 
   calculateRMS(inputChannelData) {
     // Calculate the squared-sum.
-    if (!inputChannelData) return;
+    if (!inputChannelData) {
+      this._volume = 0;
+      return;
+    }
 
     let sum = 0;
     for (let i = 0; i < inputChannelData.length; i++) {

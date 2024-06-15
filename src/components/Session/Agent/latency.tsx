@@ -17,13 +17,17 @@ const Latency: React.FC = () => {
   useDailyEvent(
     "track-started",
     useCallback((ev) => {
-      if (ev.participant?.local) {
-        console.log("LOCAL");
-        vadRef.current?.startAudio(ev.track);
-      } else {
-        console.log("REMOTE");
-        vadRef.current?.startAudio(ev.track);
-      }
+      vadRef.current?.startAudio(
+        ev.participant?.local ? "local" : "remote",
+        ev.track
+      );
+    }, [])
+  );
+
+  useDailyEvent(
+    "track-stopped",
+    useCallback((ev) => {
+      vadRef.current?.stopAudio(ev.participant?.local ? "local" : "remote");
     }, [])
   );
 

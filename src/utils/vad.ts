@@ -2,35 +2,54 @@ import workletUrl from "./vad-worklet?worker&url";
 
 export class VAD {
   context: AudioContext;
-  source: MediaStreamAudioSourceNode | null;
+  volumeMeterNode: AudioWorkletNode | null;
+  tracks: { [key: string]: null | MediaStreamAudioSourceNode } = {
+    local: null,
+    remove: null,
+  };
 
   constructor() {
-    this.source = null;
     this.context = new AudioContext();
+    this.volumeMeterNode = null;
+
+    this.init();
   }
 
-  startAudio = async (track: MediaStreamTrack) => {
-    // Remove exising source from the context..
-    if (this.source) {
-      this.context.destination.disconnect();
-      this.source.disconnect();
-      this.source = null;
+  init = async () => {
+    await this.context.audioWorklet.addModule(workletUrl);
+
+    this.volumeMeterNode = new AudioWorkletNode(this.context, "volume-meter");
+    this.volumeMeterNode.port.onmessage = ({ data }) => {
+      console.log(data * 500);
+    };
+  };
+
+  startAudio = async (type: string, track: MediaStreamTrack) => {
+    if (!this.volumeMeterNode || !this.context) {
+      return;
+    }
+
+    // Disconnect previous tracks of type
+    if (this.tracks[type]) {
+      this.tracks[type]?.disconnect();
     }
 
     const stream = new MediaStream([track]);
-    this.source = this.context.createMediaStreamSource(stream);
-    await this.context.audioWorklet.addModule(workletUrl);
+    const source = this.context.createMediaStreamSource(stream);
+    source.connect(this.volumeMeterNode).connect(this.context.destination);
 
-    const volumeMeterNode = new AudioWorkletNode(this.context, "volume-meter");
-    volumeMeterNode.port.onmessage = ({ data }) => {
-      console.log(data * 500);
-    };
-    this.source.connect(volumeMeterNode).connect(this.context.destination);
+    this.tracks[type] = source;
+  };
+
+  stopAudio = (type: string) => {
+    if (this.tracks[type]) {
+      this.tracks[type]?.disconnect();
+      this.tracks[type] = null;
+    }
   };
 
   cleanup = () => {
-    if (this.context) {
-      this.context.close();
-    }
+    this.context.destination.disconnect();
+    this.context.close();
   };
 }
