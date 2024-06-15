@@ -22,19 +22,16 @@ export const RoomSetup: React.FC<RoomSetupProps> = ({
 }) => {
   return (
     <>
-      {import.meta.env.DEV &&
-        (!import.meta.env.VITE_SERVER_URL ||
-          !import.meta.env.VITE_DAILY_API_KEY) && (
-          <Alert title="Missing environment settings" intent="danger">
-            <p>
-              You have not set a server URL for local development, or a Daily
-              API Key if you're bypassing starting an agent. Please set{" "}
-              <samp>VITE_SERVER_URL</samp> in <samp>.env.local</samp>. Without
-              this, the client will attempt to start the bot by calling
-              localhost on the same port.
-            </p>
-          </Alert>
-        )}
+      {import.meta.env.DEV && !import.meta.env.VITE_SERVER_URL && (
+        <Alert title="Missing environment settings" intent="danger">
+          <p>
+            You have not set a server URL for local development. Please set{" "}
+            <samp>VITE_SERVER_URL</samp> in <samp>.env.local</samp>. Without
+            this, the client will attempt to start the bot by calling localhost
+            on the same port.
+          </p>
+        </Alert>
+      )}
       <SettingsList
         serverUrl={serverUrl}
         roomQueryString={roomQs}

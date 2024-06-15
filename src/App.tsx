@@ -14,13 +14,12 @@ import {
   CardHeader,
   CardTitle,
 } from "./components/ui/card";
-import { fetch_meeting_token, fetch_start_agent } from "./actions";
+import { fetch_start_agent } from "./actions";
 
 type State =
   | "idle"
   | "configuring"
   | "requesting_agent"
-  | "requesting_token"
   | "connecting"
   | "connected"
   | "started"
@@ -90,19 +89,6 @@ export default function App() {
         setState("error");
         return;
       }
-    } else {
-      // Retrieve user token for room
-      setState("requesting_token");
-
-      try {
-        data = await fetch_meeting_token(roomUrl);
-      } catch (e) {
-        setError(
-          `Unable to get token for room: ${roomUrl} - have you set your Daily API key?`
-        );
-        setState("error");
-        return;
-      }
     }
 
     // Join the daily session, passing through the url and token
@@ -110,7 +96,7 @@ export default function App() {
 
     await daily.join({
       url: data.room_url || roomUrl,
-      token: data.token,
+      token: data.token || null,
       videoSource: false,
       startAudioOff: startAudioOff,
     });
