@@ -2,7 +2,7 @@ import { Check, X } from "lucide-react";
 
 import { cn } from "@/utils/tailwind";
 
-interface SettingList {
+interface SettingsList {
   serverUrl: string;
   roomQueryString: string | null;
   roomQueryStringValid: boolean | null;
@@ -14,7 +14,7 @@ const titleCx = "font-semibold w-max";
 const valueCx =
   "text-right font-mono truncate text-primary-600 [&>svg]:ml-auto";
 
-export const SettingList: React.FC<SettingList> = ({
+export const SettingsList: React.FC<SettingsList> = ({
   serverUrl,
   roomQueryString,
   roomQueryStringValid,

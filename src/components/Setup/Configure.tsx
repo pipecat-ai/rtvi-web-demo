@@ -1,16 +1,17 @@
 import React from "react";
 
-import DeviceSelect from "./DeviceSelect";
 import HelpTip from "../ui/helptip";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
+
+import DeviceSelect from "./DeviceSelect";
 
 interface ConfigureProps {
   startAudioOff: boolean;
   handleStartAudioOff: () => void;
 }
 
-const Configure: React.FC<ConfigureProps> = ({
+export const Configure: React.FC<ConfigureProps> = ({
   startAudioOff,
   handleStartAudioOff,
 }) => {
@@ -32,5 +33,3 @@ const Configure: React.FC<ConfigureProps> = ({
     </>
   );
 };
-
-export default Configure;

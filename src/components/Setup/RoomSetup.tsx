@@ -3,7 +3,7 @@ import React from "react";
 import { Alert } from "../ui/alert";
 
 import { RoomInput } from "./RoomInput";
-import { SettingList } from "./SettingsList";
+import { SettingsList } from "./SettingsList";
 
 interface RoomSetupProps {
   serverUrl: string;
@@ -13,7 +13,7 @@ interface RoomSetupProps {
   handleCheckRoomUrl: (url: string) => void;
 }
 
-const RoomSetup: React.FC<RoomSetupProps> = ({
+export const RoomSetup: React.FC<RoomSetupProps> = ({
   serverUrl,
   roomQs,
   roomQueryStringValid,
@@ -35,7 +35,7 @@ const RoomSetup: React.FC<RoomSetupProps> = ({
             </p>
           </Alert>
         )}
-      <SettingList
+      <SettingsList
         serverUrl={serverUrl}
         roomQueryString={roomQs}
         roomQueryStringValid={roomQueryStringValid}
@@ -50,5 +50,3 @@ const RoomSetup: React.FC<RoomSetupProps> = ({
     </>
   );
 };
-
-export default RoomSetup;

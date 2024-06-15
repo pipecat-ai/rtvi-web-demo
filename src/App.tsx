@@ -3,8 +3,7 @@ import { useDaily } from "@daily-co/daily-react";
 import { ArrowRight, Loader2 } from "lucide-react";
 
 import Session from "./components/Session";
-import Configure from "./components/Setup/Configure";
-import RoomSetup from "./components/Setup/RoomSetup";
+import { Configure, RoomSetup } from "./components/Setup";
 import { Alert } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
 import {
