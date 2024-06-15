@@ -22,15 +22,17 @@
   margin: 0 auto;
   z-index: 20;
   transition: all 0.5s ease, opacity 2s ease;
-  border: 6px solid color-mix(in srgb, var(--color-gray-300), transparent 70%);
-  outline: 6px solid color-mix(in srgb, var(--color-gray-300), transparent 70%);
+  border: 6px solid
+    color-mix(in srgb, theme(colors.primary.300), transparent 70%);
+  outline: 6px solid
+    color-mix(in srgb, theme(colors.primary.300), transparent 70%);
   outline-offset: 0px;
   opacity: 0.5;
 
-  background-color: var(--color-gray-500);
+  background-color: theme(colors.primary.500);
   background-image: radial-gradient(
-    var(--color-gray-300),
-    var(--color-gray-400)
+    theme(colors.primary.300),
+    theme(colors.primary.400)
   );
 }
 
@@ -58,13 +60,15 @@
 
 .canTalk {
   opacity: 1;
-  background-color: var(--color-gray-500);
+  background-color: theme(colors.primary.500);
   background-image: radial-gradient(
-    var(--color-gray-500),
-    var(--color-gray-600)
+    theme(colors.primary.500),
+    theme(colors.primary.600)
   );
-  border: 6px solid color-mix(in srgb, var(--color-gray-200), transparent 60%);
-  outline: 6px solid color-mix(in srgb, var(--color-gray-400), transparent 70%);
+  border: 6px solid
+    color-mix(in srgb, theme(colors.primary.200), transparent 60%);
+  outline: 6px solid
+    color-mix(in srgb, theme(colors.primary.400), transparent 70%);
   outline-offset: 4px;
 
   .icon {
@@ -79,10 +83,39 @@
 
 .muted {
   opacity: 1;
-  background-color: var(--color-red-500);
-  background-image: radial-gradient(var(--color-red-500), var(--color-red-600));
-  border: 6px solid color-mix(in srgb, var(--color-red-200), transparent 60%);
-  outline: 6px solid color-mix(in srgb, var(--color-red-400), transparent 70%);
+  background-color: theme(colors.red.500);
+  background-image: radial-gradient(
+    theme(colors.red.500),
+    theme(colors.red.600)
+  );
+  border: 6px solid color-mix(in srgb, theme(colors.red.200), transparent 60%);
+  outline: 6px solid color-mix(in srgb, theme(colors.red.400), transparent 70%);
+
+  &:after {
+    content: "Click to talk";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 11px;
+    font-weight: theme(fontWeight.bold);
+    font-family: theme(fontFamily.mono);
+    text-transform: uppercase;
+    letter-spacing: theme(letterSpacing.wider);
+    color: theme(colors.red.100);
+    animation: pulseText 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+}
+
+@keyframes pulseText {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
 
 .volume {
@@ -94,7 +127,7 @@
   transition: all 0.1s ease;
   transform: scale(0);
   opacity: 0.5;
-  background-color: var(--color-green-300);
+  background-color: theme(colors.green.300);
 }
 
 /* Transcript */
@@ -111,8 +144,8 @@
   font-weight: 600;
   z-index: 999;
   color: white;
-  background-color: color-mix(in srgb, var(--color-gray-800), transparent 30%);
-  border-radius: var(--borderRadius-xs);
+  background-color: color-mix(in srgb, theme(colors.gray.800), transparent 30%);
+  border-radius: theme(borderRadius.sm);
   padding: 4px 8px;
 
   &:global(.active) {

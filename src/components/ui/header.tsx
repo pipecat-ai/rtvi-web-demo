@@ -1,5 +1,5 @@
-import ExpiryTimer from "../ExpiryTimer";
 import Logo from "../logo";
+import ExpiryTimer from "../Session/ExpiryTimer";
 
 const aCx =
   "underline decoration-primary-400/0 hover:decoration-primary-400 underline-offset-4 transition-all duration-300";

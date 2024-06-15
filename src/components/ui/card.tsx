@@ -8,13 +8,13 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, shadow, fullWidthMobile, ...props }, ref) => (
+  ({ className, shadow, fullWidthMobile = true, ...props }, ref) => (
     <div
       ref={ref}
       className={cn(
         "rounded-3xl border border-transparent bg-origin-border borderClip bg-cardBorder",
-        fullWidthMobile ? "w-full md:w-auto" : "",
-        shadow ? "shadow-long" : "",
+        shadow && "shadow-long",
+        fullWidthMobile && "w-full max-w-full min-w-full md:min-w-0",
         className
       )}
       {...props}
@@ -30,7 +30,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex flex-col space-y-3 p-9", className)}
+    className={cn("flex flex-col space-y-3 p-6 lg:p-9", className)}
     {...props}
   />
 ));
@@ -71,7 +71,11 @@ const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
   ({ className, stack = false, ...props }, ref) => (
     <div
       ref={ref}
-      className={cn("p-9 pt-0", stack ? "flex flex-col gap-4" : "", className)}
+      className={cn(
+        "p-6 pt-0 lg:p-9 lg:pt-0",
+        stack && "flex flex-col gap-3 lg:gap-4",
+        className
+      )}
       {...props}
     />
   )
@@ -84,7 +88,10 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("flex justify-center items-center p-9 pt-0", className)}
+    className={cn(
+      "flex justify-center items-center p-6 pt-0 lg:p-9 lg:pt-0",
+      className
+    )}
     {...props}
   />
 ));

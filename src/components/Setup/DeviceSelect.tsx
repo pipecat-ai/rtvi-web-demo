@@ -8,7 +8,13 @@ import { Alert } from "../ui/alert";
 import { Field } from "../ui/field";
 import { Select } from "../ui/select";
 
-export const DeviceSelect: React.FC = () => {
+interface DeviceSelectProps {
+  hideMeter: boolean;
+}
+
+export const DeviceSelect: React.FC<DeviceSelectProps> = ({
+  hideMeter = false,
+}) => {
   const daily = useDaily();
   const {
     currentMic,
@@ -91,7 +97,7 @@ export const DeviceSelect: React.FC = () => {
             ))
           )}
         </Select>
-        <AudioIndicatorBar />
+        {!hideMeter && <AudioIndicatorBar />}
       </Field>
 
       <Field label="Speakers:">

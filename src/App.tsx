@@ -130,7 +130,7 @@ export default function App() {
 
   if (state !== "idle") {
     return (
-      <Card shadow fullWidthMobile className="animate-appear max-w-lg">
+      <Card shadow className="animate-appear max-w-lg">
         <CardHeader>
           <CardTitle>Configure your devices</CardTitle>
           <CardDescription>
@@ -158,7 +158,7 @@ export default function App() {
   }
 
   return (
-    <Card shadow fullWidthMobile className="animate-appear max-w-lg">
+    <Card shadow className="animate-appear max-w-lg">
       <CardHeader>
         <CardTitle>Pipecat {import.meta.env.VITE_APP_TITLE}</CardTitle>
         <CardDescription>Check configuration below</CardDescription>
