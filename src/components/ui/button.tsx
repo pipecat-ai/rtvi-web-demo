@@ -4,11 +4,12 @@ import { cva, VariantProps } from "class-variance-authority";
 import { cn } from "@/utils/tailwind";
 
 const buttonVariants = cva(
-  "inline-flex gap-2 items-center justify-center whitespace-nowrap rounded-xl text-base font-semibold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-5",
+  "inline-flex gap-2 items-center justify-center whitespace-nowrap rounded-xl border text-base font-semibold ring-ring transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&>svg]:size-5",
   {
     variants: {
       variant: {
-        primary: "bg-primary text-primary-foreground hover:bg-primary/90",
+        primary:
+          "border-primary bg-primary text-primary-foreground hover:bg-primary/90 disabled:text-primary-foreground/50",
         ghost: "button-ghost",
         outline: "button-outline",
         light: "button-light",

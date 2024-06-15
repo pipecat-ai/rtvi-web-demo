@@ -11,7 +11,9 @@ export default {
           ...colors.gray,
           DEFAULT: colors.gray[900],
           foreground: colors.white,
+          hairline: colors.gray[100],
         },
+        ring: colors.gray[500],
       },
       fontFamily: {
         sans: ["Inter", ...defaultTheme.fontFamily.sans],
@@ -26,6 +28,11 @@ export default {
       },
       backgroundImage: {
         cardBorder: `linear-gradient(90deg, white, white), linear-gradient(0deg, ${colors.gray[300]}, ${colors.gray[200]})`,
+        selectArrow:
+          "url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQgNkw4IDEwTDEyIDYiIHN0cm9rZT0iIzY0NzQ4QiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+Cjwvc3ZnPgo=')",
+      },
+      backgroundPosition: {
+        selectArrow: "right 1rem center",
       },
       boxShadow: {
         short:

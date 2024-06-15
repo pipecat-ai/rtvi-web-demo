@@ -11,7 +11,7 @@ import { LineChart, LogOut, Settings } from "lucide-react";
 
 import StatsAggregator from "../../utils/stats_aggregator";
 import { Button } from "../ui/button";
-import DeviceSelect from "../DeviceSelect";
+import DeviceSelect from "../Setup/DeviceSelect";
 import Stats from "../Stats";
 import UserMicBubble from "../UserMicBubble";
 

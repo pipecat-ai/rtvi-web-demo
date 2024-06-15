@@ -3,12 +3,12 @@ import { DailyMeetingState } from "@daily-co/daily-js";
 import { useDaily, useDevices } from "@daily-co/daily-react";
 import { Mic, Speaker } from "lucide-react";
 
-import { Alert } from "../ui/alert";
 import { AudioIndicatorBar } from "../AudioIndicator";
+import { Alert } from "../ui/alert";
+import { Field } from "../ui/field";
+import { Select } from "../ui/select";
 
-import styles from "./styles.module.css";
-
-export function DeviceSelect() {
+export const DeviceSelect: React.FC = () => {
   const daily = useDaily();
   const {
     currentMic,
@@ -43,7 +43,7 @@ export function DeviceSelect() {
   }, [daily, microphones]);
 
   return (
-    <div className={styles.deviceSelect}>
+    <div className="flex flex-col flex-wrap gap-4">
       {hasMicError && (
         <Alert intent="danger" title="Device error">
           {micState === "blocked" ? (
@@ -75,52 +75,44 @@ export function DeviceSelect() {
         </Alert>
       )}
 
-      <section className={styles.field}>
-        <label>Microphone:</label>
-        <div className={styles.selectContainer}>
-          <Mic size={24} />
-          <select
-            onChange={(e) => handleMicrophoneChange(e.target.value)}
-            defaultValue={currentMic?.device.deviceId}
-            className={styles.deviceSelectField}
-          >
-            {microphones.length === 0 ? (
-              <option value="">Loading devices...</option>
-            ) : (
-              microphones.map((m) => (
-                <option key={m.device.deviceId} value={m.device.deviceId}>
-                  {m.device.label}
-                </option>
-              ))
-            )}
-          </select>
-        </div>
+      <Field label="Microphone:" error={hasMicError}>
+        <Select
+          onChange={(e) => handleMicrophoneChange(e.target.value)}
+          defaultValue={currentMic?.device.deviceId}
+          icon={<Mic size={24} />}
+        >
+          {microphones.length === 0 ? (
+            <option value="">Loading devices...</option>
+          ) : (
+            microphones.map((m) => (
+              <option key={m.device.deviceId} value={m.device.deviceId}>
+                {m.device.label}
+              </option>
+            ))
+          )}
+        </Select>
         <AudioIndicatorBar />
-      </section>
+      </Field>
 
-      <section className={styles.field}>
-        <label>Speakers:</label>
-        <div className={styles.selectContainer}>
-          <Speaker size={24} />
-          <select
-            onChange={(e) => handleSpeakerChange(e.target.value)}
-            defaultValue={currentSpeaker?.device.deviceId}
-            className={styles.deviceSelectField}
-          >
-            {speakers.length === 0 ? (
-              <option value="default">Use system default</option>
-            ) : (
-              speakers.map((m) => (
-                <option key={m.device.deviceId} value={m.device.deviceId}>
-                  {m.device.label}
-                </option>
-              ))
-            )}
-          </select>
-        </div>
-      </section>
+      <Field label="Speakers:">
+        <Select
+          icon={<Speaker size={24} />}
+          onChange={(e) => handleSpeakerChange(e.target.value)}
+          defaultValue={currentSpeaker?.device.deviceId}
+        >
+          {speakers.length === 0 ? (
+            <option value="default">Use system default</option>
+          ) : (
+            speakers.map((m) => (
+              <option key={m.device.deviceId} value={m.device.deviceId}>
+                {m.device.label}
+              </option>
+            ))
+          )}
+        </Select>
+      </Field>
     </div>
   );
-}
+};
 
 export default DeviceSelect;

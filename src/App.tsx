@@ -2,11 +2,9 @@ import { useState } from "react";
 import { useDaily } from "@daily-co/daily-react";
 import { ArrowRight, Loader2 } from "lucide-react";
 
-import { DeviceSelect } from "./components/DeviceSelect";
-import { RoomInput } from "./components/RoomInput";
 import Session from "./components/Session";
-import { SettingList } from "./components/SettingList/SettingList";
-import { Switch } from "./components/switch";
+import Configure from "./components/Setup/Configure";
+import RoomSetup from "./components/Setup/RoomSetup";
 import { Alert } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
 import {
@@ -89,9 +87,7 @@ export default function App() {
           return;
         }
       } catch (e) {
-        setError(
-          `Unable to connect to the server at '${serverUrl}' - is it running?`
-        );
+        setError(`Unable to connect to the bot server at '${serverUrl}'`);
         setState("error");
         return;
       }
@@ -149,34 +145,30 @@ export default function App() {
 
   if (state !== "idle") {
     return (
-      <div className="card card-appear">
-        <div className="card-inner card-md">
-          <div className="card-header">
-            <h1>Configure your devices</h1>
-            <p> Please configure your microphone and speakers below</p>
-          </div>
-          <DeviceSelect />
-          <div className="config-options">
-            <div className="config-option">
-              <label>Join with mic muted:</label>
-              <Switch
-                checked={startAudioOff}
-                onCheckedChange={() => setStartAudioOff(!startAudioOff)}
-              />
-            </div>
-          </div>
-          <div className="card-footer">
-            <Button
-              key="start"
-              onClick={() => start()}
-              disabled={state !== "configuring"}
-            >
-              {state !== "configuring" && <Loader2 className="animate-spin" />}
-              {status_text[state as keyof typeof status_text]}
-            </Button>
-          </div>
-        </div>
-      </div>
+      <Card shadow fullWidthMobile className="animate-appear max-w-lg">
+        <CardHeader>
+          <CardTitle>Configure your devices</CardTitle>
+          <CardDescription>
+            Please configure your microphone and speakers below
+          </CardDescription>
+        </CardHeader>
+        <CardContent stack>
+          <Configure
+            startAudioOff={startAudioOff}
+            handleStartAudioOff={() => setStartAudioOff(!startAudioOff)}
+          />
+        </CardContent>
+        <CardFooter>
+          <Button
+            key="start"
+            onClick={() => start()}
+            disabled={state !== "configuring"}
+          >
+            {state !== "configuring" && <Loader2 className="animate-spin" />}
+            {status_text[state as keyof typeof status_text]}
+          </Button>
+        </CardFooter>
+      </Card>
     );
   }
 
@@ -187,28 +179,13 @@ export default function App() {
         <CardDescription>Check configuration below</CardDescription>
       </CardHeader>
       <CardContent stack>
-        {import.meta.env.DEV &&
-          (!import.meta.env.VITE_SERVER_URL ||
-            !import.meta.env.VITE_DAILY_API_KEY) && (
-            <Alert title="Missing environment settings" intent="danger">
-              <p>
-                You have not set a server URL for local development, or a Daily
-                API Key if you're bypassing starting an agent. Please set{" "}
-                <samp>VITE_SERVER_URL</samp> in <samp>.env.local</samp>. Without
-                this, the client will attempt to start the bot by calling
-                localhost on the same port.
-              </p>
-            </Alert>
-          )}
-        <SettingList
+        <RoomSetup
           serverUrl={serverUrl}
-          roomQueryString={roomQs}
+          roomQs={roomQs}
           roomQueryStringValid={checkRoomUrl(roomQs)}
+          handleCheckRoomUrl={(url) => setRoomUrl(url)}
+          roomError={roomError}
         />
-
-        {import.meta.env.VITE_MANUAL_ROOM_ENTRY && !roomQs && (
-          <RoomInput onChange={(url) => setRoomUrl(url)} error={roomError} />
-        )}
       </CardContent>
       <CardFooter>
         <Button
