@@ -28,7 +28,7 @@ const Latency: React.FC = () => {
     }, [])
   );
 */
-  return <div>Latency</div>;
+  return <div />;
 };
 
 export default Latency;
