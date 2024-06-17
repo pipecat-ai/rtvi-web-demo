@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --default-font-size: theme(fontSize.sm);
+  --app-padding: 12px;
+  --layout-aside-width: 100%;
+
+  @screen md {
+    --app-padding: 1rem;
+    --default-font-size: theme(fontSize.base);
+    --layout-aside-width: 320px;
+  }
+  @screen lg {
+    --layout-aside-width: 380px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+*:focus-visible {
+  outline-color: black;
+  outline-offset: 2px;
+  outline-width: 2px;
+}
+
+html {
+  font-size: var(--default-font-size);
+}
+
+html,
+body {
+  background-color: theme(colors.primary.50);
+  color: theme(colors.primary.900);
+}
+
+body {
+  font-family: theme(fontFamily.sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* App layout */
+
+body {
+  display: flex;
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-flow: row nowrap;
+  flex: 1;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 0 var(--app-padding) var(--app-padding) var(--app-padding);
+}
+
+#tray {
+}
+
+/* Animation keyframes */
+@keyframes appear {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes wiggle {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Utilities */
+
+.borderClip {
+  background-clip: padding-box, border-box;
+}
+
+samp {
+  font-family: theme(fontFamily.mono);
+  display: inline;
+  font-size: theme(fontSize.sm);
+  padding: 0 0.4em;
+  line-height: 1;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, currentColor, transparent 92%);
+  letter-spacing: 0.05rem;
+}
+
+/* Dialog (modal) */
+
+dialog {
+  background: transparent;
+  box-shadow: theme(boxShadow.long);
+  border-radius: theme(borderRadius.3xl);
+  animation: appear 0.3s ease-out;
+}
+
+dialog::backdrop {
+  background-color: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+}

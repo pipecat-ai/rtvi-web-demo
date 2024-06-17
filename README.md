@@ -16,12 +16,18 @@ yarn run build
 
 Navigate to https://localhost:5173
 
----
 
-## TODO:
+## What libraries does this use?
 
-- Compile style modules with media queries
-- Move layout styles to layout.css
-- Use global media query to change common variables (font size, gutter etc)
-- Rename "styles.module.css" to component specific
-- Handle issue where user speaks before mic track is ready
+### Vite / React
+
+We've used [Vite](https://vitejs.dev/) to simplify the development and build experience. 
+
+### Tailwind CSS
+
+We use [Tailwind](https://tailwindcss.com/) so the UI is easy to theme quickly, and reduce the number of CSS classes used throughout the project.
+
+### Radix
+
+For interactive components, we make use of [Radix](https://www.radix-ui.com/).
+

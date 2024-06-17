@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppMessage } from "@daily-co/daily-react";
 
-import styles from "./transcript.module.css";
+import styles from "./styles.module.css";
 
 export default function Transcript() {
   const [partialText, setPartialText] = useState<string>("");
   const [sentences, setSentences] = useState<string[]>([]);
-  const intervalRef = useRef(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    clearInterval(intervalRef.current);
+    clearInterval(intervalRef.current!);
 
     intervalRef.current = setInterval(() => {
       if (sentences.length > 2) {
@@ -17,7 +17,7 @@ export default function Transcript() {
       }
     }, 2500);
 
-    return () => clearInterval(intervalRef.current);
+    return () => clearInterval(intervalRef.current!);
   }, [sentences]);
 
   useAppMessage({

@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useRoom } from "@daily-co/daily-react";
+import { Timer } from "lucide-react";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { cn } from "@/utils/tailwind";
 
 import styles from "./styles.module.css";
 
@@ -38,18 +46,21 @@ const ExpiryTimer: React.FC = () => {
   const isExpired = time.minutes <= 0 && time.seconds <= 0;
 
   return (
-    <div className={styles.expiry}>
-      {isExpired ? (
-        <>Session expired</>
-      ) : (
-        <>
-          <span className={styles.header}>Time remaining</span>
-          <span className={styles.time}>
-            {time.minutes}m {time.seconds.toString().padStart(2, "0")}s
+    <Tooltip>
+      <TooltipTrigger>
+        <div className={styles.expiry}>
+          <Timer size={20} />
+          <span className={cn(styles.time, isExpired && styles.expired)}>
+            {isExpired
+              ? "--:--"
+              : `${time.minutes}m ${time.seconds.toString().padStart(2, "0")}s`}
           </span>
-        </>
-      )}
-    </div>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>
+        <p>Remaining session time before expiry</p>
+      </TooltipContent>
+    </Tooltip>
   );
 };
 

@@ -19,6 +19,7 @@ interface StatsMap {
 interface IStatsAggregator {
   statsMap: StatsMap;
   hasNewStats: boolean;
+  turns: number;
 
   addStat(stat: Stat): void;
   getStats(): StatsMap | null;
@@ -27,6 +28,7 @@ interface IStatsAggregator {
 declare class StatsAggregator implements IStatsAggregator {
   statsMap: StatsMap;
   hasNewStats: boolean;
+  turns: number;
 
   constructor();
   addStat(stat: Stat): void;

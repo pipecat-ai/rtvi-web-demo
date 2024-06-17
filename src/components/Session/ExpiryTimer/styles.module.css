@@ -1,0 +1,25 @@
+.expiry {
+  margin-left: auto;
+  display: flex;
+  flex-flow: row nowrap;
+  font-size: theme(fontSize.sm);
+  background-color: theme(colors.primary.100);
+  border-radius: theme(borderRadius.lg);
+  padding: theme(spacing.2) theme(spacing.3);
+  border-top: 1px solid theme(colors.primary.200);
+  gap: theme(spacing[1.5]);
+
+  svg {
+    color: theme(colors.primary.400);
+  }
+}
+
+.expired {
+  color: theme(colors.primary.400);
+}
+
+.time {
+  font-weight: theme(fontWeight.semibold);
+  letter-spacing: theme(letterSpacing.wider);
+  width: 60px;
+}
