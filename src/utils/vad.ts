@@ -2,7 +2,6 @@ import workletUrl from "./vad-worklet?worker&url";
 
 export class VAD {
   context: AudioContext;
-  volumeMeterNode: AudioWorkletNode | null;
   tracks: { [key: string]: null | MediaStreamAudioSourceNode } = {
     local: null,
     remove: null,
@@ -10,33 +9,34 @@ export class VAD {
 
   constructor() {
     this.context = new AudioContext();
-    this.volumeMeterNode = null;
 
     this.init();
   }
 
   init = async () => {
     await this.context.audioWorklet.addModule(workletUrl);
-
-    this.volumeMeterNode = new AudioWorkletNode(this.context, "volume-meter");
-    this.volumeMeterNode.port.onmessage = ({ data }) => {
-      console.log(data * 500);
-    };
   };
 
   startAudio = async (type: string, track: MediaStreamTrack) => {
-    if (!this.volumeMeterNode || !this.context) {
+    if (!this.context) {
       return;
     }
 
     // Disconnect previous tracks of type
     if (this.tracks[type]) {
       this.tracks[type]?.disconnect();
+      this.tracks[type] = null;
     }
 
     const stream = new MediaStream([track]);
     const source = this.context.createMediaStreamSource(stream);
-    source.connect(this.volumeMeterNode).connect(this.context.destination);
+
+    // Create a audio worklet for this track
+    const volumeMeterNode = new AudioWorkletNode(this.context, "volume-meter");
+    volumeMeterNode.port.onmessage = ({ data }) => {
+      console.log(type);
+    };
+    source.connect(volumeMeterNode).connect(this.context.destination);
 
     this.tracks[type] = source;
   };

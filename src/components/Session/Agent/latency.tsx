@@ -1,16 +1,13 @@
-import React, { useCallback, useEffect } from "react";
-import { useDailyEvent } from "@daily-co/daily-react";
+import React from "react";
+//import { useDailyEvent } from "@daily-co/daily-react";
 
-import { VAD } from "@/utils/vad";
+//import { VAD } from "@/utils/vad";
 
 const Latency: React.FC = () => {
-  const vadRef = React.useRef<VAD | null>(null);
+  /*const vadRef = React.useRef<VAD | null>(null);
 
   useEffect(() => {
     if (vadRef.current) return;
-
-    console.log("A");
-
     vadRef.current = new VAD();
   });
 
@@ -30,7 +27,7 @@ const Latency: React.FC = () => {
       vadRef.current?.stopAudio(ev.participant?.local ? "local" : "remote");
     }, [])
   );
-
+*/
   return <div>Latency</div>;
 };
 
