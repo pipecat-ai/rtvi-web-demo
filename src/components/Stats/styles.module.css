@@ -1,75 +1,190 @@
 .container {
-  display: flex;
-  flex-flow: column wrap;
-  gap: 1.5rem;
+  position: absolute;
   width: var(--layout-aside-width);
-  box-sizing: border-box;
-  border-left: 1px solid var(--color-gray-200);
-  height: 100%;
-  font-size: var(--font-size-sm);
+  z-index: 999;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background: white;
+  border-top: 1px solid theme(colors.primary.200);
+  animation: appear 0.3s ease-in-out;
+  text-align: left;
 
-  @media (max-width: 768px) {
-    gap: 1rem;
-    padding: 1rem;
+  @screen md {
+    height: 100%;
+    position: relative;
+    background: transparent;
+    border-top: 0px;
+    border-left: 1px solid theme(colors.primary.200);
   }
 }
 
-.statsContainer {
+.inner {
+  user-select: none;
+  padding: theme(spacing.4) theme(spacing.3);
+  padding-top: 0px;
+  overflow-x: scroll;
   display: flex;
-  flex-flow: column wrap;
-  gap: 2rem;
-
-  padding: 0 1rem;
-}
-
-.serviceName {
-  font-weight: 500;
-}
-
-.statValue {
-  line-height: 1;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  font-size: var(--font-size-xs);
-  display: inline-flex;
   flex-flow: row nowrap;
-  gap: 5px;
+  gap: theme(spacing.8);
 
-  span {
-    line-height: 1;
+  @screen md {
+    gap: theme(spacing.8);
+    height: 100%;
+    overflow-x: visible;
+    overflow-y: scroll;
+    flex-flow: column wrap;
+  }
+}
+
+.close {
+  text-align: center;
+
+  @screen md {
+    text-align: right;
+  }
+}
+
+.networkStats {
+  display: flex;
+  flex-flow: column nowrap;
+  gap: theme(spacing.3);
+  height: 100%;
+
+  > div {
+    display: flex;
+    flex-flow: column wrap;
+    flex: 1;
+    min-width: 100px;
+    padding: theme(spacing.3) theme(spacing.2);
+    align-items: center;
+    justify-content: center;
+    border-radius: theme(borderRadius.md);
+    background-color: theme(colors.primary.100);
+    flex-shrink: 0;
+
+    span {
+      color: theme(colors.primary.900);
+      font-weight: theme(fontWeight.semibold);
+      flex-shrink: 0;
+    }
   }
 
-  span:global(.bold) {
-    font-weight: bold;
-  }
-  sub {
-    vertical-align: baseline;
-    margin-left: 2px;
-    font-size: 65%;
+  @screen md {
+    height: auto;
+    flex-flow: row nowrap;
+
+    > div {
+      min-width: auto;
+    }
   }
 }
 
 .statsHeader {
-  background-color: var(--color-gray-100);
   font-weight: 600;
-  padding: 8px 0;
+  display: none;
+
+  @screen md {
+    display: block;
+  }
+}
+
+.monoHeader {
+  font-family: theme(fontFamily.mono);
+  font-size: theme(fontSize.xs);
+  text-transform: uppercase;
+  letter-spacing: theme(letterSpacing.wide);
+  color: theme(colors.primary.600);
+}
+
+.section {
+  @screen md {
+  }
+}
+
+.section,
+.sectionServices {
+  display: flex;
+  flex-flow: row;
+  gap: theme(spacing.3);
+
+  @screen md {
+    display: flex;
+    flex-flow: column wrap;
+    gap: theme(spacing.3);
+  }
+}
+
+sub {
+  vertical-align: baseline;
+  margin-left: 2px;
+  font-size: 50%;
+  bottom: 0 !important;
+  color: theme(colors.primary.500);
 }
 
 .serviceStat {
-  font-size: var(--font-size-sm);
+  font-size: theme(fontSize.sm);
+  background-color: white;
+  border: 1px solid theme(colors.primary.200);
+  border-radius: theme(borderRadius.md);
+
+  > header {
+    padding: theme(spacing.3);
+  }
+
+  > footer {
+    border-top: 1px solid theme(colors.primary.200);
+    display: flex;
+    flex-flow: row nowrap;
+    font-size: 11px;
+    font-family: theme(fontFamily.mono);
+    justify-content: space-between;
+    padding: theme(spacing.2) theme(spacing.3);
+  }
+}
+
+.serviceName {
+  font-weight: theme(fontWeight.semibold);
+  font-size: theme(fontSize.base);
+  margin-bottom: theme(spacing.3);
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 5px;
+  align-items: center;
+}
+
+.latest {
+  background-color: theme(colors.primary.50);
+  border-radius: theme(borderRadius.md);
+  font-size: theme(fontSize.xs);
+  text-transform: uppercase;
+  letter-spacing: theme(letterSpacing.wide);
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: center;
+  gap: theme(spacing.2);
+  padding: theme(spacing.2) theme(spacing.3);
+}
+
+.statValue {
+  line-height: 1;
+  font-family: theme(fontFamily.mono);
+  font-weight: theme(fontWeight.bold);
+  text-transform: uppercase;
+  display: inline-flex;
+  flex-flow: row nowrap;
+  gap: 5px;
+  line-height: 1;
+
+  > span {
+    font-weight: theme(fontWeight.normal);
+  }
 }
 
 .chart {
   width: auto;
-  height: 80px;
   line-height: 1;
-}
-
-.rangeRow {
-  display: flex;
-  flex-flow: row nowrap;
-  font-size: 11px;
-  font-family: var(--font-mono);
-  justify-content: space-between;
-  width: 100%;
+  margin: 0 theme(spacing.3);
 }

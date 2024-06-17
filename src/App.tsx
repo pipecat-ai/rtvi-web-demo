@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDaily } from "@daily-co/daily-react";
-import { ArrowRight, Loader2 } from "lucide-react";
+import { ArrowRight, Ear, Loader2 } from "lucide-react";
 
 import Session from "./components/Session";
 import { Configure, RoomSetup } from "./components/Setup";
@@ -43,13 +43,18 @@ const checkRoomUrl = (url: string | null): boolean =>
   !!(url && /^(https?:\/\/[^.]+(\.staging)?\.daily\.co\/[^/]+)$/.test(url));
 const autoRoomCreation = import.meta.env.VITE_MANUAL_ROOM_ENTRY ? false : true;
 
+// Show config options
+const showConfigOptions = import.meta.env.VITE_SHOW_CONFIG;
+
 // Mic mode
 const isOpenMic = import.meta.env.VITE_OPEN_MIC ? true : false;
 
 export default function App() {
   const daily = useDaily();
 
-  const [state, setState] = useState<State>("idle");
+  const [state, setState] = useState<State>(
+    showConfigOptions ? "idle" : "configuring"
+  );
   const [error, setError] = useState<string | null>(null);
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
   const [roomUrl, setRoomUrl] = useState<string | null>(roomQs || null);
@@ -138,6 +143,10 @@ export default function App() {
           </CardDescription>
         </CardHeader>
         <CardContent stack>
+          <div className="flex flex-row gap-2 bg-primary-50 px-4 py-2 md:p-2 text-sm items-center justify-center rounded-md font-medium text-pretty">
+            <Ear className="size-7 md:size-5 text-primary-400" />
+            Works best in a quiet environment with a good internet.
+          </div>
           <Configure
             startAudioOff={startAudioOff}
             handleStartAudioOff={() => setStartAudioOff(!startAudioOff)}

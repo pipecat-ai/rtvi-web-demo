@@ -5,10 +5,15 @@
 :root {
   --default-font-size: theme(fontSize.sm);
   --app-padding: 12px;
+  --layout-aside-width: 100%;
 
   @screen md {
     --app-padding: 1rem;
     --default-font-size: theme(fontSize.base);
+    --layout-aside-width: 320px;
+  }
+  @screen lg {
+    --layout-aside-width: 380px;
   }
 }
 
@@ -72,7 +77,6 @@ main {
 }
 
 #tray {
-  overflow-x: hidden;
 }
 
 /* Animation keyframes */
@@ -128,6 +132,7 @@ dialog {
   background: transparent;
   box-shadow: theme(boxShadow.long);
   border-radius: theme(borderRadius.3xl);
+  animation: appear 0.3s ease-out;
 }
 
 dialog::backdrop {

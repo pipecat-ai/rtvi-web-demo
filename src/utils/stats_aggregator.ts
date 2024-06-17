@@ -1,6 +1,7 @@
 class StatsAggregator implements IStatsAggregator {
   statsMap: StatsMap = {};
   hasNewStats = false;
+  turns = 0;
 
   constructor() {}
 
@@ -33,6 +34,7 @@ class StatsAggregator implements IStatsAggregator {
       low,
     };
 
+    this.turns++;
     this.hasNewStats = true;
   }
 

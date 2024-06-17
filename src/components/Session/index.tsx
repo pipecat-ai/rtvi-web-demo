@@ -20,6 +20,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import UserMicBubble from "../UserMicBubble";
 
 import Agent from "./Agent";
@@ -125,14 +126,17 @@ export const Session = React.memo(
 
         {showStats &&
           createPortal(
-            <Stats statsAggregator={stats_aggregator} />,
+            <Stats
+              statsAggregator={stats_aggregator}
+              handleClose={() => setShowStats(false)}
+            />,
             document.getElementById("tray")!
           )}
 
         <div className="flex-1 flex flex-col items-center justify-center w-full">
           <Card
             fullWidthMobile={false}
-            className="w-full max-w-[320px] sm:max-w-[420px] mt-auto"
+            className="w-full max-w-[320px] sm:max-w-[420px] mt-auto shadow-long"
           >
             <Agent />
           </Card>
@@ -148,20 +152,30 @@ export const Session = React.memo(
 
         <footer className="w-full flex flex-row mt-auto self-end md:w-auto">
           <div className="flex flex-row justify-between gap-3 w-full md:w-auto">
-            <Button
-              variant={showStats ? "light" : "ghost"}
-              size="icon"
-              onClick={() => setShowStats(!showStats)}
-            >
-              <LineChart />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setShowDevices(true)}
-            >
-              <Settings />
-            </Button>
+            <Tooltip>
+              <TooltipContent>Show bot statistics panel</TooltipContent>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={showStats ? "light" : "ghost"}
+                  size="icon"
+                  onClick={() => setShowStats(!showStats)}
+                >
+                  <LineChart />
+                </Button>
+              </TooltipTrigger>
+            </Tooltip>
+            <Tooltip>
+              <TooltipContent>Configure devices</TooltipContent>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowDevices(true)}
+                >
+                  <Settings />
+                </Button>
+              </TooltipTrigger>
+            </Tooltip>
             <Button onClick={() => onLeave()} className="ml-auto">
               <LogOut size={16} />
               End

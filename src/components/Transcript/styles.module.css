@@ -17,7 +17,7 @@
 
 .transcript {
   font-weight: 600;
-  font-size: var(--font-size-sm);
+  font-size: theme(fontSize.sm);
   max-width: 320px;
 }
 
@@ -25,8 +25,12 @@
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   -moz-box-decoration-break: clone;
-  background-color: color-mix(in srgb, var(--color-gray-800), transparent 30%);
-  border-radius: var(--borderRadius-xs);
+  background-color: color-mix(
+    in srgb,
+    theme(colors.primary.800),
+    transparent 30%
+  );
+  border-radius: theme(borderRadius.sm);
   padding: 4px 8px;
   line-height: 1;
 }
