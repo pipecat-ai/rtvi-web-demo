@@ -30,7 +30,7 @@
     theme(colors.primary.800),
     transparent 30%
   );
-  border-radius: theme(borderRadius.sm);
+  border-radius: theme(borderRadius.md);
   padding: 4px 8px;
   line-height: 1;
 }
