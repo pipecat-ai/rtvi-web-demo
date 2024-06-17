@@ -14,7 +14,10 @@ const HelpTip: React.FC<HelpTipProps> = ({ text, className }) => {
   return (
     <Tooltip>
       <TooltipTrigger>
-        <CircleHelp size={16} className={cn("text-primary-400 ", className)} />
+        <CircleHelp
+          size={16}
+          className={cn("text-primary-400 hidden md:block", className)}
+        />
       </TooltipTrigger>
       <TooltipContent asChild>
         <span className="text-sm font-medium">{text}</span>
