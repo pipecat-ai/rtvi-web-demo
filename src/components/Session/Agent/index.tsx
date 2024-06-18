@@ -3,10 +3,10 @@ import { useActiveSpeakerId, useParticipantIds } from "@daily-co/daily-react";
 import clsx from "clsx";
 import { Loader2 } from "lucide-react";
 
+import Latency from "@/components/Latency";
 import Transcript from "@/components/Transcript";
 
 import Avatar from "./avatar";
-import Latency from "./latency";
 
 import styles from "./styles.module.css";
 
