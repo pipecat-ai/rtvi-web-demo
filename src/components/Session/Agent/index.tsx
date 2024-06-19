@@ -45,7 +45,10 @@ export const Agent: React.FC<{ hasStarted: boolean }> = memo(
           <Transcript />
         </div>
         <footer className={styles.agentFooter}>
-          <Latency started={agentState === "connected" && hasStarted} />
+          <Latency
+            started={agentState === "connected" && hasStarted}
+            botStatus={agentState}
+          />
         </footer>
       </div>
     );

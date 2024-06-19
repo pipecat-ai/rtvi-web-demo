@@ -1,0 +1,95 @@
+.statusContainer {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  padding: theme(spacing.2) 0 0 0;
+}
+
+.statusColumn,
+.latencyColumn {
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: white;
+  padding: theme(spacing.3);
+  border-radius: theme(borderRadius.2xl);
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+
+.statusColumn {
+  display: none;
+  flex: 1;
+  border: 1px solid theme(colors.primary.200);
+  justify-content: space-between;
+  background-color: theme(colors.primary.50);
+
+  &:first-child {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    mask: linear-gradient(to left, transparent, black 32px);
+  }
+  &:last-child {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    mask: linear-gradient(to right, transparent, black 32px);
+  }
+  @screen md {
+    display: flex;
+  }
+}
+
+.status {
+  margin: 0 auto;
+  align-self: flex-start;
+  background-color: theme(colors.sky.100);
+  border-radius: theme(borderRadius.md);
+  font-size: theme(fontSize.xs);
+  font-weight: theme(fontWeight.bold);
+  padding: theme(spacing.1) theme(spacing.2);
+  color: theme(colors.sky.700);
+  text-transform: capitalize;
+}
+
+.statusSpeaking {
+  background-color: theme(colors.emerald.100);
+  color: theme(colors.emerald.700);
+}
+
+.statusConnecting {
+  background-color: theme(colors.orange.100);
+  color: theme(colors.orange.700);
+}
+
+.statusLoading {
+  background-color: theme(colors.blue.100);
+  color: theme(colors.blue.700);
+}
+
+.speaking {
+  border-color: theme(colors.emerald.300);
+  background-color: theme(colors.emerald.50);
+  box-shadow: 0 0 0 2px theme(colors.emerald.50);
+}
+
+.latencyColumn {
+  width: 90px;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0 auto;
+}
+
+.header {
+  font-family: theme(fontFamily.mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: theme(letterSpacing.wider);
+}
+
+.lastDelta {
+  font-size: theme(fontSize.sm);
+  font-weight: theme(fontWeight.bold);
+}
+
+.medianDelta {
+  font-size: 11px;
+  color: theme(colors.gray.400);
+}

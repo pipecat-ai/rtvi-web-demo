@@ -6,11 +6,14 @@ import {
   useParticipantIds,
   useParticipantProperty,
 } from "@daily-co/daily-react";
+import clsx from "clsx";
 
 import { VAD, VADState } from "@/vad";
 import AudioWorkletURL from "@/vad/worklet.ts?worker&url";
 
 import { calculateMedian } from "./utils";
+
+import styles from "./styles.module.css";
 
 enum State {
   SPEAKING = "Speaking",
@@ -19,8 +22,8 @@ enum State {
 
 const REMOTE_AUDIO_THRESHOLD = 0.1;
 
-const Latency: React.FC<{ started: boolean }> = memo(
-  ({ started = false }) => {
+const Latency: React.FC<{ started: boolean; botStatus: string }> = memo(
+  ({ started = false, botStatus }) => {
     const localSessionId = useLocalSessionId();
     const [localAudioTrack] = useParticipantProperty(localSessionId, [
       "tracks.audio.persistentTrack",
@@ -166,19 +169,54 @@ const Latency: React.FC<{ started: boolean }> = memo(
 
     /* ---- Render ---- */
 
-    console.log(deltaArrayRef.current);
+    const userCx = clsx(
+      styles.statusColumn,
+      currentState === State.SPEAKING && styles.speaking
+    );
+
+    const userStatus = clsx(
+      styles.status,
+      currentState === State.SPEAKING && styles.statusSpeaking
+    );
+
+    const boxStatusCx = clsx(
+      styles.status,
+      botStatus === "connecting" && styles.statusConnecting,
+      botStatus === "loading" && styles.statusLoading
+    );
 
     return (
-      <div className="w-full">
-        <div className="flex flex-row gap-3 w-full">
-          <span>last: {lastDelta}</span>
-          <span>median: {median}</span>
-          <span>current state: {currentState}</span>
+      <>
+        <div className={styles.statusContainer}>
+          <div className={userCx}>
+            <span className={styles.header}>User status</span>
+            <span className={userStatus}>
+              {currentState === State.SPEAKING ? "Speaking" : "Connected"}
+            </span>
+          </div>
+          <div className={styles.latencyColumn}>
+            <span className={styles.header}>Latency</span>
+            <span className={styles.lastDelta}>
+              {lastDelta || "---"}
+              <sub>ms</sub>
+            </span>
+            <span className={styles.medianDelta}>
+              {"x ~ "}
+              {median || "0"}
+              <sub>ms</sub>
+            </span>
+          </div>
+          <div className={styles.statusColumn}>
+            <span className={styles.header}>Bot status</span>
+            <span className={boxStatusCx}>{botStatus}</span>
+          </div>
         </div>
-      </div>
+      </>
     );
   },
-  (prevState, nextState) => prevState.started === nextState.started
+  (prevState, nextState) =>
+    prevState.started === nextState.started &&
+    prevState.botStatus === nextState.botStatus
 );
 
 export default Latency;

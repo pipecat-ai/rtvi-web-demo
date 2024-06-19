@@ -25,7 +25,6 @@
 }
 
 .agentFooter {
-  margin: 1.5rem 0 0.75rem 0;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
