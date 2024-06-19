@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import {
   DailyAudio,
-  useActiveSpeakerId,
   useAppMessage,
   useDaily,
+  useDailyEvent,
   useMeetingState,
 } from "@daily-co/daily-react";
 import { LineChart, LogOut, Settings } from "lucide-react";
@@ -40,32 +40,73 @@ export const Session = React.memo(
     const [showDevices, setShowDevices] = useState(false);
     const [showStats, setShowStats] = useState(false);
     const modalRef = useRef<HTMLDialogElement>(null);
-    const [talkState, setTalkState] = useState<"user" | "assistant" | "open">(
+    /*const [talkState, setTalkState] = useState<"user" | "assistant" | "open">(
       openMic ? "open" : "assistant"
-    );
+    );*/
     const [muted, setMuted] = useState(startAudioOff);
-    const activeSpeakerId = useActiveSpeakerId({ ignoreLocal: true });
     const meetingState = useMeetingState();
 
+    // Use active speaker event to trigger the "ready" state
+    // so the user can begin talking to the LLM
+    // Note: this "air" also avoids a scenario where we immediately
+    // trigger interruption on load, causing the LLM to appear silent
+    useDailyEvent(
+      "active-speaker-change",
+      useCallback(() => {
+        if (hasStarted) {
+          return;
+        }
+        setHasStarted(true);
+      }, [hasStarted])
+    );
+
+    // Mute on join
     useEffect(() => {
-      // Mute on join (typically done with token params, but we'll do it here to be sure)
-      if (daily && startAudioOff) {
+      // Avoid immediately triggering interruption on load
+      // by muting the users mic initially
+      if (daily) {
         daily.setLocalAudio(false);
       }
     }, [daily, startAudioOff]);
 
+    // If we joined unmuted, enable the mic once the
+    // active speaker event has triggered once
+    useEffect(() => {
+      if (!daily || startAudioOff) {
+        return;
+      }
+      if (hasStarted) {
+        daily.setLocalAudio(true);
+      }
+    }, [daily, startAudioOff, hasStarted]);
+
+    // Leave the meeting if there is an error
     useEffect(() => {
       if (meetingState === "error") {
         onLeave();
       }
     }, [meetingState, onLeave]);
 
+    // Reset on unmount
+    useEffect(
+      () => () => {
+        setHasStarted(false);
+      },
+      []
+    );
+
+    // Modal effect
+    // Note: backdrop doesn't currently work with dialog open, so we use setModal instead
     useEffect(() => {
-      if (hasStarted || activeSpeakerId === null) {
-        return;
+      const current = modalRef.current;
+
+      if (current && showDevices) {
+        current.inert = true;
+        current.showModal();
+        current.inert = false;
       }
-      setHasStarted(true);
-    }, [hasStarted, activeSpeakerId]);
+      return () => current?.close();
+    }, [showDevices]);
 
     useAppMessage({
       onAppMessage: (e) => {
@@ -77,6 +118,8 @@ export const Session = React.memo(
           return;
         }
 
+        /*
+        Open mic handler (disabled for now)
         if (!daily || !e.data?.cue) return;
 
         // Determine the UI state from the cue sent by the bot
@@ -87,20 +130,9 @@ export const Session = React.memo(
         } else {
           daily.setLocalAudio(false);
           setTalkState("assistant");
-        }
+        }*/
       },
     });
-
-    useEffect(() => {
-      const current = modalRef.current;
-      // Backdrop doesn't currently work with dialog open, so we use setModal instead
-      if (current && showDevices) {
-        current.inert = true;
-        current.showModal();
-        current.inert = false;
-      }
-      return () => current?.close();
-    }, [showDevices]);
 
     function toggleMute() {
       if (!daily) return;
@@ -138,12 +170,12 @@ export const Session = React.memo(
             fullWidthMobile={false}
             className="w-full max-w-[320px] sm:max-w-[420px] mt-auto shadow-long"
           >
-            <Agent />
+            <Agent hasStarted={hasStarted} />
           </Card>
 
           <UserMicBubble
             openMic={openMic}
-            active={hasStarted && talkState !== "assistant"}
+            active={hasStarted} //Open mic: && talkState !== "assistant"}
             muted={muted}
             handleMute={() => toggleMute()}
           />

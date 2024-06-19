@@ -112,6 +112,7 @@ export default function App() {
 
   async function leave() {
     await daily?.leave();
+    await daily?.destroy();
     setState("idle");
   }
 
