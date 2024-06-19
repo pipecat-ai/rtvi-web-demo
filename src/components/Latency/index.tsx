@@ -38,32 +38,30 @@ const Latency: React.FC<{ started: boolean; botStatus: string }> = memo(
     const [median, setMedian] = useState<number | null>(null);
     const [hasSpokenOnce, setHasSpokenOnce] = useState<boolean>(false);
 
-    const timerRef = useRef<NodeJS.Timeout | null>(null);
     const deltaRef = useRef<number>(0);
     const deltaArrayRef = useRef<number[]>([]);
+    const startTimeRef = useRef<Date | null>(null);
     const mountedRef = useRef<boolean>(false);
 
     /* ---- Timer actions ---- */
     const startTimer = useCallback(() => {
-      const t = setInterval(() => {
-        deltaRef.current += 1;
-      }, 1);
-      timerRef.current = t;
-      //setTimer(t);
+      console.log("Starting timer");
+      startTimeRef.current = new Date();
     }, []);
 
     const stopTimer = useCallback(() => {
-      clearInterval(timerRef.current!);
+      if (!startTimeRef.current) {
+        return;
+      }
 
-      deltaArrayRef.current = [...deltaArrayRef.current, deltaRef.current];
+      console.log("Stopping timer");
 
-      // Calculate median
-      setLastDelta(deltaRef.current);
+      const now = new Date();
+      const diff = now.getTime() - startTimeRef.current.getTime();
+      deltaArrayRef.current = [...deltaArrayRef.current, diff];
       setMedian(calculateMedian(deltaArrayRef.current));
-
-      deltaRef.current = 0;
-
-      timerRef.current = null;
+      setLastDelta(diff);
+      startTimeRef.current = null;
     }, []);
 
     // Stop timer when bot starts talking
@@ -71,7 +69,7 @@ const Latency: React.FC<{ started: boolean; botStatus: string }> = memo(
       remoteAudioTrack?.persistentTrack,
       useCallback(
         (volume) => {
-          if (volume > REMOTE_AUDIO_THRESHOLD && timerRef.current) {
+          if (volume > REMOTE_AUDIO_THRESHOLD && startTimeRef.current) {
             stopTimer();
           }
         },
@@ -83,7 +81,7 @@ const Latency: React.FC<{ started: boolean; botStatus: string }> = memo(
 
     // Reset state on mount
     useEffect(() => {
-      timerRef.current = null;
+      startTimeRef.current = null;
       deltaRef.current = 0;
       deltaArrayRef.current = [];
       setVadInstance(null);
@@ -144,17 +142,6 @@ const Latency: React.FC<{ started: boolean; botStatus: string }> = memo(
 
       mountedRef.current = true;
     }, [localAudioTrack]);
-
-    // Cleanup timer
-    useEffect(
-      () => () => {
-        if (timerRef.current) {
-          clearInterval(timerRef.current!);
-          timerRef.current = null;
-        }
-      },
-      []
-    );
 
     // Cleanup VAD
     useEffect(
