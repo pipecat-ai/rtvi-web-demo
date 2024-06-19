@@ -190,7 +190,9 @@ const Latency: React.FC<{
       <>
         <div className={styles.statusContainer}>
           <div className={userCx}>
-            <span className={styles.header}>User status</span>
+            <span className={styles.header}>
+              User <span>status</span>
+            </span>
             <span className={userStatus}>
               {currentState === State.SPEAKING ? "Speaking" : "Connected"}
             </span>
@@ -202,13 +204,14 @@ const Latency: React.FC<{
               <sub>ms</sub>
             </span>
             <span className={styles.medianDelta}>
-              {"x ~ "}
-              {median?.toFixed() || "0"}
+              avg {median?.toFixed() || "0"}
               <sub>ms</sub>
             </span>
           </div>
           <div className={styles.statusColumn}>
-            <span className={styles.header}>Bot status</span>
+            <span className={styles.header}>
+              Bot <span>status</span>
+            </span>
             <span className={boxStatusCx}>{botStatus}</span>
           </div>
         </div>

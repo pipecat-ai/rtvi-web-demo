@@ -16,7 +16,7 @@
 }
 
 .statusColumn {
-  display: none;
+  display: flex;
   flex: 1;
   border: 1px solid theme(colors.primary.200);
   justify-content: space-between;
@@ -32,6 +32,7 @@
     border-bottom-left-radius: 0px;
     mask: linear-gradient(to right, transparent, black 32px);
   }
+
   @screen md {
     display: flex;
   }
@@ -82,6 +83,16 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: theme(letterSpacing.wider);
+
+  > span {
+    display: none;
+  }
+
+  @screen md {
+    > span {
+      display: inline;
+    }
+  }
 }
 
 .lastDelta {

@@ -1,7 +1,7 @@
 .container {
   position: absolute;
   width: var(--layout-aside-width);
-  z-index: 999;
+  z-index: 9999;
   left: 0px;
   right: 0px;
   bottom: 0px;
@@ -11,6 +11,7 @@
   text-align: left;
 
   @screen md {
+    z-index: 1;
     height: 100%;
     position: relative;
     background: transparent;

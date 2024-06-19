@@ -13,9 +13,9 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  width: 120px;
-  height: 120px;
-  border-radius: 120px;
+  width: 100px;
+  height: 100px;
+  border-radius: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -34,6 +34,12 @@
     theme(colors.primary.300),
     theme(colors.primary.400)
   );
+
+  @screen md {
+    width: 120px;
+    height: 120px;
+    border-radius: 120px;
+  }
 }
 
 @keyframes pulse {
