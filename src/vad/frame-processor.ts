@@ -3,8 +3,8 @@ Some of this code, together with the default options found in index.ts,
 were taken (or took inspiration) from https://github.com/snakers4/silero-vad
 */
 
-import { SpeechProbabilities } from "./models";
 import { Message } from "./messages";
+import { SpeechProbabilities } from "./models";
 
 export const RECOMMENDED_FRAME_SAMPLES = [512, 1024, 1536];
 

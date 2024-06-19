@@ -1,7 +1,7 @@
-import { VADOptions } from "./vad";
 import { FrameProcessor } from "./frame-processor";
-import { Silero, SpeechProbabilities } from "./models";
 import { Message } from "./messages";
+import { Silero, SpeechProbabilities } from "./models";
+import { VADOptions } from "./vad";
 
 export interface AudioVADNodeInterface {
   audioContext: AudioContext;

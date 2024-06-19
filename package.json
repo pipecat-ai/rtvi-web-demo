@@ -25,7 +25,8 @@
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
-    "@types/node": "^20.14.2",
+    "@types/audioworklet": "^0.0.55",
+    "@types/node": "^20.14.5",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@types/react-sparklines": "^1.7.5",
