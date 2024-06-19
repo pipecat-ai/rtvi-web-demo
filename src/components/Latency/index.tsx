@@ -21,6 +21,7 @@ enum State {
 }
 
 const REMOTE_AUDIO_THRESHOLD = 0.1;
+const LATENCY_MIN = 100;
 
 const Latency: React.FC<{
   started: boolean;
@@ -37,7 +38,6 @@ const Latency: React.FC<{
 
     const [vadInstance, setVadInstance] = useState<VAD | null>(null);
     const [currentState, setCurrentState] = useState<State>(State.SILENT);
-    //const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
     const [lastDelta, setLastDelta] = useState<number | null>(null);
     const [median, setMedian] = useState<number | null>(null);
     const [hasSpokenOnce, setHasSpokenOnce] = useState<boolean>(false);
@@ -59,6 +59,13 @@ const Latency: React.FC<{
 
       const now = new Date();
       const diff = now.getTime() - startTimeRef.current.getTime();
+
+      // Ignore any values that are obviously wrong
+      // These may be triggered by small noises such as coughs etc
+      if (diff < LATENCY_MIN) {
+        return;
+      }
+
       deltaArrayRef.current = [...deltaArrayRef.current, diff];
       setMedian(calculateMedian(deltaArrayRef.current));
       setLastDelta(diff);
@@ -123,8 +130,9 @@ const Latency: React.FC<{
         const vad = new VAD({
           workletURL: AudioWorkletURL,
           stream,
-          positiveSpeechThreshold: 0.6,
-          minSpeechFrames: 5,
+          positiveSpeechThreshold: 0.8,
+          negativeSpeechThreshold: 0.8 - 0.15,
+          minSpeechFrames: 8,
           redemptionFrames: 3,
           preSpeechPadFrames: 1,
           onSpeechStart: () => {
