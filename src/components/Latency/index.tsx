@@ -10,6 +10,8 @@ import {
 import { VAD, VADState } from "@/vad";
 import AudioWorkletURL from "@/vad/worklet.ts?worker&url";
 
+import { calculateMedian } from "./utils";
+
 enum State {
   SPEAKING = "Speaking",
   SILENT = "Silent",
@@ -29,6 +31,8 @@ const Latency: React.FC<{ started: boolean }> = memo(
     const [vadInstance, setVadInstance] = useState<VAD | null>(null);
     const [currentState, setCurrentState] = useState<State>(State.SILENT);
     //const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+    const [lastDelta, setLastDelta] = useState<number | null>(null);
+    const [median, setMedian] = useState<number | null>(null);
     const [hasSpokenOnce, setHasSpokenOnce] = useState<boolean>(false);
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -49,6 +53,11 @@ const Latency: React.FC<{ started: boolean }> = memo(
       clearInterval(timerRef.current!);
 
       deltaArrayRef.current = [...deltaArrayRef.current, deltaRef.current];
+
+      // Calculate median
+      setLastDelta(deltaRef.current);
+      setMedian(calculateMedian(deltaArrayRef.current));
+
       deltaRef.current = 0;
 
       timerRef.current = null;
@@ -162,6 +171,8 @@ const Latency: React.FC<{ started: boolean }> = memo(
     return (
       <div className="w-full">
         <div className="flex flex-row gap-3 w-full">
+          <span>last: {lastDelta}</span>
+          <span>median: {median}</span>
           <span>current state: {currentState}</span>
         </div>
       </div>
