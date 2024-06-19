@@ -96,12 +96,12 @@ export const Stats = React.memo(
             <div className={styles.networkStats}>
               <div>
                 <h4 className={styles.monoHeader}>Turns</h4>
-                <span>{numTurns}</span>
+                <span className="truncate">{numTurns}</span>
               </div>
               <div>
                 <h4 className={styles.monoHeader}>RTT</h4>
-                <span>
-                  {rtt || "---"}
+                <span className="truncate">
+                  {rtt?.toFixed(3) || "---"}
                   <sub>s</sub>
                 </span>
               </div>

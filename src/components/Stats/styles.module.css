@@ -62,6 +62,7 @@
     border-radius: theme(borderRadius.md);
     background-color: theme(colors.primary.100);
     flex-shrink: 0;
+    overflow: hidden;
 
     span {
       color: theme(colors.primary.900);
