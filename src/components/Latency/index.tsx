@@ -27,37 +27,43 @@ const Latency: React.FC<{ started: boolean }> = memo(
     const remoteAudioTrack = useAudioTrack(remoteParticipantId);
 
     const [vadInstance, setVadInstance] = useState<VAD | null>(null);
-    const [frames, setFrames] = useState<number>(0);
     const [currentState, setCurrentState] = useState<State>(State.SILENT);
-    const [delta, setDelta] = useState<number>(0);
-    const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+    //const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
     const [hasSpokenOnce, setHasSpokenOnce] = useState<boolean>(false);
+
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const deltaRef = useRef<number>(0);
+    const deltaArrayRef = useRef<number[]>([]);
     const mountedRef = useRef<boolean>(false);
 
     /* ---- Timer actions ---- */
     const startTimer = useCallback(() => {
       const t = setInterval(() => {
-        setDelta((prev) => prev + 1);
+        deltaRef.current += 1;
       }, 1);
-      setTimer(t);
+      timerRef.current = t;
+      //setTimer(t);
     }, []);
 
     const stopTimer = useCallback(() => {
-      clearInterval(timer!);
-      setTimer(null);
-      setDelta(0);
-    }, [timer]);
+      clearInterval(timerRef.current!);
+
+      deltaArrayRef.current = [...deltaArrayRef.current, deltaRef.current];
+      deltaRef.current = 0;
+
+      timerRef.current = null;
+    }, []);
 
     // Stop timer when bot starts talking
     useAudioLevel(
       remoteAudioTrack?.persistentTrack,
       useCallback(
         (volume) => {
-          if (volume > REMOTE_AUDIO_THRESHOLD && timer) {
+          if (volume > REMOTE_AUDIO_THRESHOLD && timerRef.current) {
             stopTimer();
           }
         },
-        [stopTimer, timer]
+        [stopTimer]
       )
     );
 
@@ -65,8 +71,9 @@ const Latency: React.FC<{ started: boolean }> = memo(
 
     // Reset state on mount
     useEffect(() => {
-      setDelta(0);
-      setTimer(null);
+      timerRef.current = null;
+      deltaRef.current = 0;
+      deltaArrayRef.current = [];
       setVadInstance(null);
       setHasSpokenOnce(false);
     }, []);
@@ -104,9 +111,6 @@ const Latency: React.FC<{ started: boolean }> = memo(
           minSpeechFrames: 5,
           redemptionFrames: 3,
           preSpeechPadFrames: 1,
-          onFrameProcessed: () => {
-            setFrames((prev) => prev + 1);
-          },
           onSpeechStart: () => {
             setCurrentState(State.SPEAKING);
           },
@@ -132,12 +136,12 @@ const Latency: React.FC<{ started: boolean }> = memo(
     // Cleanup timer
     useEffect(
       () => () => {
-        if (timer) {
-          clearInterval(timer!);
-          setTimer(null);
+        if (timerRef.current) {
+          clearInterval(timerRef.current!);
+          timerRef.current = null;
         }
       },
-      [timer]
+      []
     );
 
     // Cleanup VAD
@@ -153,12 +157,12 @@ const Latency: React.FC<{ started: boolean }> = memo(
 
     /* ---- Render ---- */
 
+    console.log(deltaArrayRef.current);
+
     return (
       <div className="w-full">
-        <span className="font-bold">{delta}ms</span>
         <div className="flex flex-row gap-3 w-full">
           <span>current state: {currentState}</span>
-          <span>frames: {frames}</span>
         </div>
       </div>
     );
