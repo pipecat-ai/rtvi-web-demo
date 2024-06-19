@@ -22,8 +22,12 @@ enum State {
 
 const REMOTE_AUDIO_THRESHOLD = 0.1;
 
-const Latency: React.FC<{ started: boolean; botStatus: string }> = memo(
-  ({ started = false, botStatus }) => {
+const Latency: React.FC<{
+  started: boolean;
+  botStatus: string;
+  statsAggregator: StatsAggregator;
+}> = memo(
+  ({ started = false, botStatus, statsAggregator }) => {
     const localSessionId = useLocalSessionId();
     const [localAudioTrack] = useParticipantProperty(localSessionId, [
       "tracks.audio.persistentTrack",
@@ -45,7 +49,6 @@ const Latency: React.FC<{ started: boolean; botStatus: string }> = memo(
 
     /* ---- Timer actions ---- */
     const startTimer = useCallback(() => {
-      console.log("Starting timer");
       startTimeRef.current = new Date();
     }, []);
 
@@ -54,15 +57,18 @@ const Latency: React.FC<{ started: boolean; botStatus: string }> = memo(
         return;
       }
 
-      console.log("Stopping timer");
-
       const now = new Date();
       const diff = now.getTime() - startTimeRef.current.getTime();
       deltaArrayRef.current = [...deltaArrayRef.current, diff];
       setMedian(calculateMedian(deltaArrayRef.current));
       setLastDelta(diff);
       startTimeRef.current = null;
-    }, []);
+
+      // Increment turns
+      if (statsAggregator) {
+        statsAggregator.turns++;
+      }
+    }, [statsAggregator]);
 
     // Stop timer when bot starts talking
     useAudioLevel(
@@ -189,7 +195,7 @@ const Latency: React.FC<{ started: boolean; botStatus: string }> = memo(
             </span>
             <span className={styles.medianDelta}>
               {"x ~ "}
-              {median || "0"}
+              {median?.toFixed() || "0"}
               <sub>ms</sub>
             </span>
           </div>

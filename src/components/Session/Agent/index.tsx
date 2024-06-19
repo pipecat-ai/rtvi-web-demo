@@ -12,8 +12,11 @@ import styles from "./styles.module.css";
 
 type AgentState = "connecting" | "loading" | "connected";
 
-export const Agent: React.FC<{ hasStarted: boolean }> = memo(
-  ({ hasStarted = false }) => {
+export const Agent: React.FC<{
+  hasStarted: boolean;
+  statsAggregator: StatsAggregator;
+}> = memo(
+  ({ hasStarted = false, statsAggregator }) => {
     const participantIds = useParticipantIds({ filter: "remote" });
     const activeSpeakerId = useActiveSpeakerId({ ignoreLocal: true });
     const [agentState, setAgentState] = useState<AgentState>("connecting");
@@ -48,6 +51,7 @@ export const Agent: React.FC<{ hasStarted: boolean }> = memo(
           <Latency
             started={agentState === "connected" && hasStarted}
             botStatus={agentState}
+            statsAggregator={statsAggregator}
           />
         </footer>
       </div>

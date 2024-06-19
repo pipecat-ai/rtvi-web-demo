@@ -34,7 +34,6 @@ class StatsAggregator implements IStatsAggregator {
       low,
     };
 
-    this.turns++;
     this.hasNewStats = true;
   }
 

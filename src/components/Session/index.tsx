@@ -170,7 +170,7 @@ export const Session = React.memo(
             fullWidthMobile={false}
             className="w-full max-w-[320px] sm:max-w-[420px] mt-auto shadow-long"
           >
-            <Agent hasStarted={hasStarted} />
+            <Agent hasStarted={hasStarted} statsAggregator={stats_aggregator} />
           </Card>
 
           <UserMicBubble
