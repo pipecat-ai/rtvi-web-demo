@@ -34,14 +34,15 @@ const status_text = {
 };
 
 // Server URL (ensure trailing slash)
-let serverUrl = import.meta.env.VITE_SERVER_URL || import.meta.env.BASE_URL;
-if (!serverUrl.endsWith("/")) serverUrl += "/";
+let serverUrl = import.meta.env.VITE_SERVER_URL;
+if (serverUrl && !serverUrl.endsWith("/")) serverUrl += "/";
+
+const autoRoomCreation = !!import.meta.env.VITE_MANUAL_ROOM_ENTRY;
 
 // Query string for room URL
 const roomQs = new URLSearchParams(window.location.search).get("room_url");
 const checkRoomUrl = (url: string | null): boolean =>
   !!(url && /^(https?:\/\/[^.]+(\.staging)?\.daily\.co\/[^/]+)$/.test(url));
-const autoRoomCreation = import.meta.env.VITE_MANUAL_ROOM_ENTRY ? false : true;
 
 // Show config options
 const showConfigOptions = import.meta.env.VITE_SHOW_CONFIG;
@@ -63,7 +64,7 @@ export default function App() {
   );
 
   function handleRoomUrl() {
-    if (checkRoomUrl(roomUrl) || autoRoomCreation) {
+    if ((autoRoomCreation && serverUrl) || checkRoomUrl(roomUrl)) {
       setRoomError(false);
       setState("configuring");
     } else {
@@ -191,7 +192,9 @@ export default function App() {
         <Button
           fullWidthMobile
           key="next"
-          disabled={!!((roomQs && !roomError) || !roomUrl)}
+          disabled={
+            !!(roomQs && !roomError) || !(autoRoomCreation && !serverUrl)
+          }
           onClick={() => handleRoomUrl()}
         >
           Next <ArrowRight />

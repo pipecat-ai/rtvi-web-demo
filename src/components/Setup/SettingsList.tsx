@@ -4,7 +4,6 @@ import { cn } from "@/utils/tailwind";
 
 interface SettingsList {
   serverUrl: string;
-  manualStartBot?: boolean;
   manualRoomCreation?: boolean;
   roomQueryString: string | null;
   roomQueryStringValid: boolean | null;
@@ -18,20 +17,18 @@ const valueCx =
 
 export const SettingsList: React.FC<SettingsList> = ({
   serverUrl,
-  manualStartBot = false,
   manualRoomCreation = false,
   roomQueryString,
   roomQueryStringValid,
 }) => {
   return (
     <div className="grid w-full border border-primary-100 rounded-lg overflow-hidden">
-      {import.meta.env.VITE_SERVER_URL && (
+      {import.meta.env.VITE_SERVER_URL ? (
         <div className={rowCx}>
           <span className={titleCx}>Server URL</span>
           <span className={valueCx}>{serverUrl}</span>
         </div>
-      )}
-      {manualStartBot && (
+      ) : (
         <div className={rowCx}>
           <span className={titleCx}>Start bot manually</span>
           <span className={valueCx}>
