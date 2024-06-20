@@ -191,6 +191,7 @@ export default function App() {
       </CardContent>
       <CardFooter>
         <Button
+          id="nextBtn"
           fullWidthMobile
           key="next"
           disabled={
