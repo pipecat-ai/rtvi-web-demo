@@ -9,8 +9,10 @@
   border-top: 1px solid theme(colors.primary.200);
   animation: appear 0.3s ease-in-out;
   text-align: left;
+  box-shadow: theme(boxShadow.stats);
 
   @screen md {
+    box-shadow: none;
     z-index: 1;
     height: 100%;
     position: relative;

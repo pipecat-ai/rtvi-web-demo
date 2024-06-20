@@ -10,9 +10,13 @@
   display: flex;
   flex-flow: column nowrap;
   background-color: white;
-  padding: theme(spacing.3);
+  padding: theme(spacing.2);
   border-radius: theme(borderRadius.2xl);
   transition: border-color 200ms ease, background-color 200ms ease;
+
+  @screen md {
+    padding: theme(spacing.3);
+  }
 }
 
 .statusColumn {

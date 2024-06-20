@@ -163,6 +163,7 @@ export default function App() {
         <CardFooter>
           <Button
             key="start"
+            fullWidthMobile
             onClick={() => start()}
             disabled={state !== "configuring"}
           >

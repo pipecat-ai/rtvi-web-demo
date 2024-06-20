@@ -143,7 +143,7 @@ export const Session = React.memo(
     return (
       <>
         <dialog ref={modalRef}>
-          <Card className="max-w-md">
+          <Card className="w-svw max-w-full md:max-w-md">
             <CardHeader>
               <CardTitle>Change devices</CardTitle>
             </CardHeader>
