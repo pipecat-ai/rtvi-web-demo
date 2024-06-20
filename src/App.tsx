@@ -37,7 +37,8 @@ const status_text = {
 let serverUrl = import.meta.env.VITE_SERVER_URL;
 if (serverUrl && !serverUrl.endsWith("/")) serverUrl += "/";
 
-const autoRoomCreation = !!import.meta.env.VITE_MANUAL_ROOM_ENTRY;
+// Auto room creation (requires server URL)
+const autoRoomCreation = import.meta.env.VITE_MANUAL_ROOM_ENTRY ? false : true;
 
 // Query string for room URL
 const roomQs = new URLSearchParams(window.location.search).get("room_url");
@@ -193,7 +194,7 @@ export default function App() {
           fullWidthMobile
           key="next"
           disabled={
-            !!(roomQs && !roomError) || !(autoRoomCreation && !serverUrl)
+            !!((roomQs && !roomError) || (autoRoomCreation && !serverUrl))
           }
           onClick={() => handleRoomUrl()}
         >
