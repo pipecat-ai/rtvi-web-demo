@@ -99,13 +99,18 @@ export default function App() {
     // Join the daily session, passing through the url and token
     setState("connecting");
 
-    await daily.join({
-      url: data.room_url || roomUrl,
-      token: data.token || null,
-      videoSource: false,
-      startAudioOff: startAudioOff,
-    });
-
+    try {
+      await daily.join({
+        url: data?.room_url || roomUrl,
+        token: data?.token || "",
+        videoSource: false,
+        startAudioOff: startAudioOff,
+      });
+    } catch (e) {
+      setError(`Unable to join room: '${data?.room_url || roomUrl}'`);
+      setState("error");
+      return;
+    }
     // Away we go...
     setState("connected");
   }
@@ -186,7 +191,7 @@ export default function App() {
         <Button
           fullWidthMobile
           key="next"
-          disabled={!!(roomQs && !roomError)}
+          disabled={!!((roomQs && !roomError) || !roomUrl)}
           onClick={() => handleRoomUrl()}
         >
           Next <ArrowRight />
