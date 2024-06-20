@@ -34,14 +34,16 @@ const status_text = {
 };
 
 // Server URL (ensure trailing slash)
-let serverUrl = import.meta.env.VITE_SERVER_URL || import.meta.env.BASE_URL;
-if (!serverUrl.endsWith("/")) serverUrl += "/";
+let serverUrl = import.meta.env.VITE_SERVER_URL;
+if (serverUrl && !serverUrl.endsWith("/")) serverUrl += "/";
+
+// Auto room creation (requires server URL)
+const autoRoomCreation = import.meta.env.VITE_MANUAL_ROOM_ENTRY ? false : true;
 
 // Query string for room URL
 const roomQs = new URLSearchParams(window.location.search).get("room_url");
 const checkRoomUrl = (url: string | null): boolean =>
   !!(url && /^(https?:\/\/[^.]+(\.staging)?\.daily\.co\/[^/]+)$/.test(url));
-const autoRoomCreation = import.meta.env.VITE_MANUAL_ROOM_ENTRY ? false : true;
 
 // Show config options
 const showConfigOptions = import.meta.env.VITE_SHOW_CONFIG;
@@ -63,7 +65,7 @@ export default function App() {
   );
 
   function handleRoomUrl() {
-    if (checkRoomUrl(roomUrl) || autoRoomCreation) {
+    if ((autoRoomCreation && serverUrl) || checkRoomUrl(roomUrl)) {
       setRoomError(false);
       setState("configuring");
     } else {
@@ -99,13 +101,18 @@ export default function App() {
     // Join the daily session, passing through the url and token
     setState("connecting");
 
-    await daily.join({
-      url: data.room_url || roomUrl,
-      token: data.token || null,
-      videoSource: false,
-      startAudioOff: startAudioOff,
-    });
-
+    try {
+      await daily.join({
+        url: data?.room_url || roomUrl,
+        token: data?.token || "",
+        videoSource: false,
+        startAudioOff: startAudioOff,
+      });
+    } catch (e) {
+      setError(`Unable to join room: '${data?.room_url || roomUrl}'`);
+      setState("error");
+      return;
+    }
     // Away we go...
     setState("connected");
   }
@@ -113,7 +120,7 @@ export default function App() {
   async function leave() {
     await daily?.leave();
     await daily?.destroy();
-    setState("idle");
+    setState(showConfigOptions ? "idle" : "configuring");
   }
 
   if (state === "error") {
@@ -184,9 +191,12 @@ export default function App() {
       </CardContent>
       <CardFooter>
         <Button
+          id="nextBtn"
           fullWidthMobile
           key="next"
-          disabled={!!(roomQs && !roomError)}
+          disabled={
+            !!((roomQs && !roomError) || (autoRoomCreation && !serverUrl))
+          }
           onClick={() => handleRoomUrl()}
         >
           Next <ArrowRight />

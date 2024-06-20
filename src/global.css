@@ -119,7 +119,7 @@ main {
 samp {
   font-family: theme(fontFamily.mono);
   display: inline;
-  font-size: theme(fontSize.sm);
+  font-size: theme(fontSize.xs);
   padding: 0 0.4em;
   line-height: 1;
   border-radius: 0.25rem;
