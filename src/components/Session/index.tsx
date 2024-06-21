@@ -36,7 +36,7 @@ interface SessionProps {
 export const Session = React.memo(
   ({ onLeave, startAudioOff = false, openMic = false }: SessionProps) => {
     const daily = useDaily();
-    const [hasStarted, setHasStarted] = useState(false);
+    const [hasStarted, setHasStarted] = useState(openMic);
     const [showDevices, setShowDevices] = useState(false);
     const [showStats, setShowStats] = useState(false);
     const modalRef = useRef<HTMLDialogElement>(null);

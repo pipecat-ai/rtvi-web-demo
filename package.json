@@ -26,7 +26,6 @@
     "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.44.1",
     "@types/audioworklet": "^0.0.55",
     "@types/node": "^20.14.5",
     "@types/react": "^18.2.66",
