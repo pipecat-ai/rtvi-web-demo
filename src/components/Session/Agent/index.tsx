@@ -24,6 +24,8 @@ export const Agent: React.FC<{
     useEffect(() => {
       if (participantIds.length > 0) {
         setAgentState("connected");
+      } else {
+        setAgentState("connecting");
       }
     }, [activeSpeakerId, participantIds.length]);
 
