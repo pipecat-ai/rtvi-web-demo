@@ -27,7 +27,9 @@ const Splash: React.FC<SplashProps> = ({ handleReady }) => {
         <footer className="flex flex-row gap-2">
           <Button onClick={handleReady}>Try Demo</Button>
           <Button variant="light" asChild>
-            <a href="#">Read blog post</a>
+            <a href="https://www.daily.co/blog/the-worlds-fastest-voice-bot/">
+              Read blog post
+            </a>
           </Button>
         </footer>
       </div>
