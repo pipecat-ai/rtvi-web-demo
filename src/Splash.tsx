@@ -10,7 +10,7 @@ const Splash: React.FC<SplashProps> = ({ handleReady }) => {
   return (
     <main className="w-full h-full flex items-center justify-center bg-primary-200">
       <div className="flex flex-col gap-8 items-center max-w-xl p-4">
-        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-pretty">
+        <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-balance">
           Very Fast Voice AI Agents - Demo
         </h1>
         <p>

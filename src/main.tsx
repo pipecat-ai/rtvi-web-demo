@@ -12,6 +12,10 @@ import "./global.css"; // Note: Core app layout can be found here
 // Show marketing splash page
 const showSplashPage = import.meta.env.VITE_SHOW_SPLASH ? true : false;
 
+// Show warning on Firefox
+// @ts-expect-error - Firefox is not supported
+const isFirefox: boolean = typeof InstallTrigger !== "undefined";
+
 export const Layout = () => {
   const [showSplash, setShowSplash] = useState<boolean>(showSplashPage);
 
@@ -36,6 +40,12 @@ export const Layout = () => {
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
+    {isFirefox && (
+      <div className="bg-red-500 text-white text-sm font-bold text-center p-2 fixed t-0 w-full">
+        Voice activity detection not supported in Firefox. For best results,
+        please use Chrome or Edge.
+      </div>
+    )}
     <Layout />
   </React.StrictMode>
 );
