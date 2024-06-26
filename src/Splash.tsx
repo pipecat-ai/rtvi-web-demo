@@ -50,8 +50,8 @@ const Splash: React.FC<SplashProps> = ({ handleReady }) => {
             times.
           </p>
           <p className="lg:text-lg text-primary-600">
-            This bot was built using Pipecat, and open source framework for
-            voice and multimodal conversational AI.
+            This bot was built using Pipecat, an open source framework for voice
+            and multimodal conversational AI.
           </p>
         </div>
 
