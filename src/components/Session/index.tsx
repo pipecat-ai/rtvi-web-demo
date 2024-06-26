@@ -25,7 +25,7 @@ import UserMicBubble from "../UserMicBubble";
 
 import Agent from "./Agent";
 
-const stats_aggregator: StatsAggregator = new StatsAggregator();
+let stats_aggregator: StatsAggregator = new StatsAggregator();
 
 interface SessionProps {
   onLeave: () => void;
@@ -68,6 +68,11 @@ export const Session = React.memo(
         daily.setLocalAudio(false);
       }
     }, [daily, startAudioOff]);
+
+    // Reset stats aggregator on mount
+    useEffect(() => {
+      stats_aggregator = new StatsAggregator();
+    }, []);
 
     // If we joined unmuted, enable the mic once the
     // active speaker event has triggered once
