@@ -25,7 +25,7 @@ import UserMicBubble from "../UserMicBubble";
 
 import Agent from "./Agent";
 
-let stats_aggregator: StatsAggregator = new StatsAggregator();
+let stats_aggregator: StatsAggregator;
 
 interface SessionProps {
   onLeave: () => void;
