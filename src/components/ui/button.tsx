@@ -14,7 +14,7 @@ const buttonVariants = cva(
         ghost:
           "border-primary-200 bg-white text-primary hover:border-primary-300 hover:bg-white/0 disabled:text-primary-foreground/50",
         outline: "button-outline",
-        light: "button-light",
+        light: "border-transparent bg-transparent hover:bg-primary-50/20",
         icon: "bg-transparent border-0 hover:bg-primary-200",
       },
       size: {
