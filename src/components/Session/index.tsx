@@ -117,8 +117,13 @@ export const Session = React.memo(
       onAppMessage: (e) => {
         // Aggregate metrics from pipecat
         if (e.data?.type === "pipecat-metrics") {
-          e.data.metrics.ttfb.map((m: { name: string; time: number }) => {
-            stats_aggregator.addStat([m.name, "ttfb", m.time, Date.now()]);
+          e.data.metrics.ttfb.map((m: { processor: string; value: number }) => {
+            stats_aggregator.addStat([
+              m.processor,
+              "ttfb",
+              m.value,
+              Date.now(),
+            ]);
           });
           return;
         }
