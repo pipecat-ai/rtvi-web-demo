@@ -6,10 +6,11 @@ import {
   VoiceClientProvider,
 } from "@realtime-ai/voice-sdk-react";
 
-import Header from "./components/ui/header.tsx";
-import { TooltipProvider } from "./components/ui/tooltip.tsx";
-import App from "./App.tsx";
-import Splash from "./Splash.tsx";
+import Header from "./components/ui/header";
+import { TooltipProvider } from "./components/ui/tooltip";
+import App from "./App";
+import { defaultConfig } from "./config";
+import Splash from "./Splash";
 
 import "./global.css"; // Note: Core app layout can be found here
 
@@ -24,22 +25,7 @@ const isFirefox: boolean = typeof InstallTrigger !== "undefined";
 const voiceClient = new VoiceClient({
   baseUrl: import.meta.env.VITE_BASE_URL,
   enableMic: true,
-
-  config: {
-    llm: {
-      model: "llama3-70b-8192",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a helpful assistant named Gary. Keep responses short and legible.",
-        },
-      ],
-    },
-    tts: {
-      voice: "79a125e8-cd45-4c13-8a67-188112f4dd22",
-    },
-  },
+  config: defaultConfig,
 });
 
 export const Layout = () => {

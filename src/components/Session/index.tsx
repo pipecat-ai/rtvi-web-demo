@@ -11,6 +11,7 @@ import {
 } from "@realtime-ai/voice-sdk-react";
 import { LineChart, LogOut, Settings } from "lucide-react";
 
+import Configuration from "../Configuration";
 //import StatsAggregator from "../../utils/stats_aggregator";
 import { Button } from "../ui/button";
 import * as Card from "../ui/card";
@@ -134,9 +135,11 @@ export const Session = React.memo(
         <dialog ref={modalRef}>
           <Card.Card className="w-svw max-w-full md:max-w-md">
             <Card.CardHeader>
-              <Card.CardTitle>Change devices</Card.CardTitle>
+              <Card.CardTitle>Configuration</Card.CardTitle>
             </Card.CardHeader>
-            <Card.CardContent></Card.CardContent>
+            <Card.CardContent>
+              <Configuration />
+            </Card.CardContent>
             <Card.CardFooter>
               <Button onClick={() => setShowDevices(false)}>Close</Button>
             </Card.CardFooter>
