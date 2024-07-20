@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
-import { DailyProvider } from "@daily-co/daily-react";
+import { VoiceClient } from "@realtime-ai/voice-sdk";
+import {
+  VoiceClientAudio,
+  VoiceClientProvider,
+} from "@realtime-ai/voice-sdk-react";
 
 import Header from "./components/ui/header.tsx";
 import { TooltipProvider } from "./components/ui/tooltip.tsx";
@@ -16,6 +20,28 @@ const showSplashPage = import.meta.env.VITE_SHOW_SPLASH ? true : false;
 // @ts-expect-error - Firefox is not supported
 const isFirefox: boolean = typeof InstallTrigger !== "undefined";
 
+// Voice client (realtime-ai)
+const voiceClient = new VoiceClient({
+  baseUrl: import.meta.env.VITE_BASE_URL,
+  enableMic: true,
+
+  config: {
+    llm: {
+      model: "llama3-70b-8192",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a helpful assistant named Gary. Keep responses short and legible.",
+        },
+      ],
+    },
+    tts: {
+      voice: "79a125e8-cd45-4c13-8a67-188112f4dd22",
+    },
+  },
+});
+
 export const Layout = () => {
   const [showSplash, setShowSplash] = useState<boolean>(showSplashPage);
 
@@ -24,7 +50,7 @@ export const Layout = () => {
   }
 
   return (
-    <DailyProvider>
+    <VoiceClientProvider voiceClient={voiceClient}>
       <TooltipProvider>
         <main>
           <Header />
@@ -33,8 +59,9 @@ export const Layout = () => {
           </div>
         </main>
         <aside id="tray" />
+        <VoiceClientAudio />
       </TooltipProvider>
-    </DailyProvider>
+    </VoiceClientProvider>
   );
 };
 
@@ -42,8 +69,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     {isFirefox && (
       <div className="bg-red-500 text-white text-sm font-bold text-center p-2 fixed t-0 w-full">
-        Voice activity detection not supported in Firefox. For best results,
-        please use Chrome or Edge.
+        Clientside voice activity detection temporamental in Firefox. For best
+        results, please use Chrome or Edge.
       </div>
     )}
     <Layout />

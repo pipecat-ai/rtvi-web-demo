@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useRoom } from "@daily-co/daily-react";
+import React, { useCallback, useEffect, useState } from "react";
+import { VoiceEvent } from "@realtime-ai/voice-sdk";
+import {
+  useVoiceClient,
+  useVoiceClientEvent,
+} from "@realtime-ai/voice-sdk-react";
 import { Timer } from "lucide-react";
 
 import {
@@ -12,15 +16,21 @@ import { cn } from "@/utils/tailwind";
 import styles from "./styles.module.css";
 
 const ExpiryTimer: React.FC = () => {
-  const room = useRoom();
+  const voiceClient = useVoiceClient();
+  const [exp, setExp] = useState<number | undefined>(undefined);
   const [time, setTime] = useState({ minutes: 0, seconds: 0 });
 
-  const noExpiry = !room || !room.config.exp || room.config.exp === 0;
+  useVoiceClientEvent(
+    VoiceEvent.Connected,
+    useCallback(() => setExp(voiceClient?.transportExpiry), [voiceClient])
+  );
+
+  const noExpiry = !exp || exp === 0;
 
   useEffect(() => {
     if (noExpiry) return;
 
-    const futureTimestamp = room.config.exp;
+    const futureTimestamp = exp;
 
     // Function to update time
     const updateTime = () => {
@@ -39,7 +49,7 @@ const ExpiryTimer: React.FC = () => {
 
     // Clear interval on component unmount
     return () => clearInterval(interval);
-  }, [noExpiry, room]); // Dependency array includes room to re-run effect if room changes
+  }, [noExpiry, exp]);
 
   if (noExpiry) return null;
 

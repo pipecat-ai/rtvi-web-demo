@@ -1,11 +1,10 @@
 import React, { memo, useEffect, useState } from "react";
-import { useActiveSpeakerId, useParticipantIds } from "@daily-co/daily-react";
 import clsx from "clsx";
 import { Loader2 } from "lucide-react";
 
 import Latency from "@/components/Latency";
-import Transcript from "@/components/Transcript";
 
+//import Transcript from "@/components/Transcript";
 import Avatar from "./avatar";
 
 import styles from "./styles.module.css";
@@ -14,20 +13,19 @@ type AgentState = "connecting" | "loading" | "connected";
 
 export const Agent: React.FC<{
   hasStarted: boolean;
-  statsAggregator: StatsAggregator;
+  //statsAggregator: StatsAggregator;
 }> = memo(
-  ({ hasStarted = false, statsAggregator }) => {
-    const participantIds = useParticipantIds({ filter: "remote" });
-    const activeSpeakerId = useActiveSpeakerId({ ignoreLocal: true });
+  ({ hasStarted = false }) => {
+    // , statsAggregator
     const [agentState, setAgentState] = useState<AgentState>("connecting");
 
     useEffect(() => {
-      if (participantIds.length > 0) {
+      if (hasStarted) {
         setAgentState("connected");
       } else {
         setAgentState("connecting");
       }
-    }, [activeSpeakerId, participantIds.length]);
+    }, [hasStarted]);
 
     // Cleanup
     useEffect(() => () => setAgentState("connecting"), []);
@@ -47,13 +45,13 @@ export const Agent: React.FC<{
           ) : (
             <Avatar />
           )}
-          <Transcript />
+          {/*<Transcript />*/}
         </div>
         <footer className={styles.agentFooter}>
           <Latency
             started={agentState === "connected" && hasStarted}
             botStatus={agentState}
-            statsAggregator={statsAggregator}
+            //statsAggregator={statsAggregator}
           />
         </footer>
       </div>

@@ -13,6 +13,8 @@
   "dependencies": {
     "@daily-co/daily-js": "^0.64.0",
     "@daily-co/daily-react": "^0.19.0",
+    "@realtime-ai/voice-sdk": "^0.3.7",
+    "@realtime-ai/voice-sdk-react": "*",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
     "class-variance-authority": "^0.7.0",

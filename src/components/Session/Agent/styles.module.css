@@ -107,7 +107,7 @@
 }
 
 .face {
-  animation: faceAppear 1.5s ease-out forwards;
+  animation: faceAppear 1s ease-out forwards;
   position: relative;
   z-index: 2;
 }

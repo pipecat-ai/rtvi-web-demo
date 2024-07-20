@@ -22,7 +22,7 @@ Navigate to https://localhost:5173
 
 Name of your bot e.g. "Simple Chatbot" (shown in HTML and intro)
 
-`VITE_SERVER_URL`
+`VITE_BASE_URL`
 
 A server URL to trigger when starting a session (e.g. a Pipecat bot_runner) that instantiates a new agent at the specified room URL.  Note: If this is not set, the app will assume you will manually start your bot at the same room URL (and show a warning on the config screen in dev mode.)
 

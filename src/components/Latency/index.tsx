@@ -1,11 +1,9 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import { VoiceEvent } from "@realtime-ai/voice-sdk";
 import {
-  useAudioLevel,
-  useAudioTrack,
-  useLocalSessionId,
-  useParticipantIds,
-  useParticipantProperty,
-} from "@daily-co/daily-react";
+  useVoiceClient,
+  useVoiceClientEvent,
+} from "@realtime-ai/voice-sdk-react";
 import clsx from "clsx";
 
 import { VAD, VADState } from "@/vad";
@@ -26,18 +24,19 @@ const LATENCY_MIN = 100;
 const Latency: React.FC<{
   started: boolean;
   botStatus: string;
-  statsAggregator: StatsAggregator;
+  //statsAggregator: StatsAggregator;
 }> = memo(
-  ({ started = false, botStatus, statsAggregator }) => {
-    const localSessionId = useLocalSessionId();
-    const [localAudioTrack] = useParticipantProperty(localSessionId, [
-      "tracks.audio.persistentTrack",
-    ]);
-    const remoteParticipantId = useParticipantIds({ filter: "remote" })[0];
-    const remoteAudioTrack = useAudioTrack(remoteParticipantId);
+  ({ started = false, botStatus }) => {
+    //statsAggregator
+    const voiceClient = useVoiceClient()!;
+    const { local } = voiceClient.tracks();
+    const localAudioTrack = local.audio;
 
     const [vadInstance, setVadInstance] = useState<VAD | null>(null);
     const [currentState, setCurrentState] = useState<State>(State.SILENT);
+    const [botTalkingState, setBotTalkingState] = useState<State | undefined>(
+      undefined
+    );
     const [lastDelta, setLastDelta] = useState<number | null>(null);
     const [median, setMedian] = useState<number | null>(null);
     const [hasSpokenOnce, setHasSpokenOnce] = useState<boolean>(false);
@@ -72,14 +71,14 @@ const Latency: React.FC<{
       startTimeRef.current = null;
 
       // Increment turns
-      if (statsAggregator) {
+      /*if (statsAggregator) {
         statsAggregator.turns++;
-      }
-    }, [statsAggregator]);
+      }*/
+    }, []);
 
     // Stop timer when bot starts talking
-    useAudioLevel(
-      remoteAudioTrack?.persistentTrack,
+    useVoiceClientEvent(
+      VoiceEvent.RemoteAudioLevel,
       useCallback(
         (volume) => {
           if (volume > REMOTE_AUDIO_THRESHOLD && startTimeRef.current) {
@@ -88,6 +87,20 @@ const Latency: React.FC<{
         },
         [stopTimer]
       )
+    );
+
+    useVoiceClientEvent(
+      VoiceEvent.BotStoppedTalking,
+      useCallback(() => {
+        setBotTalkingState(State.SILENT);
+      }, [])
+    );
+
+    useVoiceClientEvent(
+      VoiceEvent.BotStartedTalking,
+      useCallback(() => {
+        setBotTalkingState(State.SPEAKING);
+      }, [])
     );
 
     /* ---- Effects ---- */
@@ -125,7 +138,7 @@ const Latency: React.FC<{
       console.log("Loading VAD");
 
       async function loadVad() {
-        const stream = new MediaStream([localAudioTrack!]);
+        const stream = new MediaStream([localAudioTrack]);
 
         const vad = new VAD({
           workletURL: AudioWorkletURL,
@@ -175,15 +188,21 @@ const Latency: React.FC<{
       currentState === State.SPEAKING && styles.speaking
     );
 
+    const botCx = clsx(
+      styles.statusColumn,
+      botTalkingState === State.SPEAKING && styles.speaking
+    );
+
     const userStatus = clsx(
       styles.status,
       currentState === State.SPEAKING && styles.statusSpeaking
     );
 
-    const boxStatusCx = clsx(
+    const boxStatus = clsx(
       styles.status,
       botStatus === "connecting" && styles.statusConnecting,
-      botStatus === "loading" && styles.statusLoading
+      botStatus === "loading" && styles.statusLoading,
+      botTalkingState === State.SPEAKING && styles.statusSpeaking
     );
 
     return (
@@ -208,11 +227,13 @@ const Latency: React.FC<{
               <sub>ms</sub>
             </span>
           </div>
-          <div className={styles.statusColumn}>
+          <div className={botCx}>
             <span className={styles.header}>
               Bot <span>status</span>
             </span>
-            <span className={boxStatusCx}>{botStatus}</span>
+            <span className={boxStatus}>
+              {botTalkingState === State.SPEAKING ? "Speaking" : botStatus}
+            </span>
           </div>
         </div>
       </>
