@@ -33,10 +33,16 @@ const Configuration: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-3">
-      <ModelSelect onSelect={(model) => handleModelChange(model)} />
-      <LanguageSelect
-        onSelect={(voice: Voice) => handleLanguageChange(voice)}
-      />
+      {voiceClient.state === "ready" ? (
+        <>
+          <ModelSelect onSelect={(model) => handleModelChange(model)} />
+          <LanguageSelect
+            onSelect={(voice: Voice) => handleLanguageChange(voice)}
+          />
+        </>
+      ) : (
+        <p>Waiting for bot to enter ready state...</p>
+      )}
     </div>
   );
 };
