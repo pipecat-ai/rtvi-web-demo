@@ -5,9 +5,6 @@ import {
   SparklinesLine,
   SparklinesReferenceLine,
 } from "react-sparklines";
-import { useNetwork } from "@daily-co/daily-react";
-//import { DailyEventObjectAppMessage } from "@daily-co/daily-js";
-//import { useAppMessage } from "@daily-co/daily-react";
 import { X } from "lucide-react";
 
 import { Button } from "../ui/button";
@@ -30,9 +27,7 @@ export const Stats = React.memo(
       statsAggregator.statsMap
     );
     //const [ping, setPing] = useState<number | null>(null);
-    const [rtt, setRtt] = useState<number | null>(null);
     const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    const network = useNetwork();
 
     /*
     const sendAppMessage = useAppMessage({
@@ -55,15 +50,10 @@ export const Stats = React.memo(
         if (newStats) {
           setCurrentStats({ ...newStats });
         }
-        // Get Daily RTT
-        if (network) {
-          const ns = await network.getStats();
-          setRtt(ns?.latest.networkRoundTripTime || null);
-        }
       }, 2500);
 
       return () => clearInterval(intervalRef.current!);
-    }, [network, statsAggregator]);
+    }, [statsAggregator]);
 
     const numTurns = statsAggregator.turns;
 
@@ -101,7 +91,7 @@ export const Stats = React.memo(
               <div>
                 <h4 className={styles.monoHeader}>RTT</h4>
                 <span className="truncate">
-                  {rtt?.toFixed(3) || "---"}
+                  {"---"}
                   <sub>s</sub>
                 </span>
               </div>
