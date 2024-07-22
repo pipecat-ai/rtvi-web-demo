@@ -47,6 +47,9 @@ export default function App() {
 
   async function leave() {
     await voiceClient.disconnect();
+
+    // Temporary workaround to restart, whilst we fix multiple instances
+    window.location.reload();
   }
 
   if (error) {

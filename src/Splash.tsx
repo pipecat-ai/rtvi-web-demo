@@ -1,10 +1,5 @@
 import React from "react";
-import { Book } from "lucide-react";
-
-import CerebriumLogo from "@/assets/logos/cerebrium.png";
-import DailyLogo from "@/assets/logos/daily.png";
-import DeepgramLogo from "@/assets/logos/deepgram.png";
-import L3Logo from "@/assets/logos/llama3.png";
+import { Book, Info } from "lucide-react";
 
 import { Button } from "./components/ui/button";
 
@@ -20,42 +15,25 @@ const Splash: React.FC<SplashProps> = ({ handleReady }) => {
           RTVI Web Demo
         </h1>
 
-        <div className="flex flex-col gap-2">
-          <span className="text-sm text-primary-400">Brought to you by:</span>
-          <div className="flex flex-row gap-6 bg-white rounded-full py-4 px-8 items-center">
-            <a href="https://www.daily.co/" target="_blank">
-              <img src={DailyLogo} alt="Daily.co" className="max-h-[22px]" />
-            </a>
-            <a href="https://www.cerebrium.ai/" target="_blank">
-              <img
-                src={CerebriumLogo}
-                alt="Daily.co"
-                className="max-h-[22px]"
-              />
-            </a>
-            <a href="https://deepgram.com/" target="_blank">
-              <img src={DeepgramLogo} alt="Daily.co" className="max-h-[22px]" />
-            </a>
-            <a href="https://llama.meta.com/llama3/" target="_blank">
-              <img src={L3Logo} alt="Daily.co" className="max-h-[22px]" />
-            </a>
-          </div>
-        </div>
-
-        <div className="max-w-full lg:max-w-2xl flex flex-col gap-6">
-          <p className="lg:text-lg text-primary-600">TBD</p>
-          <p className="lg:text-lg text-primary-600">TBD</p>
-        </div>
-
         <Button onClick={handleReady}>Try the demo</Button>
 
         <div className="h-[1px] bg-primary-300 w-full" />
 
-        <footer className="flex flex-col lg:flex-row lg:gap-2">
+        <footer className="flex flex-col lg:gap-2">
           <Button variant="light" asChild>
             <a href="https://github.com/rtvi-ai" className="text-indigo-600">
+              <Info className="size-6" />
+              Learn more about the RTVI standard
+            </a>
+          </Button>
+
+          <Button variant="light" asChild>
+            <a
+              href="https://github.com/rtvi-ai/rtvi-web-demoi"
+              className="text-indigo-600"
+            >
               <Book className="size-6" />
-              View source code
+              Demo source code
             </a>
           </Button>
         </footer>
