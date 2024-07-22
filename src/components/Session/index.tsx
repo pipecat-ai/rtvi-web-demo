@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-//import { createPortal } from "react-dom";
+import { createPortal } from "react-dom";
+import { LineChart, LogOut, Settings } from "lucide-react";
 import { TransportState, VoiceEvent } from "realtime-ai";
 import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
-import { LineChart, LogOut, Settings } from "lucide-react";
 
+import StatsAggregator from "../../utils/stats_aggregator";
 import Configuration from "../Configuration";
-//import StatsAggregator from "../../utils/stats_aggregator";
+import Stats from "../Stats";
 import { Button } from "../ui/button";
 import * as Card from "../ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
@@ -13,7 +14,7 @@ import UserMicBubble from "../UserMicBubble";
 
 import Agent from "./Agent";
 
-//let stats_aggregator: StatsAggregator;
+let stats_aggregator: StatsAggregator;
 
 interface SessionProps {
   state: TransportState;
@@ -46,6 +47,15 @@ export const Session = React.memo(
       }, [voiceClient])
     );
 
+    useVoiceClientEvent(
+      VoiceEvent.Metrics,
+      useCallback((metrics) => {
+        metrics?.ttfb?.map((m: { processor: string; value: number }) => {
+          stats_aggregator.addStat([m.processor, "ttfb", m.value, Date.now()]);
+        });
+      }, [])
+    );
+
     // ---- Effects
 
     useEffect(() => {
@@ -68,7 +78,7 @@ export const Session = React.memo(
 
     useEffect(() => {
       // Create new stats aggregator on mount (removes stats from previous session)
-      //stats_aggregator = new StatsAggregator();
+      stats_aggregator = new StatsAggregator();
     }, []);
 
     useEffect(() => {
@@ -91,26 +101,6 @@ export const Session = React.memo(
       return () => current?.close();
     }, [showDevices]);
 
-    /*
-    useAppMessage({
-      onAppMessage: (e) => {
-        // Aggregate metrics from pipecat
-        if (e.data?.type === "pipecat-metrics") {
-          e.data.metrics?.ttfb?.map(
-            (m: { processor: string; value: number }) => {
-              stats_aggregator.addStat([
-                m.processor,
-                "ttfb",
-                m.value,
-                Date.now(),
-              ]);
-            }
-          );
-          return;
-        }
-      },
-    });*/
-
     function toggleMute() {
       voiceClient.enableMic(muted);
       setMuted(!muted);
@@ -131,6 +121,15 @@ export const Session = React.memo(
             </Card.CardFooter>
           </Card.Card>
         </dialog>
+
+        {showStats &&
+          createPortal(
+            <Stats
+              statsAggregator={stats_aggregator}
+              handleClose={() => setShowStats(false)}
+            />,
+            document.getElementById("tray")!
+          )}
 
         <div className="flex-1 flex flex-col items-center justify-center w-full">
           <Card.Card

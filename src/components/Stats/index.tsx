@@ -88,13 +88,6 @@ export const Stats = React.memo(
                 <h4 className={styles.monoHeader}>Turns</h4>
                 <span className="truncate">{numTurns}</span>
               </div>
-              <div>
-                <h4 className={styles.monoHeader}>RTT</h4>
-                <span className="truncate">
-                  {"---"}
-                  <sub>s</sub>
-                </span>
-              </div>
             </div>
           </section>
 
