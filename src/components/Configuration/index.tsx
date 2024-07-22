@@ -1,31 +1,44 @@
 import React from "react";
+import { useVoiceClient } from "realtime-ai-react";
 
-//import { useVoiceClient } from "realtime-ai-react";
-//import { composeSystemPrompt, Language } from "@/config";
-//import LanguageSelect from "./LanguageSelect";
+import { Voice } from "@/config";
+
+import LanguageSelect from "./LanguageSelect";
+import ModelSelect from "./ModelSelect";
 
 const Configuration: React.FC = () => {
-  //const voiceClient = useVoiceClient()!;
+  const voiceClient = useVoiceClient()!;
 
-  /*
-  const handleLanguageChange = (lang: Language) => {
+  const handleLanguageChange = (voice: Voice) => {
     voiceClient.updateConfig(
       {
-        tts: { voice: lang.voice },
+        tts: { voice: voice.id },
       },
       { sendPartial: true }
     );
-    voiceClient.llmContext = {
-      messages: [
-        {
-          role: "system",
-          content: composeSystemPrompt(lang.language),
-        },
-      ],
-    };
-  };*/
+    voiceClient.appendLLMContext({
+      role: "assistant",
+      content: "Ask if the user prefers the new voice you have been given.",
+    });
+  };
 
-  return <div></div>;
+  const handleModelChange = (model: string) => {
+    voiceClient.updateConfig(
+      {
+        llm: { model: model },
+      },
+      { sendPartial: true }
+    );
+  };
+
+  return (
+    <div className="flex flex-col gap-3">
+      <ModelSelect onSelect={(model) => handleModelChange(model)} />
+      <LanguageSelect
+        onSelect={(voice: Voice) => handleLanguageChange(voice)}
+      />
+    </div>
+  );
 };
 
 export default Configuration;

@@ -29,7 +29,7 @@ const Splash: React.FC<SplashProps> = ({ handleReady }) => {
 
           <Button variant="light" asChild>
             <a
-              href="https://github.com/rtvi-ai/rtvi-web-demoi"
+              href="https://github.com/rtvi-ai/rtvi-web-demo"
               className="text-indigo-600"
             >
               <Book className="size-6" />

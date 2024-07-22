@@ -232,7 +232,7 @@ const Latency: React.FC<{
                 ? "Disconnected"
                 : botTalkingState === State.SPEAKING
                 ? "Speaking"
-                : "Connecting"}
+                : "Connected"}
             </span>
           </div>
         </div>

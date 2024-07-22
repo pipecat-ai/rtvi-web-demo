@@ -160,7 +160,7 @@ export const Session = React.memo(
               </TooltipTrigger>
             </Tooltip>
             <Tooltip>
-              <TooltipContent>Configure devices</TooltipContent>
+              <TooltipContent>Configure</TooltipContent>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"

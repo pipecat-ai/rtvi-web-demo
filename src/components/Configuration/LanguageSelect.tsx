@@ -1,24 +1,24 @@
 import React from "react";
-import { Languages } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 
-import { Language, languages } from "../../config";
+import { ttsVoices, Voice } from "../../config";
 import { Field } from "../ui/field";
 import { Select } from "../ui/select";
 
 type LanguageSelectProps = {
-  onSelect: (lang: Language) => void;
+  onSelect: (voice: Voice) => void;
 };
 
 const LanguageSelect: React.FC<LanguageSelectProps> = ({ onSelect }) => {
   return (
-    <Field label="Language:">
+    <Field label="Voice:">
       <Select
-        onChange={(e) => onSelect(languages[e.target.selectedIndex])}
-        icon={<Languages size={24} />}
+        onChange={(e) => onSelect(ttsVoices[e.target.selectedIndex])}
+        icon={<MessageCircle size={24} />}
       >
-        {languages.map((l) => (
-          <option key={l.code} value={l.language}>
-            {l.language}
+        {ttsVoices.map((l: Voice) => (
+          <option key={l.id} value={l.id}>
+            {l.label}
           </option>
         ))}
       </Select>
