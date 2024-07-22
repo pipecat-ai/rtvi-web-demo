@@ -1,10 +1,7 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { VoiceClient } from "@realtime-ai/voice-sdk";
-import {
-  VoiceClientAudio,
-  VoiceClientProvider,
-} from "@realtime-ai/voice-sdk-react";
+import { VoiceClient } from "realtime-ai";
+import { VoiceClientAudio, VoiceClientProvider } from "realtime-ai-react";
 
 import Header from "./components/ui/header";
 import { TooltipProvider } from "./components/ui/tooltip";
@@ -21,22 +18,29 @@ const showSplashPage = import.meta.env.VITE_SHOW_SPLASH ? true : false;
 // @ts-expect-error - Firefox is not supported
 const isFirefox: boolean = typeof InstallTrigger !== "undefined";
 
-// Voice client (realtime-ai)
-const voiceClient = new VoiceClient({
-  baseUrl: import.meta.env.VITE_BASE_URL,
-  enableMic: true,
-  config: defaultConfig,
-});
-
 export const Layout = () => {
   const [showSplash, setShowSplash] = useState<boolean>(showSplashPage);
+  const voiceClientRef = useRef<VoiceClient | null>(null);
+
+  const startDemo = () => {
+    // We create the client in an effect to prevent audio context errors
+    // from showing before we get user intent. This is because the VoiceClient
+    // will attempt to retrieve local devices on creation.
+    voiceClientRef.current = new VoiceClient({
+      baseUrl: import.meta.env.VITE_BASE_URL,
+      enableMic: true,
+      config: defaultConfig,
+    });
+
+    setShowSplash(false);
+  };
 
   if (showSplash) {
-    return <Splash handleReady={() => setShowSplash(false)} />;
+    return <Splash handleReady={() => startDemo()} />;
   }
 
   return (
-    <VoiceClientProvider voiceClient={voiceClient}>
+    <VoiceClientProvider voiceClient={voiceClientRef.current!}>
       <TooltipProvider>
         <main>
           <Header />

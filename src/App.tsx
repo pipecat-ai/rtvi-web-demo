@@ -1,14 +1,10 @@
-import { useCallback, useState } from "react";
-import {
-  RateLimitError,
-  TransportState,
-  VoiceEvent,
-} from "@realtime-ai/voice-sdk";
+import { useState } from "react";
+import { Ear, Loader2 } from "lucide-react";
+import { RateLimitError } from "realtime-ai";
 import {
   useVoiceClient,
-  useVoiceClientEvent,
-} from "@realtime-ai/voice-sdk-react";
-import { Ear, Loader2 } from "lucide-react";
+  useVoiceClientTransportState,
+} from "realtime-ai-react";
 
 import Session from "./components/Session";
 import { Configure } from "./components/Setup";
@@ -18,6 +14,7 @@ import * as Card from "./components/ui/card";
 
 const status_text = {
   idle: "Start",
+  disconnected: "Go again",
   handshaking: "Authenticating...",
   requesting_token: "Requesting token...",
   connecting: "Connecting...",
@@ -25,17 +22,10 @@ const status_text = {
 
 export default function App() {
   const voiceClient = useVoiceClient()!;
-  const [state, setState] = useState<TransportState>(voiceClient.state);
+
+  const state = useVoiceClientTransportState();
   const [error, setError] = useState<string | null>(null);
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
-
-  useVoiceClientEvent(
-    VoiceEvent.TransportStateChanged,
-    useCallback((state: TransportState) => {
-      console.log("STATE", state);
-      setState(state);
-    }, [])
-  );
 
   async function start() {
     if (!voiceClient) return;
@@ -47,7 +37,9 @@ export default function App() {
       if (e instanceof RateLimitError) {
         setError("Demo is currently at capacity. Please try again later.");
       } else {
-        setError(`Unable to authenticate. RTVI may be at capacity.`);
+        setError(
+          "Unable to authenticate. Server may be offline or busy. Please try again later."
+        );
       }
       return;
     }
@@ -55,7 +47,6 @@ export default function App() {
 
   async function leave() {
     await voiceClient.disconnect();
-    setState("idle");
   }
 
   if (error) {
@@ -66,7 +57,7 @@ export default function App() {
     );
   }
 
-  if (state === "connected") {
+  if (state === "connected" || state === "ready") {
     return (
       <Session
         state={state}
@@ -75,6 +66,8 @@ export default function App() {
       />
     );
   }
+
+  const isReady = state === "idle" || state === "disconnected";
 
   return (
     <Card.Card shadow className="animate-appear max-w-lg">
@@ -99,9 +92,9 @@ export default function App() {
           key="start"
           fullWidthMobile
           onClick={() => start()}
-          disabled={state !== "idle"}
+          disabled={!isReady}
         >
-          {state !== "idle" && <Loader2 className="animate-spin" />}
+          {!isReady && <Loader2 className="animate-spin" />}
           {status_text[state as keyof typeof status_text]}
         </Button>
       </Card.CardFooter>

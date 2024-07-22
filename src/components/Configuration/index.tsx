@@ -1,13 +1,13 @@
 import React from "react";
-import { useVoiceClient } from "@realtime-ai/voice-sdk-react";
 
-import { composeSystemPrompt, Language } from "@/config";
-
-import LanguageSelect from "./LanguageSelect";
+//import { useVoiceClient } from "realtime-ai-react";
+//import { composeSystemPrompt, Language } from "@/config";
+//import LanguageSelect from "./LanguageSelect";
 
 const Configuration: React.FC = () => {
-  const voiceClient = useVoiceClient()!;
+  //const voiceClient = useVoiceClient()!;
 
+  /*
   const handleLanguageChange = (lang: Language) => {
     voiceClient.updateConfig(
       {
@@ -23,13 +23,9 @@ const Configuration: React.FC = () => {
         },
       ],
     };
-  };
+  };*/
 
-  return (
-    <div>
-      <LanguageSelect onSelect={handleLanguageChange} />
-    </div>
-  );
+  return <div></div>;
 };
 
 export default Configuration;

@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
-import { VoiceEvent } from "@realtime-ai/voice-sdk";
-import { useVoiceClientEvent } from "@realtime-ai/voice-sdk-react";
+import { VoiceEvent } from "realtime-ai";
+import { useVoiceClientEvent } from "realtime-ai-react";
 
 import FaceSVG from "./face.svg";
 

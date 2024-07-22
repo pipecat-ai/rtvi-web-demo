@@ -1,6 +1,8 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import clsx from "clsx";
 import { Loader2 } from "lucide-react";
+import { VoiceEvent } from "realtime-ai";
+import { useVoiceClientEvent } from "realtime-ai-react";
 
 import Latency from "@/components/Latency";
 
@@ -9,36 +11,39 @@ import Avatar from "./avatar";
 
 import styles from "./styles.module.css";
 
-type AgentState = "connecting" | "loading" | "connected";
-
 export const Agent: React.FC<{
-  hasStarted: boolean;
+  isReady: boolean;
   //statsAggregator: StatsAggregator;
 }> = memo(
-  ({ hasStarted = false }) => {
+  ({ isReady }) => {
     // , statsAggregator
-    const [agentState, setAgentState] = useState<AgentState>("connecting");
+    const [hasStarted, setHasStarted] = useState<boolean>(false);
+    const [botDisconnected, setBotDisconnected] = useState<boolean>(false);
 
     useEffect(() => {
-      if (hasStarted) {
-        setAgentState("connected");
-      } else {
-        setAgentState("connecting");
-      }
-    }, [hasStarted]);
+      // Update the started state when the transport enters the ready state
+      if (!isReady) return;
+      setHasStarted(true);
+    }, [isReady]);
+
+    useVoiceClientEvent(
+      VoiceEvent.BotDisconnected,
+      useCallback(() => {
+        setHasStarted(false);
+        setBotDisconnected(true);
+      }, [])
+    );
 
     // Cleanup
-    useEffect(() => () => setAgentState("connecting"), []);
+    useEffect(() => () => setHasStarted(false), []);
 
-    const cx = clsx(
-      styles.agentWindow,
-      agentState === "connected" && styles.connected
-    );
+    const cx = clsx(styles.agentWindow, hasStarted && styles.ready);
+    const botStatus = botDisconnected ? "disconnected" : "connected";
 
     return (
       <div className={styles.agent}>
         <div className={cx}>
-          {agentState === "connecting" ? (
+          {!hasStarted ? (
             <span className={styles.loader}>
               <Loader2 size={32} className="animate-spin" />
             </span>
@@ -49,15 +54,15 @@ export const Agent: React.FC<{
         </div>
         <footer className={styles.agentFooter}>
           <Latency
-            started={agentState === "connected" && hasStarted}
-            botStatus={agentState}
+            started={hasStarted}
+            botStatus={botStatus}
             //statsAggregator={statsAggregator}
           />
         </footer>
       </div>
     );
   },
-  (p, n) => p.hasStarted === n.hasStarted
+  (p, n) => p.isReady === n.isReady
 );
 
 export default Agent;

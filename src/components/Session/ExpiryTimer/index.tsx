@@ -1,9 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { VoiceEvent } from "@realtime-ai/voice-sdk";
-import {
-  useVoiceClient,
-  useVoiceClientEvent,
-} from "@realtime-ai/voice-sdk-react";
+import { VoiceEvent } from "realtime-ai";
+import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
 import { Timer } from "lucide-react";
 
 import {

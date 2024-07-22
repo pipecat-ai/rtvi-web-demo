@@ -1,8 +1,8 @@
 import React, { useCallback, useRef } from "react";
-import { VoiceEvent } from "@realtime-ai/voice-sdk";
-import { useVoiceClientEvent } from "@realtime-ai/voice-sdk-react";
 import clsx from "clsx";
 import { Mic, MicOff, Pause } from "lucide-react";
+import { VoiceEvent } from "realtime-ai";
+import { useVoiceClientEvent } from "realtime-ai-react";
 
 import styles from "./styles.module.css";
 

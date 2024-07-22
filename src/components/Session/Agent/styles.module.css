@@ -86,6 +86,14 @@
     background: var(--color-orange-400);
   }
 }
+.statusRed {
+  color: var(--color-red-800);
+  background: var(--color-red-100);
+
+  > span {
+    background: var(--color-red-400);
+  }
+}
 
 .statusGreen {
   color: var(--color-green-800);

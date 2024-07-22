@@ -16,7 +16,7 @@ function Header() {
         </span>
 
         <nav className="pointer-events-none flex-row items-center gap-8 text-lg leading-7 hidden group-hover:flex group-hover:pointer-events-auto">
-          <a href="https://git.new/ai" target="_blank" className={aCx}>
+          <a href="https://github.com/rtvi-ai" target="_blank" className={aCx}>
             GitHub
           </a>
           <a href="https://discord.gg/pipecat" target="_blank" className={aCx}>

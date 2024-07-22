@@ -1,14 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 //import { createPortal } from "react-dom";
-import {
-  Participant,
-  TransportState,
-  VoiceEvent,
-} from "@realtime-ai/voice-sdk";
-import {
-  useVoiceClient,
-  useVoiceClientEvent,
-} from "@realtime-ai/voice-sdk-react";
+import { TransportState, VoiceEvent } from "realtime-ai";
+import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
 import { LineChart, LogOut, Settings } from "lucide-react";
 
 import Configuration from "../Configuration";
@@ -41,23 +34,16 @@ export const Session = React.memo(
 
     // ---- Events
 
-    // Wait for the bot to join the session, and trigger it to say hello
+    // Wait for the bot to enter a ready state and trigger it to say hello
     useVoiceClientEvent(
-      VoiceEvent.ParticipantConnected,
-      useCallback(
-        (p: Participant) => {
-          if (p.local) return;
-          // Trigger the bot to say hello
-          setTimeout(() => {
-            setHasStarted(true);
-            voiceClient.appendLLMContext({
-              role: "assistant",
-              content: "Greet the user",
-            });
-          }, 2000);
-        },
-        [voiceClient]
-      )
+      VoiceEvent.BotReady,
+      useCallback(() => {
+        setHasStarted(true);
+        voiceClient.appendLLMContext({
+          role: "assistant",
+          content: "Greet the user",
+        });
+      }, [voiceClient])
     );
 
     // ---- Effects
@@ -151,7 +137,7 @@ export const Session = React.memo(
             fullWidthMobile={false}
             className="w-full max-w-[320px] sm:max-w-[420px] mt-auto shadow-long"
           >
-            <Agent hasStarted={hasStarted} />
+            <Agent isReady={state === "ready"} />
           </Card.Card>
           <UserMicBubble
             active={hasStarted}

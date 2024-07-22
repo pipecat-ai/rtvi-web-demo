@@ -1,10 +1,7 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
-import { VoiceEvent } from "@realtime-ai/voice-sdk";
-import {
-  useVoiceClient,
-  useVoiceClientEvent,
-} from "@realtime-ai/voice-sdk-react";
 import clsx from "clsx";
+import { VoiceEvent } from "realtime-ai";
+import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
 
 import { VAD, VADState } from "@/vad";
 import AudioWorkletURL from "@/vad/worklet.ts?worker&url";
@@ -135,8 +132,6 @@ const Latency: React.FC<{
         return;
       }
 
-      console.log("Loading VAD");
-
       async function loadVad() {
         const stream = new MediaStream([localAudioTrack]);
 
@@ -193,15 +188,16 @@ const Latency: React.FC<{
       botTalkingState === State.SPEAKING && styles.speaking
     );
 
-    const userStatus = clsx(
+    const userStatusCx = clsx(
       styles.status,
       currentState === State.SPEAKING && styles.statusSpeaking
     );
 
-    const boxStatus = clsx(
+    const boxStatusCx = clsx(
       styles.status,
-      botStatus === "connecting" && styles.statusConnecting,
       botStatus === "loading" && styles.statusLoading,
+      botStatus === "connecting" && styles.statusConnecting,
+      botStatus === "disconnected" && styles.statusDisconnected,
       botTalkingState === State.SPEAKING && styles.statusSpeaking
     );
 
@@ -212,7 +208,7 @@ const Latency: React.FC<{
             <span className={styles.header}>
               User <span>status</span>
             </span>
-            <span className={userStatus}>
+            <span className={userStatusCx}>
               {currentState === State.SPEAKING ? "Speaking" : "Connected"}
             </span>
           </div>
@@ -231,8 +227,12 @@ const Latency: React.FC<{
             <span className={styles.header}>
               Bot <span>status</span>
             </span>
-            <span className={boxStatus}>
-              {botTalkingState === State.SPEAKING ? "Speaking" : botStatus}
+            <span className={boxStatusCx}>
+              {botStatus === "disconnected"
+                ? "Disconnected"
+                : botTalkingState === State.SPEAKING
+                ? "Speaking"
+                : "Connecting"}
             </span>
           </div>
         </div>

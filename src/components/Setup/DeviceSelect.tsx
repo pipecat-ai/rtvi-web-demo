@@ -1,10 +1,8 @@
 import { useEffect } from "react";
-import { DailyMeetingState } from "@daily-co/daily-js";
-import { useDaily, useDevices } from "@daily-co/daily-react";
-import { Mic, Speaker } from "lucide-react";
+import { Mic } from "lucide-react";
+import { useVoiceClientMediaDevices } from "realtime-ai-react";
 
 import { AudioIndicatorBar } from "../AudioIndicator";
-import { Alert } from "../ui/alert";
 import { Field } from "../ui/field";
 import { Select } from "../ui/select";
 
@@ -15,84 +13,27 @@ interface DeviceSelectProps {
 export const DeviceSelect: React.FC<DeviceSelectProps> = ({
   hideMeter = false,
 }) => {
-  const daily = useDaily();
-  const {
-    currentMic,
-    hasMicError,
-    micState,
-    microphones,
-    setMicrophone,
-    currentSpeaker,
-    speakers,
-    setSpeaker,
-  } = useDevices();
-
-  const handleMicrophoneChange = (value: string) => {
-    setMicrophone(value);
-  };
-
-  const handleSpeakerChange = (value: string) => {
-    setSpeaker(value);
-  };
+  const { availableMics, selectedMic, updateMic } =
+    useVoiceClientMediaDevices();
 
   useEffect(() => {
-    if (microphones.length > 0 || !daily || daily.isDestroyed()) return;
-    const meetingState = daily.meetingState();
-    const meetingStatesBeforeJoin: DailyMeetingState[] = [
-      "new",
-      "loading",
-      "loaded",
-    ];
-    if (meetingStatesBeforeJoin.includes(meetingState)) {
-      daily.startCamera({ startVideoOff: true, startAudioOff: false });
-    }
-  }, [daily, microphones]);
+    updateMic(selectedMic?.deviceId);
+  }, [updateMic, selectedMic]);
 
   return (
     <div className="flex flex-col flex-wrap gap-4">
-      {hasMicError && (
-        <Alert intent="danger" title="Device error">
-          {micState === "blocked" ? (
-            <>
-              Please check your browser and system permissions. Make sure that
-              this app is allowed to access your microphone and refresh the
-              page.
-            </>
-          ) : micState === "in-use" ? (
-            <>
-              Your microphone is being used by another app. Please close any
-              other apps using your microphone and restart this app.
-            </>
-          ) : micState === "not-found" ? (
-            <>
-              No microphone seems to be connected. Please connect a microphone.
-            </>
-          ) : micState === "not-supported" ? (
-            <>
-              This app is not supported on your device. Please update your
-              software or use a different device.
-            </>
-          ) : (
-            <>
-              There seems to be an issue accessing your microphone. Try
-              restarting the app or consult a system administrator.
-            </>
-          )}
-        </Alert>
-      )}
-
-      <Field label="Microphone:" error={hasMicError}>
+      <Field label="Microphone:" error={false}>
         <Select
-          onChange={(e) => handleMicrophoneChange(e.target.value)}
-          defaultValue={currentMic?.device.deviceId}
+          onChange={(e) => updateMic(e.currentTarget.value)}
+          value={selectedMic?.deviceId}
           icon={<Mic size={24} />}
         >
-          {microphones.length === 0 ? (
+          {availableMics.length === 0 ? (
             <option value="">Loading devices...</option>
           ) : (
-            microphones.map((m) => (
-              <option key={m.device.deviceId} value={m.device.deviceId}>
-                {m.device.label}
+            availableMics.map((mic) => (
+              <option key={mic.deviceId} value={mic.deviceId}>
+                {mic.label}
               </option>
             ))
           )}
@@ -100,6 +41,7 @@ export const DeviceSelect: React.FC<DeviceSelectProps> = ({
         {!hideMeter && <AudioIndicatorBar />}
       </Field>
 
+      {/*}
       <Field label="Speakers:">
         <Select
           icon={<Speaker size={24} />}
@@ -117,6 +59,7 @@ export const DeviceSelect: React.FC<DeviceSelectProps> = ({
           )}
         </Select>
       </Field>
+      */}
     </div>
   );
 };

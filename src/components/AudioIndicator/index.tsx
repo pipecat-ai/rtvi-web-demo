@@ -1,21 +1,15 @@
 import { useCallback, useRef } from "react";
-import {
-  useAudioLevel,
-  useAudioTrack,
-  useLocalSessionId,
-} from "@daily-co/daily-react";
+import { VoiceEvent } from "realtime-ai";
+import { useVoiceClientEvent } from "realtime-ai-react";
 
 import styles from "./styles.module.css";
 
 export const AudioIndicatorBar: React.FC = () => {
-  const localSessionId = useLocalSessionId();
-  const audioTrack = useAudioTrack(localSessionId);
-
   const volRef = useRef<HTMLDivElement>(null);
 
-  useAudioLevel(
-    audioTrack?.persistentTrack,
-    useCallback((volume) => {
+  useVoiceClientEvent(
+    VoiceEvent.LocalAudioLevel,
+    useCallback((volume: number) => {
       if (volRef.current)
         volRef.current.style.width = Math.max(2, volume * 100) + "%";
     }, [])
