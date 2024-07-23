@@ -8,6 +8,7 @@ import Latency from "@/components/Latency";
 
 //import TranscriptOverlay from "../TranscriptOverlay";
 import Avatar from "./avatar";
+import ModelBadge from "./model";
 
 import styles from "./styles.module.css";
 
@@ -44,6 +45,7 @@ export const Agent: React.FC<{
     return (
       <div className={styles.agent}>
         <div className={cx}>
+          <ModelBadge />
           {!hasStarted ? (
             <span className={styles.loader}>
               <Loader2 size={32} className="animate-spin" />

@@ -4,7 +4,15 @@ import { VoiceEvent } from "realtime-ai";
 import { useVoiceClientMediaTrack } from "realtime-ai-react";
 import { useVoiceClientEvent } from "realtime-ai-react";
 
-import { LATENCY_MAX, LATENCY_MIN } from "@/config";
+import {
+  LATENCY_MAX,
+  LATENCY_MIN,
+  VAD_MIN_SPEECH_FRAMES,
+  VAD_NEGATIVE_SPEECH_THRESHOLD,
+  VAD_POSITIVE_SPEECH_THRESHOLD,
+  VAD_PRESPEECH_PAD_FRAMES,
+  VAD_REDEMPTION_FRAMES,
+} from "@/config";
 import { VAD, VADState } from "@/vad";
 import AudioWorkletURL from "@/vad/worklet.ts?worker&url";
 
@@ -39,8 +47,6 @@ const Latency: React.FC<{
     const deltaArrayRef = useRef<number[]>([]);
     const startTimeRef = useRef<Date | null>(null);
     const mountedRef = useRef<boolean>(false);
-
-    console.log(started);
 
     /* ---- Timer actions ---- */
     const startTimer = useCallback(() => {
@@ -101,10 +107,9 @@ const Latency: React.FC<{
     );
 
     useVoiceClientEvent(
-      VoiceEvent.LocalStoppedTalking,
+      VoiceEvent.LocalStartedTalking,
       useCallback(() => {
         if (!hasSpokenOnce) {
-          console.log("A");
           setHasSpokenOnce(true);
         }
       }, [hasSpokenOnce])
@@ -146,11 +151,11 @@ const Latency: React.FC<{
         const vad = new VAD({
           workletURL: AudioWorkletURL,
           stream,
-          positiveSpeechThreshold: 0.8,
-          negativeSpeechThreshold: 0.8 - 0.15,
-          minSpeechFrames: 8,
-          redemptionFrames: 3,
-          preSpeechPadFrames: 1,
+          positiveSpeechThreshold: VAD_POSITIVE_SPEECH_THRESHOLD,
+          negativeSpeechThreshold: VAD_NEGATIVE_SPEECH_THRESHOLD,
+          minSpeechFrames: VAD_MIN_SPEECH_FRAMES,
+          redemptionFrames: VAD_REDEMPTION_FRAMES,
+          preSpeechPadFrames: VAD_PRESPEECH_PAD_FRAMES,
           onSpeechStart: () => {
             setCurrentState(State.SPEAKING);
           },
