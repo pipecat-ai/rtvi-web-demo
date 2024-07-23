@@ -7,7 +7,7 @@ type SplashProps = {
   handleReady: () => void;
 };
 
-const Splash: React.FC<SplashProps> = ({ handleReady }) => {
+export const Splash: React.FC<SplashProps> = ({ handleReady }) => {
   return (
     <main className="w-full h-full flex items-center justify-center bg-primary-200 p-4 bg-[length:auto_50%] lg:bg-auto bg-colorWash bg-no-repeat bg-right-top">
       <div className="flex flex-col gap-8 lg:gap-12 items-center max-w-full lg:max-w-3xl">

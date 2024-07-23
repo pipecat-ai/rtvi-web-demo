@@ -1,6 +1,6 @@
 import ExpiryTimer from "../Session/ExpiryTimer";
 
-function Header() {
+export function Header() {
   return (
     <header
       id="header"
