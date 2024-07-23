@@ -6,7 +6,7 @@ export function composeSystemPrompt(language: string) {
 
 export const defaultConfig = {
   llm: {
-    model: "llama3-70b-8192",
+    model: "llama-3.1-405b-reasoning",
     messages: [
       {
         role: "system",
@@ -17,7 +17,7 @@ export const defaultConfig = {
     ],
   },
   tts: {
-    voice: "79a125e8-cd45-4c13-8a67-188112f4dd22",
+    voice: "b7d50908-b17c-442d-ad8d-810c63997ed9",
   },
 };
 
