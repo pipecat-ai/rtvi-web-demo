@@ -52,8 +52,8 @@ export const languages: Language[] = [
 ];
 
 export const llmModels: LLMModel[] = [
-  { label: "LLama3 70b", id: "llama-3.1-70b-versatile" },
   { label: "Llama3 8b", id: "llama-3.1-8b-instant" },
+  { label: "LLama3 70b", id: "llama-3.1-70b-versatile" },
 ];
 
 export const defaultConfig = {

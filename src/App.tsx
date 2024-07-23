@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { Ear, Loader2 } from "lucide-react";
-import { RateLimitError, VoiceEvent } from "realtime-ai";
+import { RateLimitError } from "realtime-ai";
 import {
   useVoiceClient,
-  useVoiceClientEvent,
   useVoiceClientTransportState,
 } from "realtime-ai-react";
 
@@ -31,10 +30,6 @@ export default function App() {
   >("idle");
   const [error, setError] = useState<string | null>(null);
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
-
-  useVoiceClientEvent(VoiceEvent.ConfigUpdated, (config) => {
-    console.log("Config change:", config);
-  });
 
   useEffect(() => {
     // Initialize local audio devices
@@ -72,7 +67,7 @@ export default function App() {
         setError(
           "Bot failed to join or enter ready state. Server may be busy. Please try again later."
         );
-        setAppState("idle");
+        voiceClient.disconnect();
       }
     }, BOT_READY_TIMEOUT);
 
@@ -118,7 +113,7 @@ export default function App() {
   const isReady = appState === "ready";
 
   return (
-    <Card.Card shadow className="animate-appear max-w-lg">
+    <Card.Card shadow className="animate-appear max-w-lg mb-14">
       <Card.CardHeader>
         <Card.CardTitle>Configuration</Card.CardTitle>
         <Card.CardDescription>
