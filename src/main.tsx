@@ -35,13 +35,14 @@ export const Layout = () => {
   return (
     <VoiceClientProvider voiceClient={voiceClient}>
       <TooltipProvider>
+        <aside id="left-tray" />
         <main>
           <Header />
           <div id="app">
             <App />
           </div>
         </main>
-        <aside id="tray" />
+        <aside id="right-tray" />
         <VoiceClientAudio />
       </TooltipProvider>
     </VoiceClientProvider>

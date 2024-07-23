@@ -1,5 +1,4 @@
-# RTVI Web Demo
-
+# RTVI Patient Intake Demo
 
 ## Getting setup
 
@@ -39,12 +38,11 @@ Show an initial splash screen (Splash.tsx).
 
 Whilst this app works well with hot reloading, the underlying WebRTC dependencies on some transports will throw errors if they are reinitialized. Check your console for warnings if something doesn't appear to be working.
 
-
 ## What libraries does this use?
 
 ### Vite / React
 
-We've used [Vite](https://vitejs.dev/) to simplify the development and build experience. 
+We've used [Vite](https://vitejs.dev/) to simplify the development and build experience.
 
 ### Tailwind CSS
 
@@ -53,4 +51,3 @@ We use [Tailwind](https://tailwindcss.com/) so the UI is easy to theme quickly, 
 ### Radix
 
 For interactive components, we make use of [Radix](https://www.radix-ui.com/).
-
