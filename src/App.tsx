@@ -36,6 +36,11 @@ export default function App() {
   });
 
   useEffect(() => {
+    if (!voiceClient || transportState !== "idle") return;
+    voiceClient.initDevices();
+  }, [transportState, voiceClient]);
+
+  useEffect(() => {
     // Update the app state based on the transport state
     // We only need a substate of states for the different view states
     // so this method helps avoid inline conditionals.
