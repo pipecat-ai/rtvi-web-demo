@@ -1,6 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { LineChart, LogOut, Settings, StopCircle, ListChecks } from "lucide-react";
+import {
+  LineChart,
+  LogOut,
+  Settings,
+  StopCircle,
+  ListChecks,
+} from "lucide-react";
 
 import { TransportState, VoiceEvent } from "realtime-ai";
 import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
@@ -71,6 +77,7 @@ export const Session = React.memo(
       useCallback(
         (jsonString: string) => {
           console.log("json string received:", jsonString);
+          // @ts-ignore
           const fnData = JSON.parse(jsonString.data);
 
           if (fnData && fnData.function_name) {
@@ -113,7 +120,7 @@ export const Session = React.memo(
                 break;
               case "list_prescriptions":
                 const rx = args["prescriptions"].map(
-                  (p) => `${p["medication"]}, ${p["dosage"]}`
+                  (p: any) => `${p["medication"]}, ${p["dosage"]}`
                 );
                 notes = rx.join("<br />");
                 newChecklist = checklist.map((item, i) => {
@@ -138,7 +145,7 @@ export const Session = React.memo(
                 ]);
                 break;
               case "list_allergies":
-                notes = args["allergies"].map((a) => a["name"]).join(", ");
+                notes = args["allergies"].map((a: any) => a["name"]).join(", ");
                 newChecklist = checklist.map((item, i) => {
                   if (i == 2) {
                     return {
@@ -161,7 +168,9 @@ export const Session = React.memo(
                 ]);
                 break;
               case "list_conditions":
-                notes = args["conditions"].map((a) => a["name"]).join(", ");
+                notes = args["conditions"]
+                  .map((a: any) => a["name"])
+                  .join(", ");
                 newChecklist = checklist.map((item, i) => {
                   if (i == 3) {
                     return {
@@ -184,7 +193,9 @@ export const Session = React.memo(
                 ]);
                 break;
               case "list_visit_reasons":
-                notes = args["visit_reasons"].map((a) => a["name"]).join(", ");
+                notes = args["visit_reasons"]
+                  .map((a: any) => a["name"])
+                  .join(", ");
                 newChecklist = checklist.map((item, i) => {
                   if (i == 4) {
                     return {
@@ -274,18 +285,12 @@ export const Session = React.memo(
 
         {showStats &&
           createPortal(
-            <Stats
-              statsAggregator={stats_aggregator}
-              handleClose={() => setShowStats(false)}
-            />,
+            <Stats statsAggregator={stats_aggregator} />,
             document.getElementById("right-tray")!
           )}
         {showChecklist &&
           createPortal(
-            <Checklist
-              checklist={checklist}
-              handleClose={() => setShowChecklist(false)}
-            />,
+            <Checklist checklist={checklist} />,
             document.getElementById("left-tray")!
           )}
 

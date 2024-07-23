@@ -5,9 +5,7 @@ import {
   SparklinesLine,
   SparklinesReferenceLine,
 } from "react-sparklines";
-import { X } from "lucide-react";
 
-import { Button } from "../ui/button";
 import HelpTip from "../ui/helptip";
 
 import styles from "./styles.module.css";
@@ -18,11 +16,10 @@ const StatsHeader: React.FC<{ title: string }> = ({ title }) => {
 
 interface StatsProps {
   statsAggregator: StatsAggregator;
-  handleClose: () => void;
 }
 
 export const Stats = React.memo(
-  ({ statsAggregator, handleClose }: StatsProps) => {
+  ({ statsAggregator }: StatsProps) => {
     const [currentStats, setCurrentStats] = useState<StatsMap>(
       statsAggregator.statsMap
     );
@@ -70,16 +67,6 @@ export const Stats = React.memo(
 
     return (
       <div className={styles.container}>
-        {/* <div className={styles.close}>
-          <Button
-            variant="icon"
-            size="iconSm"
-            onClick={handleClose}
-            className="m-3"
-          >
-            <X />
-          </Button>
-        </div> */}
         <div className={styles.inner}>
           <section className={styles.section}>
             <StatsHeader title="Session" />

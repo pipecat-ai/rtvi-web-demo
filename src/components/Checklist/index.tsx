@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React from "react";
 import { Circle, CircleCheckBig } from "lucide-react";
 
 import styles from "../Stats/styles.module.css";
 
 interface ChecklistProps {
-  handleClose: () => void;
   checklist: ChecklistItemProps[];
 }
 
@@ -38,19 +37,17 @@ const ChecklistItem: React.FC<{ item: ChecklistItemProps }> = ({ item }) => {
     </div>
   );
 };
-export const Checklist = React.memo(
-  ({ handleClose, checklist }: ChecklistProps) => {
-    return (
-      <div className={styles.container}>
-        <div className={styles.inner}>
-          <header className={styles.statsHeader}>Intake Checklist</header>
-          {checklist.map((item, index) => {
-            return <ChecklistItem key={index} item={item} />;
-          })}
-        </div>
+export const Checklist = React.memo(({ checklist }: ChecklistProps) => {
+  return (
+    <div className={styles.container}>
+      <div className={styles.inner}>
+        <header className={styles.statsHeader}>Intake Checklist</header>
+        {checklist.map((item, index) => {
+          return <ChecklistItem key={index} item={item} />;
+        })}
       </div>
-    );
-  }
-);
+    </div>
+  );
+});
 
 export default Checklist;
