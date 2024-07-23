@@ -70,7 +70,7 @@ export const Stats = React.memo(
 
     return (
       <div className={styles.container}>
-        <div className={styles.close}>
+        {/* <div className={styles.close}>
           <Button
             variant="icon"
             size="iconSm"
@@ -79,7 +79,7 @@ export const Stats = React.memo(
           >
             <X />
           </Button>
-        </div>
+        </div> */}
         <div className={styles.inner}>
           <section className={styles.section}>
             <StatsHeader title="Session" />

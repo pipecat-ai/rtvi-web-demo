@@ -277,7 +277,7 @@ export const Session = React.memo(
               statsAggregator={stats_aggregator}
               handleClose={() => setShowStats(false)}
             />,
-            document.getElementById("tray")!
+            document.getElementById("right-tray")!
           )}
         {showChecklist &&
           createPortal(
@@ -285,7 +285,7 @@ export const Session = React.memo(
               checklist={checklist}
               handleClose={() => setShowChecklist(false)}
             />,
-            document.getElementById("tray")!
+            document.getElementById("left-tray")!
           )}
 
         <div className="flex-1 flex flex-col items-center justify-center w-full">
@@ -319,7 +319,7 @@ export const Session = React.memo(
                 </Button>
               </TooltipTrigger>
             </Tooltip>
-            {/* <Tooltip>
+            <Tooltip>
               <TooltipContent>Show bot statistics panel</TooltipContent>
               <TooltipTrigger asChild>
                 <Button
@@ -330,7 +330,7 @@ export const Session = React.memo(
                   <LineChart />
                 </Button>
               </TooltipTrigger>
-            </Tooltip> */}
+            </Tooltip>
             <Tooltip>
               <TooltipContent>Configure</TooltipContent>
               <TooltipTrigger asChild>
