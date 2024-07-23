@@ -1,12 +1,11 @@
-# RTVI Web Demo
-
+# RTVI Patient Intake Demo
 
 ## Getting setup
 
 Install deps and build the UI:
 
 ```
-yarn 
+yarn
 yarn run build
 
 ```
@@ -21,7 +20,7 @@ Name of your bot e.g. "Simple Chatbot" (shown in HTML and intro)
 
 `VITE_BASE_URL`
 
-A server URL to trigger when starting a session (e.g. a Pipecat bot_runner) that instantiates a new agent at the specified room URL.  Note: If this is not set, the app will assume you will manually start your bot at the same room URL (and show a warning on the config screen in dev mode.)
+A server URL to trigger when starting a session (e.g. a Pipecat bot_runner) that instantiates a new agent at the specified room URL. Note: If this is not set, the app will assume you will manually start your bot at the same room URL (and show a warning on the config screen in dev mode.)
 
 `VITE_MANUAL_ROOM_ENTRY`
 
@@ -43,12 +42,11 @@ Not currently in use
 
 Not currently in use
 
-
 ## What libraries does this use?
 
 ### Vite / React
 
-We've used [Vite](https://vitejs.dev/) to simplify the development and build experience. 
+We've used [Vite](https://vitejs.dev/) to simplify the development and build experience.
 
 ### Tailwind CSS
 
@@ -57,4 +55,3 @@ We use [Tailwind](https://tailwindcss.com/) so the UI is easy to theme quickly, 
 ### Radix
 
 For interactive components, we make use of [Radix](https://www.radix-ui.com/).
-
