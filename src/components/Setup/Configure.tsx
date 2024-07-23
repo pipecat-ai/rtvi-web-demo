@@ -1,8 +1,6 @@
 import React from "react";
 
-// import { useVoiceClient } from "realtime-ai-react";
-//import { composeSystemPrompt, Language } from "@/config";
-//import LanguageSelect from "../Configuration/LanguageSelect";
+import Configuration from "../Configuration";
 import HelpTip from "../ui/helptip";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
@@ -18,31 +16,11 @@ export const Configure: React.FC<ConfigureProps> = ({
   startAudioOff,
   handleStartAudioOff,
 }) => {
-  //const voiceClient = useVoiceClient()!;
-
-  /*
-  const handleLanguageChange = (lang: Language) => {
-    voiceClient.updateConfig(
-      {
-        llm: {
-          messages: [
-            {
-              role: "system",
-              content: composeSystemPrompt(lang.language),
-            },
-          ],
-        },
-        tts: { voice: lang.voice },
-      },
-      { useDeepMerge: true }
-    );
-  };*/
-
   return (
     <>
       <section className="flex flex-col flex-wrap gap-4">
-        <DeviceSelect hideMeter={true} />
-        {/* <LanguageSelect onSelect={handleLanguageChange} /> */}
+        <DeviceSelect hideMeter={false} />
+        <Configuration showAllOptions={false} />
       </section>
 
       <section className="flex flex-col gap-4 border-y border-primary-hairline py-4 mt-4">

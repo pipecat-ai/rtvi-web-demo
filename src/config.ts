@@ -20,6 +20,7 @@ export const defaultConfig = {
     voice: "b7d50908-b17c-442d-ad8d-810c63997ed9",
   },
 };
+export const BOT_READY_TIMEOUT = 20 * 1000; // 20 seconds
 
 export type Language = {
   language: string;
@@ -29,6 +30,11 @@ export type Language = {
 };
 
 export type Voice = {
+  label: string;
+  id: string;
+};
+
+export type LLMModel = {
   label: string;
   id: string;
 };
@@ -55,4 +61,25 @@ export const languages: Language[] = [
   },
 ];
 
-export const llmModels = ["llama3-8b-8192", "llama3-70b-8192"];
+export const llmModels: LLMModel[] = [
+  { label: "Llama3 8b", id: "llama-3.1-8b-instant" },
+  { label: "LLama3 70b", id: "llama-3.1-70b-versatile" },
+  { label: "Llama3 405b", id: "llama-3.1-405b-reasoning" },
+];
+
+export const defaultConfig = {
+  llm: {
+    model: llmModels[0].id,
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are Chatbot, a friendly, helpful robot. Your output will be converted to audio so don't include special characters other than '!' or '?' in your answers. Respond to what the user said in a creative and helpful way, but keep your responses brief. Start by saying hello.",
+        //composeSystemPrompt(defaultLanguage),
+      },
+    ],
+  },
+  tts: {
+    voice: ttsVoices[0].id,
+  },
+};

@@ -2,45 +2,41 @@
 
 ## Getting setup
 
+Setup your .env.local
+
+```
+cp env.example .env.local
+```
+
 Install deps and build the UI:
 
 ```
-yarn
-yarn run build
-
+yarn 
+yarn run dev
 ```
 
-Navigate to https://localhost:5173
+Navigate to the URL shown in your terminal window.
+
+
 
 ## Configuring your env
 
-`VITE_APP_TITLE`
-
-Name of your bot e.g. "Simple Chatbot" (shown in HTML and intro)
-
 `VITE_BASE_URL`
 
-A server URL to trigger when starting a session (e.g. a Pipecat bot_runner) that instantiates a new agent at the specified room URL. Note: If this is not set, the app will assume you will manually start your bot at the same room URL (and show a warning on the config screen in dev mode.)
+The location of your bot running infrastructure. A default is provided for you to test. 
 
-`VITE_MANUAL_ROOM_ENTRY`
-
-Disable automatic room creation. User must enter a room URL to join or pass through `room_url` query string.
+If you want to run your own infrastructure, please be aware that `navigator` requires SSL / HTTPS when not targeting `localhost`.
 
 `VITE_SHOW_SPLASH`
 
 Show an initial splash screen (Splash.tsx).
 
-`VITE_SHOW_CONFIG`
+**Please note: if you disable the splash page, devices will likely not load until you issue a user intent to the page. It is recommend to obtain user intent via a click somewhere before device selection**
 
-Show app settings before device configuration, useful for debugging.
 
-`VITE_OPEN_MIC`
+## Regarding HMR
 
-Not currently in use
-
-`VITE_USER_VIDEO`
-
-Not currently in use
+Whilst this app works well with hot reloading, the underlying WebRTC dependencies on some transports will throw errors if they are reinitialized. Check your console for warnings if something doesn't appear to be working.
 
 ## What libraries does this use?
 

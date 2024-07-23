@@ -1,7 +1,7 @@
 import React from "react";
 import { Package } from "lucide-react";
 
-import { llmModels } from "../../config";
+import { LLMModel, llmModels } from "../../config";
 import { Field } from "../ui/field";
 import { Select } from "../ui/select";
 
@@ -16,9 +16,9 @@ const ModelSelect: React.FC<ModelSelectProps> = ({ onSelect }) => {
         onChange={(e) => onSelect(e.currentTarget.value)}
         icon={<Package size={24} />}
       >
-        {llmModels.map((m) => (
-          <option key={m} value={m}>
-            {m}
+        {llmModels.map((model: LLMModel) => (
+          <option key={model.id} value={model.id}>
+            {model.label}
           </option>
         ))}
       </Select>

@@ -15,8 +15,6 @@
     "@daily-co/daily-js": ">=0.67.0",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
-    "realtime-ai": "^0.0.3",
-    "realtime-ai-react": "^0.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.378.0",
@@ -24,6 +22,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-sparklines": "^1.7.0",
+    "realtime-ai": "0.0.5",
+    "realtime-ai-react": "0.0.5",
     "recoil": "^0.7.7",
     "tailwind-merge": "^2.3.0"
   },

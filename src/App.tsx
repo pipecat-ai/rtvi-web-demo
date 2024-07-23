@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Ear, Loader2 } from "lucide-react";
-import { RateLimitError } from "realtime-ai";
+import { RateLimitError, VoiceEvent } from "realtime-ai";
 import {
   useVoiceClient,
+  useVoiceClientEvent,
   useVoiceClientTransportState,
 } from "realtime-ai-react";
 
@@ -11,27 +12,73 @@ import { Configure } from "./components/Setup";
 import { Alert } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
 import * as Card from "./components/ui/card";
+import { BOT_READY_TIMEOUT } from "./config";
 
 const status_text = {
-  idle: "Start",
-  disconnected: "Go again",
+  idle: "Initializing...",
+  initializing: "Initializing...",
+  initialized: "Start",
   handshaking: "Authenticating...",
-  requesting_token: "Requesting token...",
   connecting: "Connecting...",
 };
 
 export default function App() {
   const voiceClient = useVoiceClient()!;
 
-  const state = useVoiceClientTransportState();
+  const transportState = useVoiceClientTransportState();
+  const [appState, setAppState] = useState<
+    "idle" | "ready" | "connecting" | "connected"
+  >("idle");
   const [error, setError] = useState<string | null>(null);
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
+
+  useVoiceClientEvent(VoiceEvent.ConfigUpdated, (config) => {
+    console.log("Config change:", config);
+  });
+
+  useEffect(() => {
+    // Initialize local audio devices
+    if (!voiceClient || transportState !== "idle") return;
+    voiceClient.initDevices();
+  }, [transportState, voiceClient]);
+
+  useEffect(() => {
+    // Update the app state based on the transport state
+    // We only need a substate of states for the different view states
+    // so this method helps avoid inline conditionals.
+    switch (transportState) {
+      case "initialized":
+        setAppState("ready");
+        break;
+      case "handshaking":
+      case "connecting":
+        setAppState("connecting");
+        break;
+      case "connected":
+      case "ready":
+        setAppState("connected");
+        break;
+      default:
+        setAppState("idle");
+    }
+  }, [transportState]);
 
   async function start() {
     if (!voiceClient) return;
 
+    // Set a timeout and check for join state, incase under heavy load
+    setTimeout(() => {
+      if (voiceClient.state !== "ready") {
+        setError(
+          "Bot failed to join or enter ready state. Server may be busy. Please try again later."
+        );
+        setAppState("idle");
+      }
+    }, BOT_READY_TIMEOUT);
+
     // Join the session
     try {
+      console.log(voiceClient.config);
       await voiceClient.start();
     } catch (e) {
       if (e instanceof RateLimitError) {
@@ -47,8 +94,7 @@ export default function App() {
 
   async function leave() {
     await voiceClient.disconnect();
-
-    // Temporary workaround to restart, whilst we fix multiple instances
+    // Reload the page to reset the app (this avoids transport specific reinitalizing issues)
     window.location.reload();
   }
 
@@ -60,24 +106,24 @@ export default function App() {
     );
   }
 
-  if (state === "connected" || state === "ready") {
+  if (appState === "connected") {
     return (
       <Session
-        state={state}
+        state={transportState}
         onLeave={() => leave()}
         startAudioOff={startAudioOff}
       />
     );
   }
 
-  const isReady = state === "idle" || state === "disconnected";
+  const isReady = appState === "ready";
 
   return (
     <Card.Card shadow className="animate-appear max-w-lg">
       <Card.CardHeader>
-        <Card.CardTitle>Configure your devices</Card.CardTitle>
+        <Card.CardTitle>Configuration</Card.CardTitle>
         <Card.CardDescription>
-          Please configure your microphone and speakers below
+          Please configure your devices and pipeline settings below
         </Card.CardDescription>
       </Card.CardHeader>
       <Card.CardContent stack>
@@ -98,7 +144,7 @@ export default function App() {
           disabled={!isReady}
         >
           {!isReady && <Loader2 className="animate-spin" />}
-          {status_text[state as keyof typeof status_text]}
+          {status_text[transportState as keyof typeof status_text]}
         </Button>
       </Card.CardFooter>
     </Card.Card>
