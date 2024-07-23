@@ -76,9 +76,10 @@ export default function App() {
       }
     }, BOT_READY_TIMEOUT);
 
+    console.log(voiceClient.config);
+
     // Join the session
     try {
-      console.log(voiceClient.config);
       await voiceClient.start();
     } catch (e) {
       if (e instanceof RateLimitError) {

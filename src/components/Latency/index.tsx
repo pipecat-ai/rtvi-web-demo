@@ -16,8 +16,9 @@ enum State {
   SILENT = "Silent",
 }
 
-const REMOTE_AUDIO_THRESHOLD = 0.1;
-const LATENCY_MIN = 100;
+const REMOTE_AUDIO_THRESHOLD = 0;
+const LATENCY_MIN = 300;
+const LATENCY_MAX = 3000;
 
 const Latency: React.FC<{
   started: boolean;
@@ -33,7 +34,7 @@ const Latency: React.FC<{
     );
     const [lastDelta, setLastDelta] = useState<number | null>(null);
     const [median, setMedian] = useState<number | null>(null);
-    const [hasSpokenOnce, setHasSpokenOnce] = useState<boolean>(false);
+    //const [hasSpokenOnce, setHasSpokenOnce] = useState<boolean>(false);
 
     const deltaRef = useRef<number>(0);
     const deltaArrayRef = useRef<number[]>([]);
@@ -55,7 +56,8 @@ const Latency: React.FC<{
 
       // Ignore any values that are obviously wrong
       // These may be triggered by small noises such as coughs etc
-      if (diff < LATENCY_MIN) {
+      if (diff < LATENCY_MIN || diff > LATENCY_MAX) {
+        startTimeRef.current = null;
         return;
       }
 
@@ -105,16 +107,14 @@ const Latency: React.FC<{
       deltaRef.current = 0;
       deltaArrayRef.current = [];
       setVadInstance(null);
-      setHasSpokenOnce(false);
+      //setHasSpokenOnce(false);
     }, []);
 
     // Start timer after user has spoken once
-    // Note: we use 'hasSpokenOnce' to avoid starting the timer
-    // as soon as the experience loads (if for some reason VAD is triggered)
     useEffect(() => {
       if (
         !started ||
-        !hasSpokenOnce ||
+        //!hasSpokenOnce ||
         !vadInstance ||
         vadInstance.state !== VADState.listening ||
         currentState !== State.SILENT
@@ -122,7 +122,7 @@ const Latency: React.FC<{
         return;
       }
       startTimer();
-    }, [started, vadInstance, currentState, startTimer, hasSpokenOnce]);
+    }, [started, vadInstance, currentState, startTimer]);
 
     useEffect(() => {
       if (mountedRef.current || !localMediaTrack) {
@@ -149,7 +149,6 @@ const Latency: React.FC<{
             setCurrentState(State.SILENT);
           },
           onSpeechEnd: () => {
-            setHasSpokenOnce(true);
             setCurrentState(State.SILENT);
           },
         });
