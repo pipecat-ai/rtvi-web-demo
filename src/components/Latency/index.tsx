@@ -1,7 +1,8 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { VoiceEvent } from "realtime-ai";
-import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
+import { useVoiceClientMediaTrack } from "realtime-ai-react";
+import { useVoiceClientEvent } from "realtime-ai-react";
 
 import { VAD, VADState } from "@/vad";
 import AudioWorkletURL from "@/vad/worklet.ts?worker&url";
@@ -21,14 +22,10 @@ const LATENCY_MIN = 100;
 const Latency: React.FC<{
   started: boolean;
   botStatus: string;
-  //statsAggregator: StatsAggregator;
+  statsAggregator: StatsAggregator;
 }> = memo(
-  ({ started = false, botStatus }) => {
-    //statsAggregator
-    const voiceClient = useVoiceClient()!;
-    const { local } = voiceClient.tracks();
-    const localAudioTrack = local.audio;
-
+  ({ started = false, botStatus, statsAggregator }) => {
+    const localMediaTrack = useVoiceClientMediaTrack("audio", "local");
     const [vadInstance, setVadInstance] = useState<VAD | null>(null);
     const [currentState, setCurrentState] = useState<State>(State.SILENT);
     const [botTalkingState, setBotTalkingState] = useState<State | undefined>(
@@ -68,10 +65,10 @@ const Latency: React.FC<{
       startTimeRef.current = null;
 
       // Increment turns
-      /*if (statsAggregator) {
+      if (statsAggregator) {
         statsAggregator.turns++;
-      }*/
-    }, []);
+      }
+    }, [statsAggregator]);
 
     // Stop timer when bot starts talking
     useVoiceClientEvent(
@@ -128,12 +125,14 @@ const Latency: React.FC<{
     }, [started, vadInstance, currentState, startTimer, hasSpokenOnce]);
 
     useEffect(() => {
-      if (mountedRef.current || !localAudioTrack) {
+      if (mountedRef.current || !localMediaTrack) {
         return;
       }
 
       async function loadVad() {
-        const stream = new MediaStream([localAudioTrack]);
+        const stream = new MediaStream([localMediaTrack!]);
+
+        console.log("Loading VAD");
 
         const vad = new VAD({
           workletURL: AudioWorkletURL,
@@ -163,7 +162,7 @@ const Latency: React.FC<{
       loadVad();
 
       mountedRef.current = true;
-    }, [localAudioTrack]);
+    }, [localMediaTrack]);
 
     // Cleanup VAD
     useEffect(
@@ -204,12 +203,14 @@ const Latency: React.FC<{
     return (
       <>
         <div className={styles.statusContainer}>
-          <div className={userCx}>
+          <div className={started ? userCx : styles.statusColumn}>
             <span className={styles.header}>
               User <span>status</span>
             </span>
-            <span className={userStatusCx}>
-              {currentState === State.SPEAKING ? "Speaking" : "Connected"}
+            <span className={started ? userStatusCx : styles.status}>
+              {started && currentState === State.SPEAKING
+                ? "Speaking"
+                : "Connected"}
             </span>
           </div>
           <div className={styles.latencyColumn}>

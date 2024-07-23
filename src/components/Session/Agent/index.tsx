@@ -6,16 +6,16 @@ import { useVoiceClientEvent } from "realtime-ai-react";
 
 import Latency from "@/components/Latency";
 
+//import TranscriptOverlay from "../TranscriptOverlay";
 import Avatar from "./avatar";
 
 import styles from "./styles.module.css";
 
 export const Agent: React.FC<{
   isReady: boolean;
-  //statsAggregator: StatsAggregator;
+  statsAggregator: StatsAggregator;
 }> = memo(
-  ({ isReady }) => {
-    // , statsAggregator
+  ({ isReady, statsAggregator }) => {
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [botDisconnected, setBotDisconnected] = useState<boolean>(false);
 
@@ -49,13 +49,13 @@ export const Agent: React.FC<{
           ) : (
             <Avatar />
           )}
-          {/*<Transcript />*/}
+          {/*<TranscriptOverlay />*/}
         </div>
         <footer className={styles.agentFooter}>
           <Latency
             started={hasStarted}
             botStatus={botStatus}
-            //statsAggregator={statsAggregator}
+            statsAggregator={statsAggregator}
           />
         </footer>
       </div>

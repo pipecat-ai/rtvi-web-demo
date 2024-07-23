@@ -3,6 +3,7 @@
 export function composeSystemPrompt(language: string) {
   return `You are a helpful assistant named Gary. Keep responses short and legible. Respond in ${language}.`;
 }*/
+export const BOT_READY_TIMEOUT = 20 * 1000; // 20 seconds
 
 export type Language = {
   language: string;
@@ -44,9 +45,9 @@ export const languages: Language[] = [
 ];
 
 export const llmModels: LLMModel[] = [
+  { label: "Llama3 8b", id: "llama-3.1-8b-instant" },
+  { label: "LLama3 70b", id: "llama-3.1-70b-versatile" },
   { label: "Llama3 405b", id: "llama-3.1-405b-reasoning" },
-  { label: "LLama3 70b", id: "llama3-70b-8192" },
-  { label: "Llama3 8b", id: "llama3-8b-8192" },
 ];
 
 export const defaultConfig = {

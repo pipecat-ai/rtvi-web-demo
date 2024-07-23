@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Mic } from "lucide-react";
 import { useVoiceClientMediaDevices } from "realtime-ai-react";
 
@@ -14,6 +15,10 @@ export const DeviceSelect: React.FC<DeviceSelectProps> = ({
 }) => {
   const { availableMics, selectedMic, updateMic } =
     useVoiceClientMediaDevices();
+
+  useEffect(() => {
+    updateMic(selectedMic?.deviceId);
+  }, [updateMic, selectedMic]);
 
   return (
     <div className="flex flex-col flex-wrap gap-4">

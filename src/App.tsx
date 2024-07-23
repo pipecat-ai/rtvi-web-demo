@@ -12,6 +12,7 @@ import { Configure } from "./components/Setup";
 import { Alert } from "./components/ui/alert";
 import { Button } from "./components/ui/button";
 import * as Card from "./components/ui/card";
+import { BOT_READY_TIMEOUT } from "./config";
 
 const status_text = {
   idle: "Initializing...",
@@ -32,7 +33,7 @@ export default function App() {
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
 
   useVoiceClientEvent(VoiceEvent.ConfigUpdated, (config) => {
-    console.log(config);
+    console.log("Config change:", config);
   });
 
   useEffect(() => {
@@ -65,8 +66,19 @@ export default function App() {
   async function start() {
     if (!voiceClient) return;
 
+    // Set a timeout and check for join state, incase under heavy load
+    setTimeout(() => {
+      if (voiceClient.state !== "ready") {
+        setError(
+          "Bot failed to join or enter ready state. Server may be busy. Please try again later."
+        );
+        setAppState("idle");
+      }
+    }, BOT_READY_TIMEOUT);
+
     // Join the session
     try {
+      console.log(voiceClient.config);
       await voiceClient.start();
     } catch (e) {
       if (e instanceof RateLimitError) {
