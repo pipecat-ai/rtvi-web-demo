@@ -19,7 +19,6 @@ yarn run dev
 Navigate to the URL shown in your terminal window.
 
 
-
 ## Configuring your env
 
 `VITE_BASE_URL`
