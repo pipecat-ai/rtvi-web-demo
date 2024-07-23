@@ -16,16 +16,14 @@
     z-index: 1;
     height: 100%;
     position: relative;
-    background: transparent;
+    background: white;
     border-top: 0px;
     border-left: 1px solid theme(colors.primary.200);
   }
 }
 
 .inner {
-  user-select: none;
-  padding: theme(spacing.4) theme(spacing.3);
-  padding-top: 0px;
+  padding: theme(spacing.6) theme(spacing.6);
   overflow-x: scroll;
   display: flex;
   flex-flow: row nowrap;
