@@ -6,7 +6,6 @@ import { useVoiceClientEvent } from "realtime-ai-react";
 
 import Latency from "@/components/Latency";
 
-//import Transcript from "@/components/Transcript";
 import Avatar from "./avatar";
 
 import styles from "./styles.module.css";

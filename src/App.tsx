@@ -36,6 +36,7 @@ export default function App() {
   });
 
   useEffect(() => {
+    // Initialize local audio devices
     if (!voiceClient || transportState !== "idle") return;
     voiceClient.initDevices();
   }, [transportState, voiceClient]);
