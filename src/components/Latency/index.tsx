@@ -1,8 +1,18 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { VoiceEvent } from "realtime-ai";
-import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
+import { useVoiceClientMediaTrack } from "realtime-ai-react";
+import { useVoiceClientEvent } from "realtime-ai-react";
 
+import {
+  LATENCY_MAX,
+  LATENCY_MIN,
+  VAD_MIN_SPEECH_FRAMES,
+  VAD_NEGATIVE_SPEECH_THRESHOLD,
+  VAD_POSITIVE_SPEECH_THRESHOLD,
+  VAD_PRESPEECH_PAD_FRAMES,
+  VAD_REDEMPTION_FRAMES,
+} from "@/config";
 import { VAD, VADState } from "@/vad";
 import AudioWorkletURL from "@/vad/worklet.ts?worker&url";
 
@@ -15,20 +25,15 @@ enum State {
   SILENT = "Silent",
 }
 
-const REMOTE_AUDIO_THRESHOLD = 0.1;
-const LATENCY_MIN = 100;
+const REMOTE_AUDIO_THRESHOLD = 0;
 
 const Latency: React.FC<{
   started: boolean;
   botStatus: string;
-  //statsAggregator: StatsAggregator;
+  statsAggregator: StatsAggregator;
 }> = memo(
-  ({ started = false, botStatus }) => {
-    //statsAggregator
-    const voiceClient = useVoiceClient()!;
-    const { local } = voiceClient.tracks();
-    const localAudioTrack = local.audio;
-
+  ({ started = false, botStatus, statsAggregator }) => {
+    const localMediaTrack = useVoiceClientMediaTrack("audio", "local");
     const [vadInstance, setVadInstance] = useState<VAD | null>(null);
     const [currentState, setCurrentState] = useState<State>(State.SILENT);
     const [botTalkingState, setBotTalkingState] = useState<State | undefined>(
@@ -58,7 +63,8 @@ const Latency: React.FC<{
 
       // Ignore any values that are obviously wrong
       // These may be triggered by small noises such as coughs etc
-      if (diff < LATENCY_MIN) {
+      if (diff < LATENCY_MIN || diff > LATENCY_MAX) {
+        startTimeRef.current = null;
         return;
       }
 
@@ -68,10 +74,10 @@ const Latency: React.FC<{
       startTimeRef.current = null;
 
       // Increment turns
-      /*if (statsAggregator) {
+      if (statsAggregator) {
         statsAggregator.turns++;
-      }*/
-    }, []);
+      }
+    }, [statsAggregator]);
 
     // Stop timer when bot starts talking
     useVoiceClientEvent(
@@ -100,6 +106,15 @@ const Latency: React.FC<{
       }, [])
     );
 
+    useVoiceClientEvent(
+      VoiceEvent.LocalStartedTalking,
+      useCallback(() => {
+        if (!hasSpokenOnce) {
+          setHasSpokenOnce(true);
+        }
+      }, [hasSpokenOnce])
+    );
+
     /* ---- Effects ---- */
 
     // Reset state on mount
@@ -112,8 +127,6 @@ const Latency: React.FC<{
     }, []);
 
     // Start timer after user has spoken once
-    // Note: we use 'hasSpokenOnce' to avoid starting the timer
-    // as soon as the experience loads (if for some reason VAD is triggered)
     useEffect(() => {
       if (
         !started ||
@@ -128,21 +141,21 @@ const Latency: React.FC<{
     }, [started, vadInstance, currentState, startTimer, hasSpokenOnce]);
 
     useEffect(() => {
-      if (mountedRef.current || !localAudioTrack) {
+      if (mountedRef.current || !localMediaTrack) {
         return;
       }
 
       async function loadVad() {
-        const stream = new MediaStream([localAudioTrack]);
+        const stream = new MediaStream([localMediaTrack!]);
 
         const vad = new VAD({
           workletURL: AudioWorkletURL,
           stream,
-          positiveSpeechThreshold: 0.8,
-          negativeSpeechThreshold: 0.8 - 0.15,
-          minSpeechFrames: 8,
-          redemptionFrames: 3,
-          preSpeechPadFrames: 1,
+          positiveSpeechThreshold: VAD_POSITIVE_SPEECH_THRESHOLD,
+          negativeSpeechThreshold: VAD_NEGATIVE_SPEECH_THRESHOLD,
+          minSpeechFrames: VAD_MIN_SPEECH_FRAMES,
+          redemptionFrames: VAD_REDEMPTION_FRAMES,
+          preSpeechPadFrames: VAD_PRESPEECH_PAD_FRAMES,
           onSpeechStart: () => {
             setCurrentState(State.SPEAKING);
           },
@@ -150,7 +163,6 @@ const Latency: React.FC<{
             setCurrentState(State.SILENT);
           },
           onSpeechEnd: () => {
-            setHasSpokenOnce(true);
             setCurrentState(State.SILENT);
           },
         });
@@ -163,7 +175,7 @@ const Latency: React.FC<{
       loadVad();
 
       mountedRef.current = true;
-    }, [localAudioTrack]);
+    }, [localMediaTrack]);
 
     // Cleanup VAD
     useEffect(
@@ -195,8 +207,7 @@ const Latency: React.FC<{
 
     const boxStatusCx = clsx(
       styles.status,
-      botStatus === "loading" && styles.statusLoading,
-      botStatus === "connecting" && styles.statusConnecting,
+      botStatus === "initializing" && styles.statusLoading,
       botStatus === "disconnected" && styles.statusDisconnected,
       botTalkingState === State.SPEAKING && styles.statusSpeaking
     );
@@ -204,12 +215,14 @@ const Latency: React.FC<{
     return (
       <>
         <div className={styles.statusContainer}>
-          <div className={userCx}>
+          <div className={started ? userCx : styles.statusColumn}>
             <span className={styles.header}>
               User <span>status</span>
             </span>
-            <span className={userStatusCx}>
-              {currentState === State.SPEAKING ? "Speaking" : "Connected"}
+            <span className={started ? userStatusCx : styles.status}>
+              {started && currentState === State.SPEAKING
+                ? "Speaking"
+                : "Connected"}
             </span>
           </div>
           <div className={styles.latencyColumn}>
@@ -232,7 +245,7 @@ const Latency: React.FC<{
                 ? "Disconnected"
                 : botTalkingState === State.SPEAKING
                 ? "Speaking"
-                : "Connected"}
+                : botStatus}
             </span>
           </div>
         </div>

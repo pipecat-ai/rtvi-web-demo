@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { LineChart, LogOut, Settings } from "lucide-react";
+import { LineChart, LogOut, Settings, StopCircle } from "lucide-react";
 import { TransportState, VoiceEvent } from "realtime-ai";
 import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
 
@@ -29,11 +29,10 @@ export const Session = React.memo(
     const [hasStarted, setHasStarted] = useState(false);
     const [showDevices, setShowDevices] = useState(false);
     const [showStats, setShowStats] = useState(false);
+    const [muted, setMuted] = useState(startAudioOff);
     const modalRef = useRef<HTMLDialogElement>(null);
 
-    const [muted, setMuted] = useState(startAudioOff);
-
-    // ---- Events
+    // ---- Voice Client Events
 
     // Wait for the bot to enter a ready state and trigger it to say hello
     useVoiceClientEvent(
@@ -59,15 +58,9 @@ export const Session = React.memo(
     // ---- Effects
 
     useEffect(() => {
-      // Initialize the voice client
+      // Reset started state on mount
       setHasStarted(false);
-
-      // A bit of a hack, but temporarily muting the mic
-      // avoids immediately triggering an interruption on load
-      // if the user is talking. We reactive the mic
-      // after the session has started.
-      //voiceClient.enableMic(false);
-    }, [voiceClient, startAudioOff]);
+    }, []);
 
     useEffect(() => {
       // If we joined unmuted, enable the mic once the
@@ -114,7 +107,7 @@ export const Session = React.memo(
               <Card.CardTitle>Configuration</Card.CardTitle>
             </Card.CardHeader>
             <Card.CardContent>
-              <Configuration />
+              <Configuration showAllOptions={true} />
             </Card.CardContent>
             <Card.CardFooter>
               <Button onClick={() => setShowDevices(false)}>Close</Button>
@@ -136,7 +129,10 @@ export const Session = React.memo(
             fullWidthMobile={false}
             className="w-full max-w-[320px] sm:max-w-[420px] mt-auto shadow-long"
           >
-            <Agent isReady={state === "ready"} />
+            <Agent
+              isReady={state === "ready"}
+              statsAggregator={stats_aggregator}
+            />
           </Card.Card>
           <UserMicBubble
             active={hasStarted}
@@ -147,6 +143,19 @@ export const Session = React.memo(
 
         <footer className="w-full flex flex-row mt-auto self-end md:w-auto">
           <div className="flex flex-row justify-between gap-3 w-full md:w-auto">
+            <Tooltip>
+              <TooltipContent>Interrupt bot</TooltipContent>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={showStats ? "light" : "ghost"}
+                  size="icon"
+                  onClick={() => voiceClient.interrupt()}
+                >
+                  <StopCircle />
+                </Button>
+              </TooltipTrigger>
+            </Tooltip>
+
             <Tooltip>
               <TooltipContent>Show bot statistics panel</TooltipContent>
               <TooltipTrigger asChild>

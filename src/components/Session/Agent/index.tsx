@@ -6,31 +6,34 @@ import { useVoiceClientEvent } from "realtime-ai-react";
 
 import Latency from "@/components/Latency";
 
-//import Transcript from "@/components/Transcript";
+//import TranscriptOverlay from "../TranscriptOverlay";
 import Avatar from "./avatar";
+import ModelBadge from "./model";
 
 import styles from "./styles.module.css";
 
 export const Agent: React.FC<{
   isReady: boolean;
-  //statsAggregator: StatsAggregator;
+  statsAggregator: StatsAggregator;
 }> = memo(
-  ({ isReady }) => {
-    // , statsAggregator
+  ({ isReady, statsAggregator }) => {
     const [hasStarted, setHasStarted] = useState<boolean>(false);
-    const [botDisconnected, setBotDisconnected] = useState<boolean>(false);
+    const [botStatus, setBotStatus] = useState<
+      "initializing" | "connected" | "disconnected"
+    >("initializing");
 
     useEffect(() => {
       // Update the started state when the transport enters the ready state
       if (!isReady) return;
       setHasStarted(true);
+      setBotStatus("connected");
     }, [isReady]);
 
     useVoiceClientEvent(
       VoiceEvent.BotDisconnected,
       useCallback(() => {
         setHasStarted(false);
-        setBotDisconnected(true);
+        setBotStatus("disconnected");
       }, [])
     );
 
@@ -38,11 +41,11 @@ export const Agent: React.FC<{
     useEffect(() => () => setHasStarted(false), []);
 
     const cx = clsx(styles.agentWindow, hasStarted && styles.ready);
-    const botStatus = botDisconnected ? "disconnected" : "connected";
 
     return (
       <div className={styles.agent}>
         <div className={cx}>
+          <ModelBadge />
           {!hasStarted ? (
             <span className={styles.loader}>
               <Loader2 size={32} className="animate-spin" />
@@ -50,13 +53,13 @@ export const Agent: React.FC<{
           ) : (
             <Avatar />
           )}
-          {/*<Transcript />*/}
+          {/*<TranscriptOverlay />*/}
         </div>
         <footer className={styles.agentFooter}>
           <Latency
             started={hasStarted}
             botStatus={botStatus}
-            //statsAggregator={statsAggregator}
+            statsAggregator={statsAggregator}
           />
         </footer>
       </div>
