@@ -329,7 +329,7 @@ export const Session = React.memo(
               <TooltipContent>Interrupt bot</TooltipContent>
               <TooltipTrigger asChild>
                 <Button
-                  variant={showStats ? "light" : "ghost"}
+                  variant="ghost"
                   size="icon"
                   onClick={() => voiceClient.interrupt()}
                 >
