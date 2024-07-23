@@ -37,6 +37,17 @@ const Configuration: React.FC<{ showAllOptions: boolean }> = ({
     updateConfig({
       llm: { model: model },
     });
+
+    if (voiceClient.state === "ready") {
+      voiceClient.interrupt();
+
+      setTimeout(() => {
+        voiceClient.appendLLMContext({
+          role: "user",
+          content: `I just changed your model to use ${model}! Thank me for the change.`,
+        });
+      }, 500);
+    }
   };
 
   return (

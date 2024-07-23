@@ -17,19 +17,22 @@ export const Agent: React.FC<{
 }> = memo(
   ({ isReady, statsAggregator }) => {
     const [hasStarted, setHasStarted] = useState<boolean>(false);
-    const [botDisconnected, setBotDisconnected] = useState<boolean>(false);
+    const [botStatus, setBotStatus] = useState<
+      "initializing" | "connected" | "disconnected"
+    >("initializing");
 
     useEffect(() => {
       // Update the started state when the transport enters the ready state
       if (!isReady) return;
       setHasStarted(true);
+      setBotStatus("connected");
     }, [isReady]);
 
     useVoiceClientEvent(
       VoiceEvent.BotDisconnected,
       useCallback(() => {
         setHasStarted(false);
-        setBotDisconnected(true);
+        setBotStatus("disconnected");
       }, [])
     );
 
@@ -37,7 +40,6 @@ export const Agent: React.FC<{
     useEffect(() => () => setHasStarted(false), []);
 
     const cx = clsx(styles.agentWindow, hasStarted && styles.ready);
-    const botStatus = botDisconnected ? "disconnected" : "connected";
 
     return (
       <div className={styles.agent}>

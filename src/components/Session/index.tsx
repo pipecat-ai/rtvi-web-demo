@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { LineChart, LogOut, Settings } from "lucide-react";
+import { LineChart, LogOut, Settings, StopCircle } from "lucide-react";
 import { TransportState, VoiceEvent } from "realtime-ai";
 import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
 
@@ -143,6 +143,19 @@ export const Session = React.memo(
 
         <footer className="w-full flex flex-row mt-auto self-end md:w-auto">
           <div className="flex flex-row justify-between gap-3 w-full md:w-auto">
+            <Tooltip>
+              <TooltipContent>Interrupt bot</TooltipContent>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={showStats ? "light" : "ghost"}
+                  size="icon"
+                  onClick={() => voiceClient.interrupt()}
+                >
+                  <StopCircle />
+                </Button>
+              </TooltipTrigger>
+            </Tooltip>
+
             <Tooltip>
               <TooltipContent>Show bot statistics panel</TooltipContent>
               <TooltipTrigger asChild>

@@ -4,6 +4,8 @@ export function composeSystemPrompt(language: string) {
   return `You are a helpful assistant named Gary. Keep responses short and legible. Respond in ${language}.`;
 }*/
 export const BOT_READY_TIMEOUT = 20 * 1000; // 20 seconds
+export const LATENCY_MIN = 300;
+export const LATENCY_MAX = 3000;
 
 export type Language = {
   language: string;

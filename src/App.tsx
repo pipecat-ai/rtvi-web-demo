@@ -76,8 +76,6 @@ export default function App() {
       }
     }, BOT_READY_TIMEOUT);
 
-    console.log(voiceClient.config);
-
     // Join the session
     try {
       await voiceClient.start();

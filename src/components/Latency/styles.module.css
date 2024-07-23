@@ -59,19 +59,14 @@
   color: theme(colors.emerald.700);
 }
 
-.statusConnecting {
-  background-color: theme(colors.orange.100);
-  color: theme(colors.orange.700);
-}
-
 .statusDisconnected {
   background-color: theme(colors.red.100);
   color: theme(colors.red.700);
 }
 
 .statusLoading {
-  background-color: theme(colors.blue.100);
-  color: theme(colors.blue.700);
+  background-color: theme(colors.orange.100);
+  color: theme(colors.orange.700);
 }
 
 .speaking {
