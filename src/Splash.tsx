@@ -16,7 +16,7 @@ export const Splash: React.FC<SplashProps> = ({ handleReady }) => {
           Llama 3.1 &amp;<br />
           Daily &amp;<br />
           RTVI <br />
-          500ms Voice-to-Voice Demo
+          500ms Voice-to-Voice Demo 
         </h1>
 
         <Button onClick={handleReady}>Try the demo</Button>
