@@ -73,6 +73,8 @@ export default function App() {
 
     // Join the session
     try {
+      // Disable the mic until the bot has joined
+      voiceClient.enableMic(false);
       await voiceClient.start();
     } catch (e) {
       if (e instanceof RateLimitError) {
