@@ -38,7 +38,6 @@ export const Session = React.memo(
     useVoiceClientEvent(
       VoiceEvent.BotReady,
       useCallback(() => {
-        setHasStarted(true);
         voiceClient.appendLLMContext({
           role: "assistant",
           content: "Greet the user",
@@ -55,6 +54,15 @@ export const Session = React.memo(
       }, [])
     );
 
+    useVoiceClientEvent(
+      VoiceEvent.BotStoppedTalking,
+      useCallback(() => {
+        if (hasStarted) return;
+
+        setHasStarted(true);
+      }, [hasStarted])
+    );
+
     // ---- Effects
 
     useEffect(() => {
@@ -63,8 +71,7 @@ export const Session = React.memo(
     }, []);
 
     useEffect(() => {
-      // If we joined unmuted, enable the mic once the
-      // active speaker event has triggered once
+      // If we joined unmuted, enable the mic once in ready state
       if (!hasStarted || startAudioOff) return;
       voiceClient.enableMic(true);
     }, [voiceClient, startAudioOff, hasStarted]);

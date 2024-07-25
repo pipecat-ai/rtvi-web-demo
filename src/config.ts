@@ -6,9 +6,9 @@ export function composeSystemPrompt(language: string) {
 export const BOT_READY_TIMEOUT = 20 * 1000; // 20 seconds
 export const LATENCY_MIN = 300;
 export const LATENCY_MAX = 3000;
-export const VAD_POSITIVE_SPEECH_THRESHOLD = 0.8;
-export const VAD_NEGATIVE_SPEECH_THRESHOLD = 0.8 - 0.15;
-export const VAD_MIN_SPEECH_FRAMES = 8;
+export const VAD_POSITIVE_SPEECH_THRESHOLD = 0.6;
+export const VAD_NEGATIVE_SPEECH_THRESHOLD = 0.6 - 0.15;
+export const VAD_MIN_SPEECH_FRAMES = 5;
 export const VAD_REDEMPTION_FRAMES = 3;
 export const VAD_PRESPEECH_PAD_FRAMES = 1;
 
