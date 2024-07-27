@@ -20,7 +20,6 @@ const isFirefox: boolean = typeof InstallTrigger !== "undefined";
 
 const voiceClient = new VoiceClient({
   baseUrl: import.meta.env.VITE_BASE_URL,
-  transportURL: import.meta.env.VITE_TRANSPORT_URL,
   enableMic: true,
   config: defaultConfig,
 });
