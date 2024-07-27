@@ -31,6 +31,8 @@ export default function App() {
   const [error, setError] = useState<string | null>(null);
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
 
+  console.log(transportState);
+
   useEffect(() => {
     // Initialize local audio devices
     if (!voiceClient || transportState !== "idle") return;

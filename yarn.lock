@@ -3499,17 +3499,17 @@ readdirp@~3.6.0:
   dependencies:
     picomatch "^2.2.1"
 
-realtime-ai-react@0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/realtime-ai-react/-/realtime-ai-react-0.0.8.tgz#ff8e70e3a7764c02a3301746cd9bff13e927bf84"
-  integrity sha512-R0cyA/M5KuTDCAe/xu5e2mAbJTcrt1A3gyYuDGhsXYo80YqybecYnuuk74yPqZbDDWiUN4B/2VcOlOW+pW4P7g==
+realtime-ai-react@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/realtime-ai-react/-/realtime-ai-react-0.0.9.tgz#ddc5ef245d6d3df2956f5be1abd4291a179afacf"
+  integrity sha512-6XZkuq43HC073H0LVgDH0BiwDUeJ4Scms3nDb1OlikbH9KxOiXUEd/xEtsNCie/ye9OviF9ujRLd9lGoDAMiIQ==
   dependencies:
     jotai "^2.9.0"
 
-realtime-ai@0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/realtime-ai/-/realtime-ai-0.0.8.tgz#54889c7cd3ed71f95452609ced81c56b8a99112d"
-  integrity sha512-exCoGtnjLevbnGk4dSu8MtJiPGv3gbABfGcX8OzwR9cMINprwjm6uG5x6z2GCBLptl5C77e/BQ9dOq8pw8uYuA==
+realtime-ai@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/realtime-ai/-/realtime-ai-0.0.9.tgz#9284ac52013fbab14420615d989c8cf60f3a428a"
+  integrity sha512-24+D832LrKxaAy0joG++SNcqmV2EcIcV1L2ktKw57abkiccN472sDaSFuqVUfNSLVntg5CBTccQk6c+q6PWOcQ==
   dependencies:
     "@types/events" "^3.0.3"
     deepmerge-ts "^7.0.3"
