@@ -3,6 +3,8 @@ import clsx from "clsx";
 import { VoiceEvent } from "realtime-ai";
 import { useVoiceClientMediaTrack } from "realtime-ai-react";
 import { useVoiceClientEvent } from "realtime-ai-react";
+import { VAD, VADState } from "web-vad";
+import AudioWorkletURL from "web-vad/dist/worklet?worker&url";
 
 import {
   LATENCY_MAX,
@@ -13,8 +15,6 @@ import {
   VAD_PRESPEECH_PAD_FRAMES,
   VAD_REDEMPTION_FRAMES,
 } from "@/config";
-import { VAD, VADState } from "@/vad";
-import AudioWorkletURL from "@/vad/worklet.ts?worker&url";
 
 import { calculateMedian } from "./utils";
 
