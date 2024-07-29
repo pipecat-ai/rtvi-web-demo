@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Book, Info } from "lucide-react";
+import { VAD } from "web-vad";
 
 import { Button } from "./components/ui/button";
 
@@ -8,6 +9,16 @@ type SplashProps = {
 };
 
 export const Splash: React.FC<SplashProps> = ({ handleReady }) => {
+  const [isReady, setIsReady] = React.useState(false);
+
+  useEffect(() => {
+    const cacheVAD = async () => {
+      await VAD.precacheModels("silero_vad.onnx");
+      setIsReady(true);
+    };
+    cacheVAD();
+  }, []);
+
   return (
     <main className="w-full h-full flex items-center justify-center bg-primary-200 p-4 bg-[length:auto_50%] lg:bg-auto bg-colorWash bg-no-repeat bg-right-top">
       <div className="flex flex-col gap-8 lg:gap-12 items-center max-w-full lg:max-w-3xl">
@@ -16,7 +27,9 @@ export const Splash: React.FC<SplashProps> = ({ handleReady }) => {
         </h1>
         <p>In this demo, your birthday is January 1, 1983.</p>
 
-        <Button onClick={handleReady}>Try the demo</Button>
+        <Button onClick={handleReady} disabled={!isReady}>
+          {isReady ? "Try demo" : "Downloading assets..."}
+        </Button>
 
         <div className="h-[1px] bg-primary-300 w-full" />
 

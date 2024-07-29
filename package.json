@@ -26,7 +26,7 @@
     "realtime-ai-react": "0.0.9",
     "recoil": "^0.7.7",
     "tailwind-merge": "^2.3.0",
-    "web-vad": "^0.0.5"
+    "web-vad": "^0.0.6"
   },
   "devDependencies": {
     "@types/audioworklet": "^0.0.55",
