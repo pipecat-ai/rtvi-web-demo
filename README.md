@@ -28,17 +28,13 @@ The location of your bot running infrastructure. A default is provided for you t
 
 If you want to run your own infrastructure, please be aware that `navigator` requires SSL / HTTPS when not targeting `localhost`.
 
-`VITE_SHOW_SPLASH`
-
-Show an initial splash screen (Splash.tsx).
-
-**Please note: if you disable the splash page, devices will likely not load until you issue a user intent to the page. It is recommend to obtain user intent via a click somewhere before device selection**
-
-
 ## Regarding HMR
 
 Whilst this app works well with hot reloading, the underlying WebRTC dependencies on some transports will throw errors if they are reinitialized. Check your console for warnings if something doesn't appear to be working.
 
+## User intent
+
+When not in local development, browsers require user intent before allowing access to media devices (such as webcams or mics.) We show an initial splash page which requires a user to click a button before requesting any devices from the navigator object. Removing the `Splash.tsx` willcause an error when the app is not served locally which you can see in the web console. Be sure to get user intent in your apps first!
 
 ## What libraries does this use?
 

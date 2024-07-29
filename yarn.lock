@@ -4052,10 +4052,12 @@ walk-up-path@^3.0.1:
   resolved "https://registry.yarnpkg.com/walk-up-path/-/walk-up-path-3.0.1.tgz#c8d78d5375b4966c717eb17ada73dbd41490e886"
   integrity sha512-9YlCL/ynK3CTlrSRrDxZvUauLzAswPCrsaCgilqFevUYpeEW0/3ScEjaa3kbW/T0ghhkEr7mv+fpjqn1Y1YuTA==
 
-web-vad@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/web-vad/-/web-vad-0.0.5.tgz#f9cd61858286777b7e87b02ec3f49bfd0dca0b1c"
-  integrity sha512-Wv8msMaCj2gDB76oMb2TC2d7PLwmnvABHz+rPVhAhFd+yWDo7mSokPq9FFHdn7mbAy9qiWIF/zQDunbUjAQc3w==
+web-vad@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/web-vad/-/web-vad-0.0.6.tgz#6f863dff93fc97c4a89cdc4750a29d2847dc7f57"
+  integrity sha512-XESVoYRwsNSIuKp2w/iiN+rjDXR/Cn2o7Uqs0c37Nxhnid8/6WGgPuhkY4q3hyV9QGa8wjUpce2lNzVf0c4amw==
+  dependencies:
+    onnxruntime-web "^1.18.0"
 
 which@^2.0.1:
   version "2.0.2"

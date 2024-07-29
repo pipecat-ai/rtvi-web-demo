@@ -17,7 +17,7 @@ const status_text = {
   idle: "Initializing...",
   initializing: "Initializing...",
   initialized: "Start",
-  handshaking: "Authenticating...",
+  handshaking: "Requesting agent...",
   connecting: "Connecting...",
 };
 

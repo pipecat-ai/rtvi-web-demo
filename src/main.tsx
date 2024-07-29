@@ -11,9 +11,6 @@ import { Splash } from "./Splash";
 
 import "./global.css"; // Note: Core app layout can be found here
 
-// Show an initial splash page (resolves user intent with a click)
-const showSplashPage = import.meta.env.VITE_SHOW_SPLASH ? true : false;
-
 // Show warning on Firefox
 // @ts-expect-error - Firefox is not well support
 const isFirefox: boolean = typeof InstallTrigger !== "undefined";
@@ -25,7 +22,7 @@ const voiceClient = new VoiceClient({
 });
 
 export const Layout = () => {
-  const [showSplash, setShowSplash] = useState<boolean>(showSplashPage);
+  const [showSplash, setShowSplash] = useState<boolean>(true);
 
   if (showSplash) {
     return <Splash handleReady={() => setShowSplash(false)} />;
