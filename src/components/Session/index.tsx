@@ -54,6 +54,7 @@ export const Session = React.memo(
     useVoiceClientEvent(
       VoiceEvent.BotReady,
       useCallback(() => {
+        setHasStarted(true);
         voiceClient.appendLLMContext({
           role: "system",
           content:
