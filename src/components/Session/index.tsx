@@ -1,8 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { LineChart, LogOut, Settings, StopCircle } from "lucide-react";
-import { TransportState, VoiceEvent } from "realtime-ai";
-import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
+import {
+  LLMHelper,
+  PipecatMetricsData,
+  RTVIEvent,
+  TransportState,
+} from "realtime-ai";
+import { useRTVIClient, useRTVIClientEvent } from "realtime-ai-react";
 
 import StatsAggregator from "../../utils/stats_aggregator";
 import Configuration from "../Configuration";
@@ -25,7 +30,8 @@ interface SessionProps {
 
 export const Session = React.memo(
   ({ state, onLeave, startAudioOff = false }: SessionProps) => {
-    const voiceClient = useVoiceClient()!;
+    const rtviClient = useRTVIClient()!;
+    const llmHelper = rtviClient.getHelper<LLMHelper>("llm");
     const [hasStarted, setHasStarted] = useState(false);
     const [showDevices, setShowDevices] = useState(false);
     const [showStats, setShowStats] = useState(false);
@@ -35,30 +41,29 @@ export const Session = React.memo(
     // ---- Voice Client Events
 
     // Wait for the bot to enter a ready state and trigger it to say hello
-    useVoiceClientEvent(
-      VoiceEvent.BotReady,
+    useRTVIClientEvent(
+      RTVIEvent.BotReady,
       useCallback(() => {
-        voiceClient.appendLLMContext({
+        llmHelper?.appendToMessages({
           role: "assistant",
           content: "Greet the user",
         });
-      }, [voiceClient])
+      }, [llmHelper])
     );
 
-    useVoiceClientEvent(
-      VoiceEvent.Metrics,
-      useCallback((metrics) => {
+    useRTVIClientEvent(
+      RTVIEvent.Metrics,
+      useCallback((metrics: PipecatMetricsData) => {
         metrics?.ttfb?.map((m: { processor: string; value: number }) => {
           stats_aggregator.addStat([m.processor, "ttfb", m.value, Date.now()]);
         });
       }, [])
     );
 
-    useVoiceClientEvent(
-      VoiceEvent.BotStoppedTalking,
+    useRTVIClientEvent(
+      RTVIEvent.BotStoppedSpeaking,
       useCallback(() => {
         if (hasStarted) return;
-
         setHasStarted(true);
       }, [hasStarted])
     );
@@ -73,8 +78,8 @@ export const Session = React.memo(
     useEffect(() => {
       // If we joined unmuted, enable the mic once in ready state
       if (!hasStarted || startAudioOff) return;
-      voiceClient.enableMic(true);
-    }, [voiceClient, startAudioOff, hasStarted]);
+      rtviClient.enableMic(true);
+    }, [rtviClient, startAudioOff, hasStarted]);
 
     useEffect(() => {
       // Create new stats aggregator on mount (removes stats from previous session)
@@ -102,9 +107,22 @@ export const Session = React.memo(
     }, [showDevices]);
 
     function toggleMute() {
-      voiceClient.enableMic(muted);
+      rtviClient.enableMic(muted);
       setMuted(!muted);
     }
+
+    // Helper function to handle interruption
+    const handleInterrupt = async () => {
+      try {
+        await rtviClient.action({
+          service: "tts",
+          action: "interrupt",
+          arguments: [], // No arguments needed for interrupt
+        });
+      } catch (error) {
+        console.error("Error interrupting:", error);
+      }
+    };
 
     return (
       <>
@@ -153,11 +171,7 @@ export const Session = React.memo(
             <Tooltip>
               <TooltipContent>Interrupt bot</TooltipContent>
               <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => voiceClient.interrupt()}
-                >
+                <Button variant="ghost" size="icon" onClick={handleInterrupt}>
                   <StopCircle />
                 </Button>
               </TooltipTrigger>

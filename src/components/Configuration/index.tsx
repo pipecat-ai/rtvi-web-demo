@@ -1,6 +1,6 @@
 import React from "react";
-import { VoiceClientConfigOptions } from "realtime-ai";
-import { useVoiceClient } from "realtime-ai-react";
+import { LLMHelper, RTVIClientConfigOption } from "realtime-ai";
+import { useRTVIClient } from "realtime-ai-react";
 
 import { Voice } from "@/config";
 
@@ -10,43 +10,53 @@ import VoiceSelect from "./VoiceSelect";
 const Configuration: React.FC<{ showAllOptions: boolean }> = ({
   showAllOptions = false,
 }) => {
-  const voiceClient = useVoiceClient()!;
+  const rtviClient = useRTVIClient()!;
+  const llmHelper = rtviClient.getHelper<LLMHelper>("llm");
 
-  const updateConfig = (config: VoiceClientConfigOptions) => {
-    const updateOpts =
-      voiceClient.state === "ready"
-        ? { sendPartial: true }
-        : { useDeepMerge: true };
-
-    voiceClient.updateConfig(config, updateOpts);
+  const updateConfig = async (serviceConfig: RTVIClientConfigOption[]) => {
+    const shouldInterrupt = rtviClient.state === "ready";
+    try {
+      await rtviClient.updateConfig(serviceConfig, shouldInterrupt);
+    } catch (error) {
+      console.error("Error updating config:", error);
+    }
   };
 
-  const handleVoiceChange = (voice: Voice) => {
-    updateConfig({
-      tts: { voice: voice.id },
-    });
+  const handleVoiceChange = async (voice: Voice) => {
+    await updateConfig([
+      {
+        service: "tts",
+        options: [{ name: "voice", value: voice.id }],
+      },
+    ]);
 
     // Prompt the LLM to speak
-    voiceClient.appendLLMContext({
-      role: "assistant",
-      content: "Ask if the user prefers the new voice you have been given.",
-    });
+    await llmHelper?.appendToMessages(
+      {
+        role: "assistant",
+        content: "Ask if the user prefers the new voice you have been given.",
+      },
+      true
+    ); // runImmediately = true
   };
 
-  const handleModelChange = (model: string) => {
-    updateConfig({
-      llm: { model: model },
-    });
+  const handleModelChange = async (model: string) => {
+    await updateConfig([
+      {
+        service: "llm",
+        options: [{ name: "model", value: model }],
+      },
+    ]);
 
-    if (voiceClient.state === "ready") {
-      voiceClient.interrupt();
-
-      setTimeout(() => {
-        voiceClient.appendLLMContext({
+    if (rtviClient.state === "ready") {
+      // Instead of separate interrupt call, we'll use the interrupt parameter in appendToMessages
+      await llmHelper?.appendToMessages(
+        {
           role: "user",
           content: `I just changed your model to use ${model}! Thank me for the change.`,
-        });
-      }, 500);
+        },
+        true
+      ); // runImmediately = true
     }
   };
 

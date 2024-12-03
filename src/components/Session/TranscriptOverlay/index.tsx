@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { VoiceEvent } from "realtime-ai";
-import { useVoiceClientEvent } from "realtime-ai-react";
+import { BotLLMTextData, RTVIEvent } from "realtime-ai";
+import { useRTVIClientEvent } from "realtime-ai-react";
 
 import styles from "./styles.module.css";
 
@@ -20,10 +20,10 @@ const TranscriptOverlay: React.FC = () => {
     return () => clearInterval(intervalRef.current!);
   }, [sentences]);
 
-  useVoiceClientEvent(
-    VoiceEvent.BotTranscript,
-    useCallback((transcript) => {
-      setSentences((s) => [...s, transcript]);
+  useRTVIClientEvent(
+    RTVIEvent.BotTranscript,
+    useCallback((data: BotLLMTextData) => {
+      setSentences((s) => [...s, data.text]);
     }, [])
   );
 
