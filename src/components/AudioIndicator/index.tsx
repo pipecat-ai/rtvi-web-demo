@@ -1,14 +1,14 @@
 import { useCallback, useRef } from "react";
-import { VoiceEvent } from "realtime-ai";
-import { useVoiceClientEvent } from "realtime-ai-react";
+import { RTVIEvent } from "realtime-ai";
+import { useRTVIClientEvent } from "realtime-ai-react";
 
 import styles from "./styles.module.css";
 
 export const AudioIndicatorBar: React.FC = () => {
   const volRef = useRef<HTMLDivElement>(null);
 
-  useVoiceClientEvent(
-    VoiceEvent.LocalAudioLevel,
+  useRTVIClientEvent(
+    RTVIEvent.LocalAudioLevel,
     useCallback((volume: number) => {
       if (volRef.current)
         volRef.current.style.width = Math.max(2, volume * 100) + "%";

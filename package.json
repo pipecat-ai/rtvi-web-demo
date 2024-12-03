@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@daily-co/daily-js": ">=0.67.0",
+    "@daily-co/realtime-ai-daily": "^0.2.1",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
     "class-variance-authority": "^0.7.0",
@@ -22,8 +23,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-sparklines": "^1.7.0",
-    "realtime-ai": "0.0.9",
-    "realtime-ai-react": "0.0.9",
+    "realtime-ai": "^0.2.1",
+    "realtime-ai-react": "^0.2.1",
     "recoil": "^0.7.7",
     "tailwind-merge": "^2.3.0",
     "web-vad": "^0.0.6"

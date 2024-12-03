@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Mic } from "lucide-react";
-import { useVoiceClientMediaDevices } from "realtime-ai-react";
+import { useRTVIClientMediaDevices } from "realtime-ai-react";
 
 import { AudioIndicatorBar } from "../AudioIndicator";
 import { Field } from "../ui/field";
@@ -13,8 +13,7 @@ interface DeviceSelectProps {
 export const DeviceSelect: React.FC<DeviceSelectProps> = ({
   hideMeter = false,
 }) => {
-  const { availableMics, selectedMic, updateMic } =
-    useVoiceClientMediaDevices();
+  const { availableMics, selectedMic, updateMic } = useRTVIClientMediaDevices();
 
   useEffect(() => {
     updateMic(selectedMic?.deviceId);

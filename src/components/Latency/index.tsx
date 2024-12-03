@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { VoiceEvent } from "realtime-ai";
-import { useVoiceClientMediaTrack } from "realtime-ai-react";
-import { useVoiceClientEvent } from "realtime-ai-react";
+import { RTVIEvent } from "realtime-ai";
+import { useRTVIClientMediaTrack } from "realtime-ai-react";
+import { useRTVIClientEvent } from "realtime-ai-react";
 import { VAD, VADState } from "web-vad";
 import AudioWorkletURL from "web-vad/dist/worklet?worker&url";
 
@@ -33,7 +33,7 @@ const Latency: React.FC<{
   statsAggregator: StatsAggregator;
 }> = memo(
   ({ started = false, botStatus, statsAggregator }) => {
-    const localMediaTrack = useVoiceClientMediaTrack("audio", "local");
+    const localMediaTrack = useRTVIClientMediaTrack("audio", "local");
     const [vadInstance, setVadInstance] = useState<VAD | null>(null);
     const [currentState, setCurrentState] = useState<State>(State.SILENT);
     const [botTalkingState, setBotTalkingState] = useState<State | undefined>(
@@ -80,11 +80,11 @@ const Latency: React.FC<{
     }, [statsAggregator]);
 
     // Stop timer when bot starts talking
-    useVoiceClientEvent(
-      VoiceEvent.RemoteAudioLevel,
+    useRTVIClientEvent(
+      RTVIEvent.RemoteAudioLevel,
       useCallback(
-        (volume) => {
-          if (volume > REMOTE_AUDIO_THRESHOLD && startTimeRef.current) {
+        (level: number) => {
+          if (level > REMOTE_AUDIO_THRESHOLD && startTimeRef.current) {
             stopTimer();
           }
         },
@@ -92,22 +92,22 @@ const Latency: React.FC<{
       )
     );
 
-    useVoiceClientEvent(
-      VoiceEvent.BotStoppedTalking,
+    useRTVIClientEvent(
+      RTVIEvent.BotStoppedSpeaking,
       useCallback(() => {
         setBotTalkingState(State.SILENT);
       }, [])
     );
 
-    useVoiceClientEvent(
-      VoiceEvent.BotStartedTalking,
+    useRTVIClientEvent(
+      RTVIEvent.BotStartedSpeaking,
       useCallback(() => {
         setBotTalkingState(State.SPEAKING);
       }, [])
     );
 
-    useVoiceClientEvent(
-      VoiceEvent.LocalStartedTalking,
+    useRTVIClientEvent(
+      RTVIEvent.UserStartedSpeaking,
       useCallback(() => {
         if (!hasSpokenOnce) {
           setHasSpokenOnce(true);

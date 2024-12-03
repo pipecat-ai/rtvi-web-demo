@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
-import { VoiceClient } from "realtime-ai";
-import { VoiceClientAudio, VoiceClientProvider } from "realtime-ai-react";
+import { DailyTransport } from "@daily-co/realtime-ai-daily";
+import { LLMHelper, RTVIClient, RTVIClientConfigOption } from "realtime-ai";
+import { RTVIClientAudio, RTVIClientProvider } from "realtime-ai-react";
 
 import { Header } from "./components/ui/header";
 import { TooltipProvider } from "./components/ui/tooltip";
@@ -15,11 +16,28 @@ import "./global.css"; // Note: Core app layout can be found here
 // @ts-expect-error - Firefox is not well support
 const isFirefox: boolean = typeof InstallTrigger !== "undefined";
 
-const voiceClient = new VoiceClient({
-  baseUrl: import.meta.env.VITE_BASE_URL,
+const rtviClient = new RTVIClient({
+  transport: new DailyTransport(),
+  params: {
+    baseUrl: import.meta.env.VITE_BASE_URL,
+    endpoints: {
+      connect: "/start-bot",
+      action: "/bot-action",
+    },
+    config: defaultConfig as RTVIClientConfigOption[],
+  },
   enableMic: true,
-  config: defaultConfig,
+  enableCam: false,
 });
+
+const llmHelper = new LLMHelper({
+  callbacks: {
+    // ...
+  },
+});
+
+// Register the helper
+rtviClient.registerHelper("llm", llmHelper);
 
 export const Layout = () => {
   const [showSplash, setShowSplash] = useState<boolean>(true);
@@ -29,7 +47,7 @@ export const Layout = () => {
   }
 
   return (
-    <VoiceClientProvider voiceClient={voiceClient}>
+    <RTVIClientProvider client={rtviClient}>
       <TooltipProvider>
         <main>
           <Header />
@@ -38,9 +56,9 @@ export const Layout = () => {
           </div>
         </main>
         <aside id="tray" />
-        <VoiceClientAudio />
+        <RTVIClientAudio />
       </TooltipProvider>
-    </VoiceClientProvider>
+    </RTVIClientProvider>
   );
 };
 

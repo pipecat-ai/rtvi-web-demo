@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { Ear, Loader2 } from "lucide-react";
-import { RateLimitError } from "realtime-ai";
-import {
-  useVoiceClient,
-  useVoiceClientTransportState,
-} from "realtime-ai-react";
+import { RTVIError } from "realtime-ai";
+import { useRTVIClient, useRTVIClientTransportState } from "realtime-ai-react";
 
 import Session from "./components/Session";
 import { Configure } from "./components/Setup";
@@ -14,17 +11,17 @@ import * as Card from "./components/ui/card";
 import { BOT_READY_TIMEOUT } from "./config";
 
 const status_text = {
-  idle: "Initializing...",
+  disconnected: "Initializing...",
   initializing: "Initializing...",
   initialized: "Start",
-  handshaking: "Requesting agent...",
+  authenticating: "Requesting agent...",
   connecting: "Connecting...",
 };
 
 export default function App() {
-  const voiceClient = useVoiceClient()!;
+  const rtviClient = useRTVIClient()!;
 
-  const transportState = useVoiceClientTransportState();
+  const transportState = useRTVIClientTransportState();
   const [appState, setAppState] = useState<
     "idle" | "ready" | "connecting" | "connected"
   >("idle");
@@ -33,9 +30,9 @@ export default function App() {
 
   useEffect(() => {
     // Initialize local audio devices
-    if (!voiceClient || transportState !== "idle") return;
-    voiceClient.initDevices();
-  }, [transportState, voiceClient]);
+    if (!rtviClient || transportState !== "disconnected") return;
+    rtviClient.initDevices();
+  }, [transportState, rtviClient]);
 
   useEffect(() => {
     // Update the app state based on the transport state
@@ -45,7 +42,7 @@ export default function App() {
       case "initialized":
         setAppState("ready");
         break;
-      case "handshaking":
+      case "authenticating":
       case "connecting":
         setAppState("connecting");
         break;
@@ -59,25 +56,25 @@ export default function App() {
   }, [transportState]);
 
   async function start() {
-    if (!voiceClient) return;
+    if (!rtviClient) return;
 
     // Set a timeout and check for join state, incase under heavy load
     setTimeout(() => {
-      if (voiceClient.state !== "ready") {
+      if (rtviClient.state !== "ready") {
         setError(
           "Bot failed to join or enter ready state. Server may be busy. Please try again later."
         );
-        voiceClient.disconnect();
+        rtviClient.disconnect();
       }
     }, BOT_READY_TIMEOUT);
 
     // Join the session
     try {
-      // Disable the mic until the bot has joined
-      voiceClient.enableMic(false);
-      await voiceClient.start();
+      rtviClient.enableMic(false);
+      await rtviClient.connect();
     } catch (e) {
-      if (e instanceof RateLimitError) {
+      if (e instanceof RTVIError && e.status === 429) {
+        // Changed from RateLimitError
         setError("Demo is currently at capacity. Please try again later.");
       } else {
         setError(
@@ -89,7 +86,7 @@ export default function App() {
   }
 
   async function leave() {
-    await voiceClient.disconnect();
+    await rtviClient.disconnect();
     // Reload the page to reset the app (this avoids transport specific reinitalizing issues)
     window.location.reload();
   }

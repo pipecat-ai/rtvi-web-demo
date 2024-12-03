@@ -1,16 +1,16 @@
 import React, { useCallback, useRef } from "react";
 import clsx from "clsx";
 import { Mic, MicOff, Pause } from "lucide-react";
-import { VoiceEvent } from "realtime-ai";
-import { useVoiceClientEvent } from "realtime-ai-react";
+import { RTVIEvent } from "realtime-ai";
+import { useRTVIClientEvent } from "realtime-ai-react";
 
 import styles from "./styles.module.css";
 
 const AudioIndicatorBubble: React.FC = () => {
   const volRef = useRef<HTMLDivElement>(null);
 
-  useVoiceClientEvent(
-    VoiceEvent.LocalAudioLevel,
+  useRTVIClientEvent(
+    RTVIEvent.LocalAudioLevel,
     useCallback((volume: number) => {
       if (volRef.current) {
         const v = Number(volume) * 1.75;

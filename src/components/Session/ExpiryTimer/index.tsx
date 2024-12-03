@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Timer } from "lucide-react";
-import { VoiceEvent } from "realtime-ai";
-import { useVoiceClient, useVoiceClientEvent } from "realtime-ai-react";
+import { RTVIEvent } from "realtime-ai";
+import { useRTVIClient, useRTVIClientEvent } from "realtime-ai-react";
 
 import {
   Tooltip,
@@ -12,14 +12,23 @@ import { cn } from "@/utils/tailwind";
 
 import styles from "./styles.module.css";
 
-const ExpiryTimer: React.FC = () => {
-  const voiceClient = useVoiceClient();
-  const [exp, setExp] = useState<number | undefined>(undefined);
-  const [time, setTime] = useState({ minutes: 0, seconds: 0 });
+type TimeState = {
+  minutes: number;
+  seconds: number;
+};
 
-  useVoiceClientEvent(
-    VoiceEvent.Connected,
-    useCallback(() => setExp(voiceClient?.transportExpiry), [voiceClient])
+const ExpiryTimer: React.FC = () => {
+  const rtviClient = useRTVIClient();
+  const [exp, setExp] = useState<number | undefined>(undefined);
+  const [time, setTime] = useState<TimeState>({ minutes: 0, seconds: 0 });
+
+  useRTVIClientEvent(
+    RTVIEvent.Connected,
+    useCallback(() => {
+      if (rtviClient) {
+        setExp(rtviClient.transportExpiry);
+      }
+    }, [rtviClient])
   );
 
   const noExpiry = !exp || exp === 0;
@@ -29,22 +38,25 @@ const ExpiryTimer: React.FC = () => {
 
     const futureTimestamp = exp;
 
-    // Function to update time
     const updateTime = () => {
-      const currentTimestamp = Math.floor(Date.now() / 1000);
-      const differenceInSeconds = futureTimestamp! - currentTimestamp;
-      const minutes = Math.floor(differenceInSeconds / 60);
-      const seconds = differenceInSeconds % 60;
-      setTime({ minutes, seconds });
+      try {
+        const currentTimestamp = Math.floor(Date.now() / 1000);
+        const differenceInSeconds = Math.max(
+          0,
+          futureTimestamp! - currentTimestamp
+        );
+        const minutes = Math.floor(differenceInSeconds / 60);
+        const seconds = differenceInSeconds % 60;
+        setTime({ minutes, seconds });
+      } catch (error) {
+        console.error("Error updating expiry time:", error);
+        setTime({ minutes: 0, seconds: 0 });
+      }
     };
 
-    // Update time every second
     const interval = setInterval(updateTime, 1000);
-
-    // Initial update
     updateTime();
 
-    // Clear interval on component unmount
     return () => clearInterval(interval);
   }, [noExpiry, exp]);
 

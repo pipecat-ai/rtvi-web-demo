@@ -57,19 +57,26 @@ export const llmModels: LLMModel[] = [
   { label: "Llama3 8b", id: "llama-3.1-8b-instant" },
 ];
 
-export const defaultConfig = {
-  llm: {
-    model: llmModels[0].id,
-    messages: [
+export const defaultLLMPrompt = `You are a assistant called ExampleBot. You can ask me anything.
+Keep responses brief and legible.
+Your responses will converted to audio. Please do not include any special characters in your response other than '!' or '?'.
+Start by briefly introducing yourself.`;
+
+export const defaultConfig = [
+  {
+    service: "llm",
+    options: [
+      { name: "model", value: "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo" },
       {
-        role: "system",
-        content:
-          "You are Chatbot, a friendly, helpful robot. Your output will be converted to audio so don't include special characters other than '!' or '?' in your answers. Respond to what the user said in a creative and helpful way, but keep your responses brief. Start by saying hello.",
-        //composeSystemPrompt(defaultLanguage),
+        name: "initial_messages",
+        value: [
+          {
+            role: "system",
+            content: defaultLLMPrompt,
+          },
+        ],
       },
+      { name: "run_on_config", value: true },
     ],
   },
-  tts: {
-    voice: ttsVoices[0].id,
-  },
-};
+];
